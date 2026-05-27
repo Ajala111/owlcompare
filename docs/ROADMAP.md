@@ -13,11 +13,11 @@ This is the source of truth for what's done, what's in progress, and what's defe
 - [x] Design decisions logged (`docs/DESIGN_DECISIONS.md`)
 - [x] Conventions defined (`docs/CONVENTIONS.md`)
 - [x] Glossary established (`docs/GLOSSARY.md`)
-- [ ] Repo initialized with `uv init`
-- [ ] `pyproject.toml` configured (ruff, mypy, pytest)
-- [ ] CI workflow (`.github/workflows/ci.yml`)
-- [ ] LICENSE (MIT)
-- [ ] README.md (placeholder, expanded later)
+- [x] Repo initialized with `uv init`
+- [x] `pyproject.toml` configured (ruff, mypy, pytest)
+- [x] CI workflow (`.github/workflows/ci.yml`)
+- [x] LICENSE (MIT)
+- [x] README.md (placeholder, expanded later)
 
 **Exit criteria:** A new contributor can clone the repo, run `uv sync && uv run pytest`, and get a green build (with zero tests).
 

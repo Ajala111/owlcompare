@@ -178,3 +178,37 @@ The CLI exit code maps from severity: any `breaking` → exit 1.
 - Alternative: Alpine.js (smaller, declarative) — possibly better for a mostly-read-only report. Decide during the report component spec.
 
 **Will revisit at:** `specs/NN-html-report.md`.
+
+---
+
+## DD-012: Smart App Control workaround for mypy on Windows
+
+**Status:** accepted
+**Date:** 2026-05-27
+
+**Decision:** On Windows machines where Smart App Control (SAC) is enabled, mypy is installed as a source (pure-Python) build instead of the default mypyc-compiled wheel. This is done with a **local-only**, git-ignored `uv.toml` in the project root:
+
+```toml
+no-binary-package = ["mypy"]
+```
+
+**Problem:** mypy ships compiled with mypyc, so the wheel contains an unsigned native extension (e.g. `..__mypyc.cp311-win_amd64.pyd`). With Smart App Control on, Windows blocks that DLL from loading and mypy crashes on startup:
+
+```
+ImportError: DLL load failed while importing ..__mypyc:
+An application control policy has blocked this file.
+```
+
+The pure-Python build of mypy (mypyc disabled — the default when building from sdist) has no native extension, so SAC does not block it.
+
+**Why local-only (`uv.toml`, git-ignored) and not `[tool.uv]` in `pyproject.toml`:**
+- The issue is specific to this developer's machine/security posture, not to the project.
+- CI runs on Linux, where SAC does not exist and the fast compiled wheel works fine; pinning no-binary project-wide would needlessly force every consumer and CI to build mypy from source.
+- `uv.toml` takes precedence over `[tool.uv]` and is kept out of version control, so the override never leaks into the shared configuration.
+
+**Implication:** A fresh `uv sync` on this machine rebuilds mypy from source automatically (no manual step). On machines without `uv.toml`, behavior is unchanged. CI is unaffected.
+
+**Alternatives considered:**
+- *Disable Smart App Control:* a system-wide security downgrade that requires a Windows reset to fully enable/disable; out of proportion to the problem.
+- *Skip mypy locally, rely on CI:* loses the local type-check feedback loop.
+- *Pin no-binary in `pyproject.toml`:* would fix it everywhere but slows CI and all contributors for a one-machine issue.

@@ -2,12 +2,16 @@
 
 ## Python style
 
-- **Formatter & linter:** `ruff` with the configuration in `pyproject.toml`. Run `uv run ruff format .` and `uv run ruff check .` before any commit.
+- **Formatter & linter:** `ruff` with the configuration in `pyproject.toml`. Run `uv run ruff format .` and `uv run ruff check .` before any commit. Lint rule selection (`select`/`ignore`) lives under `[tool.ruff.lint]`, not top-level `[tool.ruff]` — the top-level form is deprecated in modern ruff and emits warnings.
 - **Type hints:** required on every public function and method. Optional but encouraged on internals.
 - **Type checking:** `mypy --strict` for `src/owlcompare/` public modules. Permissive for internal helpers.
 - **Imports:** sorted by ruff's isort rules. Standard library, then third-party, then local.
 - **Docstrings:** required on every public function/class. Use Google style. One-liners are fine for obvious methods.
 - **Line length:** 100 characters.
+
+### Windows-specific notes
+
+- If `uv run mypy` fails to start with a DLL load error (`An application control policy has blocked this file` / Smart App Control), it's blocking mypy's mypyc-compiled binary, not a code problem. See **DD-012** in `docs/DESIGN_DECISIONS.md` for the local-only, git-ignored `uv.toml` workaround that forces a pure-Python mypy build.
 
 ## Naming
 
