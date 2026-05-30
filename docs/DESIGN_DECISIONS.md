@@ -212,3 +212,70 @@ The pure-Python build of mypy (mypyc disabled — the default when building from
 - *Disable Smart App Control:* a system-wide security downgrade that requires a Windows reset to fully enable/disable; out of proportion to the problem.
 - *Skip mypy locally, rely on CI:* loses the local type-check feedback loop.
 - *Pin no-binary in `pyproject.toml`:* would fix it everywhere but slows CI and all contributors for a one-machine issue.
+
+---
+
+## DD-013: Hatchling as the build backend
+
+**Status:** accepted
+**Date:** 2026-05-28
+
+**Decision:** Use `hatchling` as the build backend (`[build-system]` in `pyproject.toml`), with the version sourced dynamically from `src/owlcompare/_version.py`.
+
+**Reasoning:**
+- Single source of truth for the version is essential for a public PyPI package. Manual two-place editing of the version is a known footgun.
+- Hatchling is the PyPA-maintained, widely-used default backend for modern Python projects and supports file-based dynamic versioning.
+- `uv_build` is still maturing and does not yet support this pattern.
+- This affects only the build layer. `uv` remains our package manager and developer tool (DD-003).
+
+**Alternatives considered:**
+- *Keep `uv_build` with static version:* simpler config, but introduces a sync-two-files release ritual we'd regret.
+- *setuptools:* heavier config, no benefit over Hatchling.
+- *PDM-backend, Flit:* viable but no advantage over Hatchling for our needs.
+
+---
+
+## DD-014: Typer private API dependency (`typer._click`)
+
+**Status:** accepted
+**Date:** 2026-05-28
+
+**Decision:** `cli.py` imports `ClickException` from the vendored, private `typer._click.exceptions` module, and `typer` is pinned to `>=0.26.2,<0.27` in `pyproject.toml` to guard against a minor-version change silently breaking that import.
+
+**Context:** Typer 0.26 vendors Click as `typer._click`; there is no standalone `click` package installed. The CLI's `main()` runs the Typer app with `standalone_mode=False` (so `KeyboardInterrupt` reaches our handler and maps to exit 130 instead of Click's default exit 1), which means we must catch Click's usage errors ourselves and map them to exit code 2.
+
+`typer` publicly re-exports only `Exit`, `Abort`, and the narrow `BadParameter` — **not** the `ClickException`/`UsageError` base. `BadParameter` alone does not cover "missing argument" (`MissingParameter`) or "no such command" (`UsageError`), so catching the base class is required. We use the public `typer.Exit` / `typer.Abort` where available and reach into `typer._click.exceptions` only for `ClickException`, minimizing the private surface to a single symbol.
+
+**Reasoning:**
+- The exit-code contract (usage error → 2) in `specs/01-cli.md` requires catching the `ClickException` base, which has no public Typer path.
+- An upper version pin makes the private dependency explicit and prevents an unattended `typer` upgrade from breaking the import at runtime.
+
+**Upgrade path:** Re-evaluate when Typer 0.27 ships. Check whether (a) Typer re-exports a `ClickException` equivalent publicly, or (b) a standalone `click` is available to import from. If either holds, drop the private import and widen the pin.
+
+**Alternatives considered:**
+- *Catch only `typer.BadParameter`:* misses `MissingParameter` and "no such command", so some usage errors would fall through to the generic exit-1 handler. Rejected — violates the exit-code contract.
+- *Run with `standalone_mode=True` and catch `SystemExit`:* Click would convert `KeyboardInterrupt` to `Abort`/exit 1, breaking the exit-130 requirement. Rejected.
+- *Add `click` as a direct dependency:* it is not installed standalone with this Typer build; introducing a second Click would risk version skew against Typer's vendored copy. Rejected.
+
+---
+
+## DD-015: `httpx` as the HTTP client
+
+**Status:** accepted
+**Date:** 2026-05-29
+
+**Decision:** Use `httpx` (sync API, sync `Client`) as the HTTP client for fetching ontologies from URLs in the loader. `respx` is the matching mock-transport library used in tests.
+
+**Reasoning:**
+- Pure Python, MIT licensed, actively maintained.
+- Supports both sync and async transports behind a single API. v1 is sync; if we later need parallel fetches (resolving imports closures, scanning a directory of URLs) we can move to async without a library swap.
+- First-class timeout semantics (`connect`, `read`, `write`, `pool` configurable) and explicit redirect controls (max-redirect counts) instead of `requests`' implicit defaults.
+- Better type hints than `requests` — works cleanly under `mypy --strict`.
+- `respx` provides a `MockTransport`-based mocking layer that keeps the test suite free of real network calls (see DD-010 — fixtures stay deterministic).
+
+**Alternatives considered:**
+- *`requests`:* widely used and battle-tested but has no async path, slower release cadence, weaker timeout granularity, and incomplete type hints. Rejected.
+- *`urllib.request` (stdlib):* verbose, awkward error semantics, no built-in connection pooling. Rejected.
+- *`aiohttp`:* async-only — forces async on the entire loader path for no v1 benefit. Rejected.
+
+**Implication:** All URL fetching in `sources.py` goes through `httpx.Client`. Tests mock at the transport layer via `respx`; no real network calls in `tests/`.

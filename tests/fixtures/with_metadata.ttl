@@ -1,0 +1,21 @@
+# fixture: with_metadata.ttl
+# Purpose: a fully-annotated owl:Ontology declaration — versionIRI, versionInfo,
+# priorVersion, two owl:imports, and multilingual rdfs:label values.
+# Used to test OntologyMetadata extraction in the loader.
+
+@prefix : <http://example.org/meta#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/meta> a owl:Ontology ;
+    owl:versionIRI <http://example.org/meta/2.0.0> ;
+    owl:versionInfo "2.0.0" ;
+    owl:priorVersion <http://example.org/meta/1.0.0> ;
+    owl:imports <http://www.w3.org/2004/02/skos/core> ;
+    owl:imports <http://purl.org/dc/terms/> ;
+    rdfs:label "Metadata Ontology"@en ;
+    rdfs:label "Ontologie de métadonnées"@fr ;
+    rdfs:comment "An example ontology with rich metadata."@en .
+
+:Foo a owl:Class ;
+    rdfs:label "Foo"@en .

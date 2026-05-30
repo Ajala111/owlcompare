@@ -1,0 +1,15 @@
+# fixture: multilingual.ttl
+# Purpose: a single class with rdfs:label in three languages (en, fr, de).
+# Used to verify language tags are preserved on Entity.labels.
+
+@prefix : <http://example.org/ml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/ml> a owl:Ontology .
+
+:House a owl:Class ;
+    rdfs:label "House"@en ;
+    rdfs:label "Maison"@fr ;
+    rdfs:label "Haus"@de ;
+    rdfs:comment "A dwelling."@en .

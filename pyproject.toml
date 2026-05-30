@@ -1,6 +1,6 @@
 [project]
 name = "owlcompare"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Modern semantic ontology diff tool — compare two OWL/RDF ontologies and surface meaningful changes."
 readme = "README.md"
 license = "MIT"
@@ -8,7 +8,12 @@ authors = [
     { name = "Olatunji Felix Ajala (Phelz)", email = "ajala111@yahoo.com" },
 ]
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "httpx>=0.28.1",
+    "rdflib>=7.6.0",
+    "rich>=15.0.0",
+    "typer>=0.26.2,<0.27",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3.11",
@@ -20,7 +25,7 @@ classifiers = [
 Repository = "https://github.com/Phelz/owlcompare"
 
 [project.scripts]
-owlcompare = "owlcompare:main"
+owlcompare = "owlcompare.cli:main"
 
 [dependency-groups]
 dev = [
@@ -28,11 +33,18 @@ dev = [
     "pytest-cov>=5.0",
     "ruff>=0.6",
     "mypy>=1.11",
+    "respx>=0.23.1",
 ]
 
 [build-system]
-requires = ["uv_build>=0.11.16,<0.12.0"]
-build-backend = "uv_build"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/owlcompare/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/owlcompare"]
 
 [tool.ruff]
 line-length = 100

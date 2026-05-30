@@ -2,7 +2,7 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 0 — Foundation (planning + scaffolding)
+**Current phase:** Phase 1 — Core skeleton
 
 ---
 
@@ -25,9 +25,9 @@ This is the source of truth for what's done, what's in progress, and what's defe
 
 ## Phase 1 — Core skeleton
 
-- [ ] Component 01: CLI scaffold (`owlcompare --help` works, no real commands yet) — `specs/01-cli.md`
-- [ ] Component 02: Ontology loader — `specs/02-loader.md`
-- [ ] Component 03: Internal model — `specs/03-model.md`
+- [x] Component 01: CLI scaffold (`owlcompare --help` works, no real commands yet) — `specs/01-cli.md`
+- [x] Component 02: Ontology loader + internal model — `specs/02-loader.md`
+      (Component 03 was folded into 02 per the spec; the loader returns a fully-typed `OntologySnapshot`.)
 - [ ] Component 04: Canonicalization — `specs/04-canonicalize.md`
 
 **Exit criteria:** `owlcompare load a.ttl` parses an ontology and prints its summary (entity counts, IRI, prefixes) without errors.

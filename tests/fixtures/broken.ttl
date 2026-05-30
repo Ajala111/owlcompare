@@ -1,0 +1,10 @@
+# fixture: broken.ttl
+# Purpose: intentionally malformed Turtle — missing the closing angle bracket
+# on the object IRI. Used to verify the loader wraps rdflib parser failures
+# in a LoadError (exit code 3).
+
+@prefix : <http://example.org/broken#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+:Thing a owl:Class ;
+    rdfs:label "missing-bracket .

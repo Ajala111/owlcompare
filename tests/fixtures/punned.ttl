@@ -1,0 +1,13 @@
+# fixture: punned.ttl
+# Purpose: OWL 2 punning — the same IRI is declared as both an owl:Class and
+# an owl:NamedIndividual. The loader must index it under both kinds.
+
+@prefix : <http://example.org/punned#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/punned> a owl:Ontology .
+
+:Eagle a owl:Class .
+:Eagle a owl:NamedIndividual .
+:Eagle rdfs:label "Eagle"@en .

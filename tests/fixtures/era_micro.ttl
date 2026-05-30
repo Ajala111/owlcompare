@@ -1,0 +1,33 @@
+# fixture: era_micro.ttl
+# Purpose: small ERA-style ontology fragment with plausible European Railway
+# Agency IRIs. Kept under 30 triples — exercises realistic domain vocabulary
+# without pulling in the real ERA vocabulary.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://data.europa.eu/949/ontology> a owl:Ontology ;
+    owl:versionIRI <http://data.europa.eu/949/ontology/3.2.0> ;
+    owl:versionInfo "3.2.0" ;
+    rdfs:label "ERA Micro Vocabulary"@en .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:comment "A linear railway infrastructure element."@en .
+
+era:BaliseGroup a owl:Class ;
+    rdfs:label "Balise Group"@en .
+
+era:Balise a owl:Class ;
+    rdfs:subClassOf era:BaliseGroup ;
+    rdfs:label "Balise"@en .
+
+era:locatedOn a owl:ObjectProperty ;
+    rdfs:domain era:BaliseGroup ;
+    rdfs:range era:Track ;
+    rdfs:label "located on"@en .
+
+era:kilometricPoint a owl:DatatypeProperty ;
+    rdfs:domain era:Track ;
+    rdfs:label "kilometric point"@en .
