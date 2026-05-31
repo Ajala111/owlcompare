@@ -1,8 +1,24 @@
-"""Diff engine package. Layer 0 (syntactic) is implemented; 1-3 are planned."""
+"""Diff engine package.
+
+Layer 0 (syntactic) and the first Layer 1 slice (structural entities) are
+implemented and wired through :mod:`orchestrator`; remaining Layer 1 slices and
+Layers 2-3 are planned.
+"""
 
 from __future__ import annotations
 
-from . import syntactic
+from . import orchestrator, structural, syntactic
 from ._common import Change, DiffLayer, DiffOptions, DiffResult, Severity
+from ._subsumption import SubsumptionRegistry
 
-__all__ = ["Change", "DiffLayer", "DiffOptions", "DiffResult", "Severity", "syntactic"]
+__all__ = [
+    "Change",
+    "DiffLayer",
+    "DiffOptions",
+    "DiffResult",
+    "Severity",
+    "SubsumptionRegistry",
+    "orchestrator",
+    "structural",
+    "syntactic",
+]

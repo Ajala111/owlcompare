@@ -1,0 +1,14 @@
+# fixture: class_added_after.ttl
+# Purpose: exactly one class added relative to class_added_before.ttl —
+# ex:Dog with a single English label. Drives class_added + subsumption of the
+# rdf:type and rdfs:label triple additions.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Animal a owl:Class ;
+    rdfs:label "Animal"@en .
+
+ex:Dog a owl:Class ;
+    rdfs:label "Dog"@en .

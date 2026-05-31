@@ -16,7 +16,7 @@ from pathlib import Path
 from rdflib import RDF
 
 from owlcompare.canonicalize import canonicalize
-from owlcompare.diff import syntactic
+from owlcompare.diff import orchestrator, syntactic
 from owlcompare.loader import load
 
 FIXTURES = Path(__file__).resolve().parent.parent / "fixtures"
@@ -72,15 +72,67 @@ def test_diff_via_python_dash_m_subprocess():
             "diff",
             str(DIFF / "era_evolution_v1.ttl"),
             str(DIFF / "era_evolution_v2.ttl"),
+            "--layers",
+            "syntactic",
             "--format",
             "json",
         ],
         capture_output=True,
         text=True,
     )
-    # era_evolution has breaking changes -> exit 10.
+    # era_evolution has breaking changes -> exit 10. Pinned to the syntactic
+    # layer so the Layer 0 triple totals stay the baseline for this check.
     assert proc.returncode == 10
     payload = json.loads(proc.stdout)
     assert payload["schema_version"] == 1
     assert payload["summary"]["total"] == 18
     assert payload["summary"]["breaking"] == 5
+
+
+def _run(v_a: str, v_b: str):
+    return orchestrator.run(_canon(v_a), _canon(v_b))
+
+
+def test_era_evolution_layer1_emits_class_added_for_platform():
+    result = _run("era_evolution_v1.ttl", "era_evolution_v2.ttl")
+    class_added = [c for c in result.changes if c.layer == "structural" and c.kind == "class_added"]
+    assert len(class_added) == 1
+    assert class_added[0].subject == "http://data.europa.eu/949/Platform"
+    assert class_added[0].severity == "additive"
+    assert class_added[0].summary == 'Class added: era:Platform "Platform"@en'
+
+
+def test_era_evolution_layer1_emits_object_property_removed_for_locatedon():
+    result = _run("era_evolution_v1.ttl", "era_evolution_v2.ttl")
+    removed = [
+        c for c in result.changes if c.layer == "structural" and c.kind == "object_property_removed"
+    ]
+    assert len(removed) == 1
+    assert removed[0].subject == "http://data.europa.eu/949/locatedOn"
+    assert removed[0].severity == "breaking"
+
+
+def test_era_evolution_layer1_subsumes_associated_layer0_changes():
+    result = _run("era_evolution_v1.ttl", "era_evolution_v2.ttl")
+    registry = result.metadata["subsumption_registry"]
+    platform = next(
+        c
+        for c in result.changes
+        if c.kind == "class_added" and c.subject == "http://data.europa.eu/949/Platform"
+    )
+    # Platform's rdf:type + rdfs:label triple additions are both subsumed.
+    assert len(platform.details["subsumes"]) == 2
+    for layer0_id in platform.details["subsumes"]:
+        assert registry.is_explained(layer0_id)
+
+
+def test_era_evolution_total_change_count_reduces_with_subsumption():
+    result = _run("era_evolution_v1.ttl", "era_evolution_v2.ttl")
+    registry = result.metadata["subsumption_registry"]
+    structural = [c for c in result.changes if c.layer == "structural"]
+    layer0 = [c for c in result.changes if c.layer == "syntactic"]
+    unexplained = [c for c in layer0 if not registry.is_explained(c.details["change_id"])]
+    visible_by_default = len(structural) + len(unexplained)
+    assert visible_by_default < len(result.changes)
+    # And strictly fewer than Component 05's flat 18 Layer 0 changes.
+    assert visible_by_default < 18

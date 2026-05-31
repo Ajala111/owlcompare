@@ -16,6 +16,7 @@ from owlcompare.exceptions import DiffError
 from owlcompare.model import OntologySnapshot
 
 from ._common import Change, DiffOptions, Severity, shorten_synthetic_iri
+from ._subsumption import SubsumptionRegistry
 
 # Coarse, RDF-only severity defaults keyed by predicate IRI: ``(removed, added)``.
 # Layer 1 overrides these with per-entity classifications; here they are a
@@ -121,7 +122,7 @@ def _make_change(
         "subject_iri": str(subject) if isinstance(subject, URIRef) else None,
         "predicate_iri": str(predicate) if isinstance(predicate, URIRef) else None,
     }
-    return Change(
+    change = Change(
         layer="syntactic",
         kind=kind,
         severity=severity,
@@ -129,6 +130,11 @@ def _make_change(
         summary=summary,
         details=details,
     )
+    # Every Change carries a stable id so higher layers can subsume it and
+    # renderers can reverse-look-up. Computed from intrinsic content only, then
+    # written back into the (mutable) details dict — see SubsumptionRegistry.
+    change.details["change_id"] = SubsumptionRegistry.change_id(change)
+    return change
 
 
 def _shorten_term_for_display(term: Node, term_n3: str) -> str:

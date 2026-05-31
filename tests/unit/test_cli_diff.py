@@ -42,9 +42,19 @@ def test_cli_diff_identical_inputs_exits_0():
     assert main(["diff", _fx("identical_a.ttl"), _fx("identical_b.ttl")]) == 0
 
 
-def test_cli_diff_layers_structural_only_exits_2():
+def test_cli_diff_layers_structural_without_syntactic_exits_4():
+    # Structural is implemented now, but Layer 1 depends on Layer 0: requesting
+    # it alone is a DiffError (exit 4), not a usage error.
     assert (
         main(["diff", _fx("identical_a.ttl"), _fx("identical_b.ttl"), "--layers", "structural"])
+        == 4
+    )
+
+
+def test_cli_diff_layers_inferential_exits_2():
+    # Layers 2/3 remain stubbed → NotImplementedYetError (exit 2).
+    assert (
+        main(["diff", _fx("identical_a.ttl"), _fx("identical_b.ttl"), "--layers", "inferential"])
         == 2
     )
 
@@ -111,6 +121,64 @@ def test_cli_diff_breaking_change_exits_10():
 
 def test_cli_diff_only_info_changes_exits_0():
     assert main(["diff", _fx("renamed_label_before.ttl"), _fx("renamed_label_after.ttl")]) == 0
+
+
+def test_cli_diff_default_layers_now_include_structural(capsys):
+    main(["diff", _fx("class_added_before.ttl"), _fx("class_added_after.ttl"), "--format", "json"])
+    payload = json.loads(capsys.readouterr().out)
+    assert any(c["layer"] == "structural" for c in payload["changes"])
+
+
+def test_cli_diff_text_output_groups_by_layer(capsys):
+    main(["diff", _fx("era_evolution_v1.ttl"), _fx("era_evolution_v2.ttl")])
+    out = capsys.readouterr().out
+    assert "Layer 1 — Structural" in out
+    assert "Layer 0 — Syntactic" in out
+
+
+def test_cli_diff_text_output_hides_subsumed_layer0_by_default(capsys):
+    # ex:Dog's rdf:type/label triple additions are subsumed by "Class added";
+    # by default the Layer 0 section shows zero unexplained and the subsumed
+    # triple rows (the type declaration "owl:Class") never appear.
+    main(["diff", _fx("class_added_before.ttl"), _fx("class_added_after.ttl")])
+    out = capsys.readouterr().out
+    assert "Class added: ex:Dog" in out
+    assert "0 unexplained" in out
+    assert "owl:Class" not in out
+
+
+def test_cli_diff_show_syntactic_flag_reveals_all_layer0(capsys):
+    main(
+        [
+            "diff",
+            _fx("class_added_before.ttl"),
+            _fx("class_added_after.ttl"),
+            "--show-syntactic",
+        ]
+    )
+    out = capsys.readouterr().out
+    # The previously-hidden type-declaration triple is now visible.
+    assert "owl:Class" in out
+
+
+def test_cli_diff_text_output_shows_unexplained_count(capsys):
+    main(["diff", _fx("era_evolution_v1.ttl"), _fx("era_evolution_v2.ttl")])
+    out = capsys.readouterr().out
+    assert "unexplained)" in out
+
+
+def test_cli_diff_json_includes_subsumes_in_details(capsys):
+    main(["diff", _fx("class_added_before.ttl"), _fx("class_added_after.ttl"), "--format", "json"])
+    payload = json.loads(capsys.readouterr().out)
+    structural = [c for c in payload["changes"] if c["layer"] == "structural"]
+    assert structural
+    assert structural[0]["details"]["subsumes"]
+
+
+def test_cli_diff_json_includes_change_id_in_details(capsys):
+    main(["diff", _fx("class_added_before.ttl"), _fx("class_added_after.ttl"), "--format", "json"])
+    payload = json.loads(capsys.readouterr().out)
+    assert all("change_id" in c["details"] for c in payload["changes"])
 
 
 def test_cli_diff_table_has_no_truncation_artifacts(capsys):

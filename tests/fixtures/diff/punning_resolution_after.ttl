@@ -1,0 +1,11 @@
+# fixture: punning_resolution_after.ttl
+# Purpose: ex:Punned is now only an owl:Class (the owl:NamedIndividual kind was
+# dropped). Pairs with punning_resolution_before.ttl. Expect one
+# individual_removed (non_breaking), no entity_kind_changed.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Punned a owl:Class ;
+    rdfs:label "Punned"@en .

@@ -1,0 +1,10 @@
+# fixture: property_added_before.ttl
+# Purpose: baseline for the "one object property and one data property added"
+# case. Pairs with property_added_after.ttl.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Thing a owl:Class ;
+    rdfs:label "Thing"@en .

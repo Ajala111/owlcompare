@@ -1,0 +1,11 @@
+# fixture: multiple_kinds_added_before.ttl
+# Purpose: minimal baseline. Pairs with multiple_kinds_added_after.ttl, which
+# adds a class AND an object property AND an individual simultaneously, so the
+# diff must emit changes across several kinds in one run.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Base a owl:Class ;
+    rdfs:label "Base"@en .

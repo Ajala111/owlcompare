@@ -1,0 +1,20 @@
+# fixture: multiple_kinds_added_after.ttl
+# Purpose: adds one class (ex:Vehicle), one object property (ex:hasPart) and one
+# individual (ex:car1) relative to multiple_kinds_added_before.ttl. Drives
+# class_added + object_property_added + individual_added in a single diff.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Base a owl:Class ;
+    rdfs:label "Base"@en .
+
+ex:Vehicle a owl:Class ;
+    rdfs:label "Vehicle"@en .
+
+ex:hasPart a owl:ObjectProperty ;
+    rdfs:label "has part"@en .
+
+ex:car1 a owl:NamedIndividual ;
+    rdfs:label "car 1"@en .

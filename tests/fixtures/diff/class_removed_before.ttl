@@ -1,0 +1,13 @@
+# fixture: class_removed_before.ttl
+# Purpose: baseline for the "exactly one class removed" Layer 1 case. Pairs with
+# class_removed_after.ttl, which drops ex:Dog entirely.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Animal a owl:Class ;
+    rdfs:label "Animal"@en .
+
+ex:Dog a owl:Class ;
+    rdfs:label "Dog"@en .

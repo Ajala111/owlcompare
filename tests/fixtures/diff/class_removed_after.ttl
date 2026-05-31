@@ -1,0 +1,11 @@
+# fixture: class_removed_after.ttl
+# Purpose: exactly one class removed relative to class_removed_before.ttl —
+# ex:Dog is gone. Drives class_removed (breaking) plus subsumption of the
+# removed rdf:type and rdfs:label triples.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Animal a owl:Class ;
+    rdfs:label "Animal"@en .

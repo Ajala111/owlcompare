@@ -1,0 +1,11 @@
+# fixture: kind_changed_before.ttl
+# Purpose: ex:Foo is declared as an owl:Class here. In kind_changed_after.ttl it
+# becomes an owl:NamedIndividual — a true "kind move" that must surface as a
+# single entity_kind_changed (class -> individual), not add+remove.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Foo a owl:Class ;
+    rdfs:label "Foo"@en .

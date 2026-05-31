@@ -1,0 +1,12 @@
+# fixture: kind_changed_after.ttl
+# Purpose: ex:Foo is now an owl:NamedIndividual (was owl:Class in
+# kind_changed_before.ttl). Exercises true punning-resolution: one
+# entity_kind_changed (class -> individual), no separate class_removed /
+# individual_added.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Foo a owl:NamedIndividual ;
+    rdfs:label "Foo"@en .

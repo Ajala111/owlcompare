@@ -1,0 +1,17 @@
+# fixture: property_added_after.ttl
+# Purpose: adds exactly one object property (ex:knows) and one data property
+# (ex:age) relative to property_added_before.ttl. Drives object_property_added
+# and data_property_added with distinct kinds.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Thing a owl:Class ;
+    rdfs:label "Thing"@en .
+
+ex:knows a owl:ObjectProperty ;
+    rdfs:label "knows"@en .
+
+ex:age a owl:DatatypeProperty ;
+    rdfs:label "age"@en .

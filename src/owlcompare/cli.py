@@ -10,7 +10,7 @@ import enum
 import logging
 import sys
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, cast
 
 import rdflib
 import typer
@@ -28,7 +28,8 @@ from owlcompare._render_diff import diff_json, diff_text_plain, render_diff_text
 from owlcompare._version import __version__
 from owlcompare.canonicalize import CanonicalizeOptions
 from owlcompare.canonicalize import canonicalize as _canonicalize
-from owlcompare.diff import syntactic as _syntactic_diff
+from owlcompare.diff import orchestrator as _orchestrator
+from owlcompare.diff._common import DiffLayer, DiffOptions
 from owlcompare.exceptions import (
     CanonicalizationError,
     NotImplementedYetError,
@@ -60,9 +61,11 @@ class DiffFormat(enum.StrEnum):
     text = "text"
 
 
-# Diff layers known to the CLI. Only "syntactic" is implemented in v1; the rest
-# are validated (so an unknown name is a usage error) but raise NotImplementedYet.
+# Diff layers known to the CLI. "syntactic" and "structural" are implemented;
+# the rest are validated (so an unknown name is a usage error) but raise
+# NotImplementedYet.
 _KNOWN_LAYERS: tuple[str, ...] = ("syntactic", "structural", "inferential", "impact")
+_IMPLEMENTED_LAYERS: tuple[str, ...] = ("syntactic", "structural")
 # Exit code emitted when the diff finds at least one breaking change (DD-008).
 _BREAKING_EXIT_CODE = 10
 
@@ -142,36 +145,51 @@ def diff(
         str,
         typer.Option(
             "--layers",
-            help='Comma-separated layers (e.g. "syntactic"). Only "syntactic" is available in v1.',
+            help='Comma-separated layers. Default "syntactic,structural"; those two '
+            "are implemented in v1.",
         ),
-    ] = "syntactic",
+    ] = "syntactic,structural",
     output_format: Annotated[
         DiffFormat,
         typer.Option("--format", help="Output format (json or text)."),
     ] = DiffFormat.text,
+    show_syntactic: Annotated[
+        bool,
+        typer.Option(
+            "--show-syntactic",
+            help="Show all Layer 0 changes in text output, including those a Layer 1 "
+            "change already explains (hidden by default).",
+        ),
+    ] = False,
     out: Annotated[
         Path | None,
         typer.Option("--out", help="Output file (default: stdout)."),
     ] = None,
 ) -> None:
-    """Compare two ontologies at the syntactic layer (Layer 0).
+    """Compare two ontologies at the syntactic (Layer 0) and structural (Layer 1) layers.
 
-    Loads and canonicalizes both inputs, then reports the triple-level delta.
+    Loads and canonicalizes both inputs, then reports the delta grouped by layer.
     Exits 0 when there are no breaking changes, 10 when at least one breaking
     change is found (CI signal).
     """
     requested = _parse_layers(layers)
-    not_ready = [layer for layer in requested if layer != "syntactic"]
+    not_ready = [layer for layer in requested if layer not in _IMPLEMENTED_LAYERS]
     if not_ready:
         raise NotImplementedYetError(
             "these diff layers are not implemented yet: "
             + ", ".join(not_ready)
-            + ' (only "syntactic" is available in v1)'
+            + ' (only "syntactic" and "structural" are available in v1)'
         )
 
-    a = _canonicalize(_load_ontology(ontology_a, LoadOptions()))
-    b = _canonicalize(_load_ontology(ontology_b, LoadOptions()))
-    changes = _syntactic_diff.diff(a, b)
+    a = _load_ontology(ontology_a, LoadOptions())
+    b = _load_ontology(ontology_b, LoadOptions())
+    # ``requested`` is validated against _KNOWN_LAYERS, so each entry is a valid
+    # DiffLayer; the cast tells mypy what _parse_layers already guarantees.
+    include = cast("tuple[DiffLayer, ...]", tuple(requested))
+    result = _orchestrator.run(a, b, DiffOptions(include_layers=include))
+    changes = list(result.changes)
+    registry = result.metadata["subsumption_registry"]
+    layer1_enabled = "structural" in requested
 
     if output_format is DiffFormat.json:
         rendered = diff_json(changes)
@@ -180,9 +198,27 @@ def diff(
         else:
             typer.echo(rendered)
     elif out is not None:
-        out.write_text(diff_text_plain(changes, a, b) + "\n", encoding="utf-8")
+        out.write_text(
+            diff_text_plain(
+                changes,
+                registry,
+                result.a,
+                result.b,
+                layer1_enabled=layer1_enabled,
+                show_syntactic=show_syntactic,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
     else:
-        render_diff_text(changes, a, b)
+        render_diff_text(
+            changes,
+            registry,
+            result.a,
+            result.b,
+            layer1_enabled=layer1_enabled,
+            show_syntactic=show_syntactic,
+        )
 
     if any(change.severity == "breaking" for change in changes):
         raise typer.Exit(_BREAKING_EXIT_CODE)

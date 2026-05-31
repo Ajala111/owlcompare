@@ -1,0 +1,13 @@
+# fixture: punning_resolution_before.ttl
+# Purpose: ex:Punned is punned here — declared as BOTH owl:Class and
+# owl:NamedIndividual. In punning_resolution_after.ttl only the class survives.
+# Tests the "lost one kind" edge case: expect exactly one individual_removed and
+# NO entity_kind_changed (the IRI didn't move, it just shed a kind).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Punned a owl:Class ;
+    a owl:NamedIndividual ;
+    rdfs:label "Punned"@en .
