@@ -295,6 +295,8 @@ The pure-Python build of mypy (mypyc disabled — the default when building from
 
 **Why not fix it in code:** the issue is environmental (Windows + SAC + uv's wrapper regeneration), not a bug in `owlcompare`. CI runs on Linux, where SAC does not exist and the console script works fine; pinning a workaround in shared config would needlessly disadvantage every non-Windows environment.
 
+**Resolution (2026-06-01):** the SAC blocks have been resolved durably by installing Python 3.11 via `winget install Python.Python.3.11` and pinning `uv` to that interpreter (`uv python pin 3.11`). The winget-installed Python is signed by the Python Software Foundation and is therefore trusted by SAC, whereas uv-downloaded interpreters are unsigned and were being intermittently blocked. CI on Linux is unaffected by this change. Continue to invoke the CLI as `uv run python -m owlcompare ...` rather than the `owlcompare.exe` console-script shim, which can still be re-blocked after `uv` rebuilds it.
+
 **Implication:**
 - `CLAUDE.md` and `docs/CONVENTIONS.md` document the `python -m owlcompare` form as the recommended Windows invocation so future contributors don't hit the same failure mode.
 - The console-script entry point in `pyproject.toml` remains unchanged — it works fine on Linux/macOS and on Windows machines without SAC.
