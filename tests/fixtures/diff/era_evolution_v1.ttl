@@ -1,0 +1,44 @@
+# fixture: era_evolution_v1.ttl
+# Purpose: flagship Layer 0 test, version 1 of a small ERA-style fragment
+# (European Union Agency for Railways vocabulary, plausible IRIs). Pairs with
+# era_evolution_v2.ttl, which applies four realistic edits:
+#   - one class added       (era:Platform appears in v2)
+#   - one property removed   (era:locatedOn is gone in v2)
+#   - one cardinality change (era:hasMaxSpeed max 1 -> max 2 on era:Track)
+#   - one French label change (era:Track "Voie"@fr -> "Voie ferrée"@fr)
+# Plus a version bump. Kept well under 50 triples (23 here).
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://data.europa.eu/949/ontology> a owl:Ontology ;
+    owl:versionInfo "1.0.0" ;
+    rdfs:label "ERA Evolution Fragment"@en .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:label "Voie"@fr ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty era:hasMaxSpeed ;
+        owl:maxCardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+era:Tunnel a owl:Class ;
+    rdfs:subClassOf era:Track ;
+    rdfs:label "Tunnel"@en .
+
+era:Signal a owl:Class ;
+    rdfs:label "Signal"@en .
+
+era:hasMaxSpeed a owl:DatatypeProperty ;
+    rdfs:domain era:Track ;
+    rdfs:range xsd:integer ;
+    rdfs:label "has maximum speed"@en .
+
+era:locatedOn a owl:ObjectProperty ;
+    rdfs:domain era:Signal ;
+    rdfs:range era:Track ;
+    rdfs:label "located on"@en .

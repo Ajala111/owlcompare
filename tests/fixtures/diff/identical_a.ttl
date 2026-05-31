@@ -1,0 +1,20 @@
+# fixture: identical_a.ttl
+# Purpose: logically identical to identical_b.ttl but written with a different
+# statement order and a differently-shaped anonymous restriction. After
+# canonicalization the two must produce a byte-identical triple set, so Layer 0
+# reports zero changes. Guards against blank-node / ordering noise.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Person a owl:Class .
+
+ex:hasParent a owl:ObjectProperty .
+
+ex:Parent a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasParent ;
+        owl:someValuesFrom ex:Person
+    ] .

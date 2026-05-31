@@ -1,0 +1,15 @@
+# fixture: widened_range_after.ttl
+# Purpose: see widened_range_before.ttl. ex:hasPet's range is broadened from
+# ex:Animal to its superclass ex:Thing.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Thing a owl:Class .
+
+ex:Animal a owl:Class ;
+    rdfs:subClassOf ex:Thing .
+
+ex:hasPet a owl:ObjectProperty ;
+    rdfs:range ex:Thing .

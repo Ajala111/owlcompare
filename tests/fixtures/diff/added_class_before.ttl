@@ -1,0 +1,11 @@
+# fixture: added_class_before.ttl
+# Purpose: baseline for the "one class added" case. Pairs with
+# added_class_after.ttl, which introduces ex:Dog (declaration + label +
+# subClassOf). Diff should yield only additions.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Animal a owl:Class ;
+    rdfs:label "Animal"@en .

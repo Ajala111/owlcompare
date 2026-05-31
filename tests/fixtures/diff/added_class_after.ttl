@@ -1,0 +1,15 @@
+# fixture: added_class_after.ttl
+# Purpose: adds ex:Dog with a declaration (rdf:type -> additive), a label
+# (info) and a subClassOf axiom (additive) relative to added_class_before.ttl.
+# Exercises triple_added changes of mixed severity.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Animal a owl:Class ;
+    rdfs:label "Animal"@en .
+
+ex:Dog a owl:Class ;
+    rdfs:subClassOf ex:Animal ;
+    rdfs:label "Dog"@en .

@@ -35,3 +35,7 @@ Thumbs.db
 
 # Local-only uv overrides (machine-specific, see DD-012)
 uv.toml
+
+# Manual verification artifacts
+*.canonical.ttl
+*.canonical.nt

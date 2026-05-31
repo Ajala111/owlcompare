@@ -1,0 +1,16 @@
+# fixture: removed_class_before.ttl
+# Purpose: baseline for the "one class removed" case. ex:Cat carries a
+# declaration, a subClassOf axiom and a label so its removal exercises both
+# breaking (rdf:type, rdfs:subClassOf) and info (rdfs:label) severities. Also
+# used by the CLI "breaking change -> exit 10" test (subClassOf removed).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Animal a owl:Class ;
+    rdfs:label "Animal"@en .
+
+ex:Cat a owl:Class ;
+    rdfs:subClassOf ex:Animal ;
+    rdfs:label "Cat"@en .

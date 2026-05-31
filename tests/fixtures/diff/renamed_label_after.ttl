@@ -1,0 +1,10 @@
+# fixture: renamed_label_after.ttl
+# Purpose: see renamed_label_before.ttl. The label changes "Widget" -> "Gadget";
+# everything else is identical.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Widget a owl:Class ;
+    rdfs:label "Gadget"@en .

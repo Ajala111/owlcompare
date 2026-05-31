@@ -1,0 +1,41 @@
+# fixture: era_evolution_v2.ttl
+# Purpose: version 2 of the flagship fragment. See era_evolution_v1.ttl for the
+# full list of intended edits. Relative to v1:
+#   + era:Platform added (class declaration + English label)
+#   - era:locatedOn removed entirely (4 triples)
+#   ~ era:hasMaxSpeed restriction on era:Track: max 1 -> max 2
+#   ~ era:Track French label "Voie" -> "Voie ferrée"
+#   ~ owl:versionInfo "1.0.0" -> "2.0.0"
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://data.europa.eu/949/ontology> a owl:Ontology ;
+    owl:versionInfo "2.0.0" ;
+    rdfs:label "ERA Evolution Fragment"@en .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:label "Voie ferrée"@fr ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty era:hasMaxSpeed ;
+        owl:maxCardinality "2"^^xsd:nonNegativeInteger
+    ] .
+
+era:Tunnel a owl:Class ;
+    rdfs:subClassOf era:Track ;
+    rdfs:label "Tunnel"@en .
+
+era:Signal a owl:Class ;
+    rdfs:label "Signal"@en .
+
+era:Platform a owl:Class ;
+    rdfs:label "Platform"@en .
+
+era:hasMaxSpeed a owl:DatatypeProperty ;
+    rdfs:domain era:Track ;
+    rdfs:range xsd:integer ;
+    rdfs:label "has maximum speed"@en .

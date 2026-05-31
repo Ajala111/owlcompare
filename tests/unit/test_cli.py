@@ -67,15 +67,11 @@ def test_cli_diff_missing_args_exits_2():
 
 
 def test_cli_diff_invalid_format_exits_2():
-    result = runner.invoke(app, ["diff", "a.ttl", "b.ttl", "--format", "yaml"])
-    assert result.exit_code == 2
-
-
-def test_cli_diff_stub_exits_2_with_message(capsys, monkeypatch):
-    monkeypatch.delenv("OWLCOMPARE_LOG_LEVEL", raising=False)
-    rc = main(["diff", "a.ttl", "b.ttl"])
-    assert rc == 2
-    assert "Phase 2" in capsys.readouterr().err
+    # Invoked through main() rather than CliRunner because standalone_mode=False
+    # + a prior --help in the same process can cause Typer's rich error
+    # rendering to surface as exit 1 via CliRunner; main()'s error boundary
+    # deterministically maps it to exit 2 per DD-014.
+    assert main(["diff", "a.ttl", "b.ttl", "--format", "yaml"]) == 2
 
 
 def test_cli_verbose_sets_info_level(monkeypatch):

@@ -1,0 +1,17 @@
+# fixture: widened_range_before.ttl
+# Purpose: ex:hasPet has a narrow rdfs:range (ex:Animal). Pairs with
+# widened_range_after.ttl, which broadens it to ex:Thing. At Layer 0 this is a
+# range removed (breaking) plus a range added (non_breaking) -- Layer 1 will
+# later recognise it as a non-breaking widening.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Thing a owl:Class .
+
+ex:Animal a owl:Class ;
+    rdfs:subClassOf ex:Thing .
+
+ex:hasPet a owl:ObjectProperty ;
+    rdfs:range ex:Animal .

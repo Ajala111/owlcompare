@@ -1,0 +1,20 @@
+# fixture: identical_b.ttl
+# Purpose: see identical_a.ttl. Same triples, reordered, with the restriction
+# spelled with a separate blank-node line and reordered predicates. RDFC-1.0
+# blank-node canonicalization + restriction reification must collapse the
+# difference to nothing.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Parent a owl:Class ;
+    rdfs:subClassOf _:r .
+
+_:r owl:someValuesFrom ex:Person ;
+    owl:onProperty ex:hasParent ;
+    a owl:Restriction .
+
+ex:hasParent a owl:ObjectProperty .
+
+ex:Person a owl:Class .

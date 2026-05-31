@@ -24,13 +24,16 @@ from typer import Abort, Exit
 from typer._click.exceptions import ClickException
 
 from owlcompare._render import render_summary
+from owlcompare._render_diff import diff_json, diff_text_plain, render_diff_text
 from owlcompare._version import __version__
 from owlcompare.canonicalize import CanonicalizeOptions
 from owlcompare.canonicalize import canonicalize as _canonicalize
+from owlcompare.diff import syntactic as _syntactic_diff
 from owlcompare.exceptions import (
     CanonicalizationError,
     NotImplementedYetError,
     OwlCompareError,
+    UsageError,
 )
 from owlcompare.loader import load as _load_ontology
 from owlcompare.logging_config import configure_logging
@@ -47,13 +50,21 @@ app = typer.Typer(
 )
 
 
-class OutputFormat(enum.StrEnum):
-    """Supported report output formats for the ``diff`` command."""
+class DiffFormat(enum.StrEnum):
+    """Supported output formats for the ``diff`` command in v1.
+
+    Markdown, HTML and JUnit arrive in Phase 4 (report renderers).
+    """
 
     json = "json"
-    markdown = "markdown"
-    html = "html"
-    junit = "junit"
+    text = "text"
+
+
+# Diff layers known to the CLI. Only "syntactic" is implemented in v1; the rest
+# are validated (so an unknown name is a usage error) but raise NotImplementedYet.
+_KNOWN_LAYERS: tuple[str, ...] = ("syntactic", "structural", "inferential", "impact")
+# Exit code emitted when the diff finds at least one breaking change (DD-008).
+_BREAKING_EXIT_CODE = 10
 
 
 class LoadFormatHint(enum.StrEnum):
@@ -127,17 +138,78 @@ def version() -> None:
 def diff(
     ontology_a: Annotated[str, typer.Argument(help="Path or URL to the baseline ontology.")],
     ontology_b: Annotated[str, typer.Argument(help="Path or URL to the comparison ontology.")],
+    layers: Annotated[
+        str,
+        typer.Option(
+            "--layers",
+            help='Comma-separated layers (e.g. "syntactic"). Only "syntactic" is available in v1.',
+        ),
+    ] = "syntactic",
     output_format: Annotated[
-        OutputFormat,
-        typer.Option("--format", help="Output format."),
-    ] = OutputFormat.json,
+        DiffFormat,
+        typer.Option("--format", help="Output format (json or text)."),
+    ] = DiffFormat.text,
     out: Annotated[
         Path | None,
-        typer.Option("--out", help="Output file (default: stdout for json/markdown)."),
+        typer.Option("--out", help="Output file (default: stdout)."),
     ] = None,
 ) -> None:
-    """Compare two ontologies (stub in v1; not yet implemented)."""
-    raise NotImplementedYetError("diff is not yet implemented (planned for Phase 2)")
+    """Compare two ontologies at the syntactic layer (Layer 0).
+
+    Loads and canonicalizes both inputs, then reports the triple-level delta.
+    Exits 0 when there are no breaking changes, 10 when at least one breaking
+    change is found (CI signal).
+    """
+    requested = _parse_layers(layers)
+    not_ready = [layer for layer in requested if layer != "syntactic"]
+    if not_ready:
+        raise NotImplementedYetError(
+            "these diff layers are not implemented yet: "
+            + ", ".join(not_ready)
+            + ' (only "syntactic" is available in v1)'
+        )
+
+    a = _canonicalize(_load_ontology(ontology_a, LoadOptions()))
+    b = _canonicalize(_load_ontology(ontology_b, LoadOptions()))
+    changes = _syntactic_diff.diff(a, b)
+
+    if output_format is DiffFormat.json:
+        rendered = diff_json(changes)
+        if out is not None:
+            out.write_text(rendered + "\n", encoding="utf-8")
+        else:
+            typer.echo(rendered)
+    elif out is not None:
+        out.write_text(diff_text_plain(changes, a, b) + "\n", encoding="utf-8")
+    else:
+        render_diff_text(changes, a, b)
+
+    if any(change.severity == "breaking" for change in changes):
+        raise typer.Exit(_BREAKING_EXIT_CODE)
+
+
+def _parse_layers(raw: str) -> list[str]:
+    """Parse and validate the ``--layers`` value into a deduped ordered list.
+
+    Raises:
+        UsageError: if the value is empty or names an unknown layer (exit 2).
+    """
+    parts = [part.strip().lower() for part in raw.split(",") if part.strip()]
+    if not parts:
+        raise UsageError("no diff layers specified")
+    unknown = [part for part in parts if part not in _KNOWN_LAYERS]
+    if unknown:
+        raise UsageError(
+            "unknown diff layer(s): "
+            + ", ".join(unknown)
+            + "; valid layers are: "
+            + ", ".join(_KNOWN_LAYERS)
+        )
+    deduped: list[str] = []
+    for part in parts:
+        if part not in deduped:
+            deduped.append(part)
+    return deduped
 
 
 @app.command(name="load")

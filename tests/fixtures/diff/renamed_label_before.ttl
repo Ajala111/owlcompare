@@ -1,0 +1,11 @@
+# fixture: renamed_label_before.ttl
+# Purpose: only an rdfs:label value differs from renamed_label_after.ttl; the
+# entity is otherwise unchanged. Diff should yield exactly one removed-label and
+# one added-label change, both severity "info" -> exit code 0.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Widget a owl:Class ;
+    rdfs:label "Widget"@en .
