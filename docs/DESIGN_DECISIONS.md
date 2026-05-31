@@ -279,3 +279,28 @@ The pure-Python build of mypy (mypyc disabled — the default when building from
 - *`aiohttp`:* async-only — forces async on the entire loader path for no v1 benefit. Rejected.
 
 **Implication:** All URL fetching in `sources.py` goes through `httpx.Client`. Tests mock at the transport layer via `respx`; no real network calls in `tests/`.
+
+---
+
+## DD-016: Windows Smart App Control workaround for the console script
+
+**Status:** accepted
+**Date:** 2026-05-31
+
+**Decision:** On Windows machines where Smart App Control (SAC) is enabled, invoke the CLI as `uv run python -m owlcompare ...` rather than the `uv run owlcompare ...` console script.
+
+**Problem:** On Windows with SAC enabled, `uv run owlcompare` can fail intermittently with OS error 4551 after `uv` rebuilds the console-script wrapper (`owlcompare.exe`). The freshly-emitted wrapper executable is unsigned and SAC blocks it from running until it is trusted. The error surfaces as a launch failure before any owlcompare code runs.
+
+**Workaround:** `uv run python -m owlcompare` routes through the trusted `python.exe` interpreter (which is signed and SAC-trusted) and imports `owlcompare.__main__`, bypassing the regenerated wrapper. This is purely an invocation change; nothing in the package needs to change.
+
+**Why not fix it in code:** the issue is environmental (Windows + SAC + uv's wrapper regeneration), not a bug in `owlcompare`. CI runs on Linux, where SAC does not exist and the console script works fine; pinning a workaround in shared config would needlessly disadvantage every non-Windows environment.
+
+**Implication:**
+- `CLAUDE.md` and `docs/CONVENTIONS.md` document the `python -m owlcompare` form as the recommended Windows invocation so future contributors don't hit the same failure mode.
+- The console-script entry point in `pyproject.toml` remains unchanged — it works fine on Linux/macOS and on Windows machines without SAC.
+- This is paired with [[DD-012]], which records a related SAC workaround for mypy.
+
+**Alternatives considered:**
+- *Disable Smart App Control:* system-wide security downgrade requiring a Windows reset to toggle. Out of proportion to the problem.
+- *Remove the console script:* would force every user (not just SAC-affected Windows users) to type the longer form. Rejected.
+- *Sign the generated wrapper:* `uv` would have to ship a signed wrapper; out of our control.

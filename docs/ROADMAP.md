@@ -2,7 +2,7 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 1 — Core skeleton
+**Current phase:** Phase 2 — Syntactic and structural diff (Phase 1 complete)
 
 ---
 
@@ -28,9 +28,9 @@ This is the source of truth for what's done, what's in progress, and what's defe
 - [x] Component 01: CLI scaffold (`owlcompare --help` works, no real commands yet) — `specs/01-cli.md`
 - [x] Component 02: Ontology loader + internal model — `specs/02-loader.md`
       (Component 03 was folded into 02 per the spec; the loader returns a fully-typed `OntologySnapshot`.)
-- [ ] Component 04: Canonicalization — `specs/04-canonicalize.md`
+- [x] Component 04: Canonicalization — `specs/04-canonicalize.md`
 
-**Exit criteria:** `owlcompare load a.ttl` parses an ontology and prints its summary (entity counts, IRI, prefixes) without errors.
+**Phase 1 complete.** `owlcompare load a.ttl` summarizes an ontology; `owlcompare canonicalize a.ttl` emits a normalized form where two equivalent inputs produce byte-identical output.
 
 ---
 
@@ -82,6 +82,7 @@ This is the source of truth for what's done, what's in progress, and what's defe
 
 ## Backlog (post-v1)
 
+- Quad-graph aware loader (resolves Component 04 known limitation)
 - Layer 2 inferential diff with HermiT
 - Layer 2 inferential diff with ELK
 - Layer 3 SHACL impact analysis

@@ -177,6 +177,7 @@ class OntologySnapshot:
     prefixes: dict[str, str]
     source: str
     format: str
+    canonical: bool = False
 
     def axiom_count(self) -> int:
         """Triple count of the underlying graph (proxy for axiom count)."""

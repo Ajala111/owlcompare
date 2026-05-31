@@ -1,0 +1,27 @@
+# Fixture: restriction_nested.ttl
+#
+# Purpose: a restriction whose someValuesFrom filler is itself an anonymous
+# restriction. Exercises recursive reification — Pass 2 must hash and rewrite
+# the inner expression bottom-up so the outer expression's hash incorporates
+# the inner one's content.
+
+@prefix : <http://example.org/nested#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/nested> a owl:Ontology .
+
+:Person a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :owns ;
+        owl:someValuesFrom [
+            a owl:Restriction ;
+            owl:onProperty :madeOf ;
+            owl:someValuesFrom :Wood
+        ]
+    ] .
+
+:owns a owl:ObjectProperty .
+:madeOf a owl:ObjectProperty .
+:Wood a owl:Class .

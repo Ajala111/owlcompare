@@ -1,0 +1,21 @@
+# Fixture: restriction_simple.ttl
+#
+# Purpose: minimal class with a single anonymous owl:Restriction
+# (someValuesFrom on a named property). Exercises Pass 2 — the restriction
+# blank node must be replaced with a urn:owlcompare:restriction:<hash> IRI.
+
+@prefix : <http://example.org/simple#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/simple> a owl:Ontology .
+
+:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :hasGauge ;
+        owl:someValuesFrom :Gauge
+    ] .
+
+:hasGauge a owl:ObjectProperty .
+:Gauge a owl:Class .

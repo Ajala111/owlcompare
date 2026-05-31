@@ -39,6 +39,12 @@ class DiffError(OwlCompareError):
     exit_code: int = 4
 
 
+class CanonicalizationError(OwlCompareError):
+    """Failure during canonicalization (Component 04)."""
+
+    exit_code: int = 4
+
+
 class ReportError(OwlCompareError):
     """Failure during report generation."""
 

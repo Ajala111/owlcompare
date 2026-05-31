@@ -1,0 +1,21 @@
+# Fixture: lists.ttl
+#
+# Purpose: an anonymous class expression using owl:unionOf with an RDF list
+# of three named classes (Cat, Dog, Fish). Exercises Pass 3 (list collapsing):
+# the rdf:first/rdf:rest chain must be replaced with urn:owlcompare:list:<hash>
+# IRIs.
+
+@prefix : <http://example.org/lists#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/lists> a owl:Ontology .
+
+:Pet a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:unionOf ( :Cat :Dog :Fish )
+    ] .
+
+:Cat a owl:Class .
+:Dog a owl:Class .
+:Fish a owl:Class .

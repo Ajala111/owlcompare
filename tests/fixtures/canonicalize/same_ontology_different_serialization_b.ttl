@@ -1,0 +1,31 @@
+# Fixture: same_ontology_different_serialization_b.ttl
+#
+# Purpose: paired with same_ontology_different_serialization_a.ttl. Both files
+# encode the IDENTICAL ontology. This file is the COMPACT form: anonymous
+# blank-node syntax for the restriction, declarations in a different order, no
+# explicit blank-node labels.
+#
+# Canonicalizing both files must yield byte-identical output.
+
+@prefix : <http://example.org/same#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/same> a owl:Ontology .
+
+:hasOwner a owl:ObjectProperty .
+
+:Person a owl:Class .
+
+:Cat a owl:Class ;
+    rdfs:subClassOf :Animal ,
+        [
+            a owl:Restriction ;
+            owl:onProperty :hasOwner ;
+            owl:someValuesFrom :Person
+        ] .
+
+:Dog a owl:Class ;
+    rdfs:subClassOf :Animal .
+
+:Animal a owl:Class .

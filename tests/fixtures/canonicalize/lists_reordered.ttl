@@ -1,0 +1,21 @@
+# Fixture: lists_reordered.ttl
+#
+# Purpose: the SAME triples as lists.ttl except the unionOf list elements are
+# in a different order (Dog, Fish, Cat instead of Cat, Dog, Fish). The list
+# pass treats order as semantically significant — different order must produce
+# a DIFFERENT canonical form (distinct urn:owlcompare:list:<hash>).
+
+@prefix : <http://example.org/lists#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/lists> a owl:Ontology .
+
+:Pet a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:unionOf ( :Dog :Fish :Cat )
+    ] .
+
+:Cat a owl:Class .
+:Dog a owl:Class .
+:Fish a owl:Class .

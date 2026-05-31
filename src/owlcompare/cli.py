@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 from typing import Annotated
 
+import rdflib
 import typer
 from typer import Abort, Exit
 
@@ -24,10 +25,17 @@ from typer._click.exceptions import ClickException
 
 from owlcompare._render import render_summary
 from owlcompare._version import __version__
-from owlcompare.exceptions import NotImplementedYetError, OwlCompareError
+from owlcompare.canonicalize import CanonicalizeOptions
+from owlcompare.canonicalize import canonicalize as _canonicalize
+from owlcompare.exceptions import (
+    CanonicalizationError,
+    NotImplementedYetError,
+    OwlCompareError,
+)
 from owlcompare.loader import load as _load_ontology
 from owlcompare.logging_config import configure_logging
 from owlcompare.model import LoadOptions
+from owlcompare.sources import resolve as _resolve_source
 
 logger = logging.getLogger("owlcompare")
 
@@ -57,6 +65,20 @@ class LoadFormatHint(enum.StrEnum):
     nt = "nt"
     json_ld = "json-ld"
     trig = "trig"
+
+
+class CanonicalOutputFormat(enum.StrEnum):
+    """Accepted ``--output-format`` values for ``owlcompare canonicalize``."""
+
+    turtle = "turtle"
+    nt = "nt"
+
+
+# rdflib serializer name keyed by our public output-format alias.
+_CANONICAL_RDFLIB_FORMAT: dict[CanonicalOutputFormat, str] = {
+    CanonicalOutputFormat.turtle: "turtle",
+    CanonicalOutputFormat.nt: "nt",
+}
 
 
 def _version_callback(value: bool) -> None:
@@ -147,6 +169,78 @@ def load_cmd(
     )
     snapshot = _load_ontology(source, opts)
     render_summary(snapshot)
+
+
+@app.command(name="canonicalize")
+def canonicalize_cmd(
+    source: Annotated[str, typer.Argument(help="File path or URL to the ontology.")],
+    format_hint: Annotated[
+        LoadFormatHint | None,
+        typer.Option("--format", help="Format hint (passed to loader)."),
+    ] = None,
+    out: Annotated[
+        Path | None,
+        typer.Option("--out", help="Output file (default: stdout)."),
+    ] = None,
+    output_format: Annotated[
+        CanonicalOutputFormat,
+        typer.Option("--output-format", help="Serialization for output."),
+    ] = CanonicalOutputFormat.turtle,
+    no_blank_nodes: Annotated[
+        bool,
+        typer.Option("--no-blank-nodes", help="Skip blank node canonicalization."),
+    ] = False,
+    no_reify_restrictions: Annotated[
+        bool,
+        typer.Option("--no-reify-restrictions", help="Skip restriction reification."),
+    ] = False,
+    no_collapse_lists: Annotated[
+        bool,
+        typer.Option("--no-collapse-lists", help="Skip list collapsing."),
+    ] = False,
+    no_sort: Annotated[
+        bool,
+        typer.Option("--no-sort", help="Skip triple sorting."),
+    ] = False,
+) -> None:
+    """Canonicalize an ontology and emit the normalized form."""
+    load_opts = LoadOptions(
+        format_hint=format_hint.value if format_hint is not None else None,
+    )
+    snapshot = _load_ontology(source, load_opts)
+    # Quad formats (TriG, N-Quads) may carry named graphs; the loader parses
+    # into a plain Graph and silently merges them, so we re-parse into a
+    # ConjunctiveGraph here purely to surface a CanonicalizationError on
+    # named-graph input (spec § Edge cases — exit code 4).
+    if snapshot.format in ("trig", "nquads"):
+        _check_quad_source_has_no_named_graphs(source, snapshot.format, load_opts)
+    canon_opts = CanonicalizeOptions(
+        canonicalize_blank_nodes=not no_blank_nodes,
+        reify_restrictions=not no_reify_restrictions,
+        collapse_lists=not no_collapse_lists,
+        sort_triples=not no_sort,
+    )
+    canonical = _canonicalize(snapshot, canon_opts)
+    serialized = canonical.graph.serialize(format=_CANONICAL_RDFLIB_FORMAT[output_format])
+    if isinstance(serialized, bytes):
+        serialized = serialized.decode("utf-8")
+    if out is not None:
+        out.write_text(serialized, encoding="utf-8")
+    else:
+        typer.echo(serialized, nl=False)
+
+
+def _check_quad_source_has_no_named_graphs(
+    source: str, normalized_format: str, load_opts: LoadOptions
+) -> None:
+    resolved = _resolve_source(source, timeout_seconds=load_opts.timeout_seconds)
+    rdflib_format = "trig" if normalized_format == "trig" else "nquads"
+    dataset = rdflib.Dataset()
+    dataset.parse(data=resolved.content, format=rdflib_format)
+    default_id = dataset.default_graph.identifier
+    for ctx in dataset.graphs():
+        if ctx.identifier != default_id and len(ctx) > 0:
+            raise CanonicalizationError("named graphs not supported in v1")
 
 
 def _configure_console_encoding() -> None:

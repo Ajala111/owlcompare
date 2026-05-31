@@ -1,0 +1,32 @@
+# Fixture: same_ontology_different_serialization_a.ttl
+#
+# Purpose: paired with same_ontology_different_serialization_b.ttl. Both files
+# encode the IDENTICAL ontology (Animal/Cat/Dog with a Cat→hasOwner-someValuesFrom-Person
+# restriction). This file is the VERBOSE form: explicit blank node labels, triple
+# order shuffled relative to the natural one, restriction written out as separate
+# triples instead of inline.
+#
+# Canonicalizing both files must yield byte-identical output — the most important
+# test of this component.
+
+@prefix : <http://example.org/same#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/same> a owl:Ontology .
+
+:Animal a owl:Class .
+:Person a owl:Class .
+
+:Dog a owl:Class .
+:Dog rdfs:subClassOf :Animal .
+
+:hasOwner a owl:ObjectProperty .
+
+:Cat a owl:Class .
+:Cat rdfs:subClassOf :Animal .
+:Cat rdfs:subClassOf _:restriction_alpha .
+
+_:restriction_alpha a owl:Restriction .
+_:restriction_alpha owl:onProperty :hasOwner .
+_:restriction_alpha owl:someValuesFrom :Person .

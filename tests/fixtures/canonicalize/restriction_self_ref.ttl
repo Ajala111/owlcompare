@@ -1,0 +1,19 @@
+# Fixture: restriction_self_ref.ttl
+#
+# Purpose: an anonymous class expression that references its enclosing named
+# class (cycle: :A → intersectionOf(:A, :B)). The reification recursion must
+# detect the cycle and break it with a placeholder; canonicalization must
+# terminate and produce a stable hash.
+
+@prefix : <http://example.org/selfref#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/selfref> a owl:Ontology .
+
+:A a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf ( :A :B )
+    ] .
+
+:B a owl:Class .

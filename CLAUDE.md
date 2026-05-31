@@ -86,13 +86,13 @@ owlcompare/
 ## Quick command reference
 
 ```bash
-uv sync                              # Install dependencies
-uv run pytest                        # Run tests
-uv run pytest tests/unit/test_x.py   # Run one test file
-uv run ruff check .                  # Lint
-uv run ruff format .                 # Format
-uv run mypy src/owlcompare           # Type-check
-uv run owlcompare --help             # Run the CLI
+uv sync                                       # Install dependencies
+uv run pytest                                 # Run tests
+uv run pytest tests/unit/test_x.py            # Run one test file
+uv run ruff check .                           # Lint
+uv run ruff format .                          # Format
+uv run mypy src/owlcompare                    # Type-check
+uv run python -m owlcompare --help            # Run the CLI (SAC-safe on Windows; see DD-016)
 ```
 
 ## When in doubt

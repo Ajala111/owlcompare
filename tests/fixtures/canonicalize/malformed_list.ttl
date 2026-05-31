@@ -1,0 +1,19 @@
+# Fixture: malformed_list.ttl
+#
+# Purpose: an rdf:first triple with no companion rdf:rest. The list pass must
+# log an INFO warning and leave the malformed triples in place — never raise.
+# Used to verify that Pass 3 degrades gracefully on broken input.
+
+@prefix : <http://example.org/malformed#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://example.org/malformed> a owl:Ontology .
+
+:A a owl:Class .
+
+_:dangling rdf:first :A .
+# Deliberately no rdf:rest companion — the list pass should warn, not raise.
+:Holder :hasFragment _:dangling .
+
+:hasFragment a owl:ObjectProperty .

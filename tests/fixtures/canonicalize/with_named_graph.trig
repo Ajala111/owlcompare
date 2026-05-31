@@ -1,0 +1,18 @@
+# Fixture: with_named_graph.trig
+#
+# Purpose: a TriG file declaring two named graphs. v1 supports only the default
+# graph; canonicalize() must raise CanonicalizationError on any input with
+# named-graph contexts. Exit code 4 at the CLI surface.
+
+@prefix : <http://example.org/quads#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/quads> a owl:Ontology .
+
+:G1 {
+    :A a owl:Class .
+}
+
+:G2 {
+    :B a owl:Class .
+}
