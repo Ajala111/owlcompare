@@ -8,19 +8,17 @@ from typer.testing import CliRunner
 
 from owlcompare.cli import app, main
 
-# Wide terminal so Typer's rich formatter doesn't truncate long option names
-# (e.g. ``--no-reify-restrictions``) in the help panel.
-runner = CliRunner(env={"COLUMNS": "200"})
+runner = CliRunner()
 FIXTURES = Path(__file__).resolve().parent.parent / "fixtures"
 CANON_FIXTURES = FIXTURES / "canonicalize"
 
 _RESTRICTION_PREFIX = "urn:owlcompare:restriction:"
 
 
-def test_cli_canonicalize_help_lists_options():
-    result = runner.invoke(app, ["canonicalize", "--help"])
+def test_cli_canonicalize_help_lists_options(help_runner, clean):
+    result = help_runner.invoke(app, ["canonicalize", "--help"])
     assert result.exit_code == 0
-    out = result.output.lower()
+    out = clean(result.output).lower()
     assert "--format" in out
     assert "--out" in out
     assert "--output-format" in out

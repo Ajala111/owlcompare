@@ -51,10 +51,10 @@ def test_cli_unknown_command_exits_2():
     assert "No such command" in _combined_output(result)
 
 
-def test_cli_diff_help_lists_options():
-    result = runner.invoke(app, ["diff", "--help"])
+def test_cli_diff_help_lists_options(help_runner, clean):
+    result = help_runner.invoke(app, ["diff", "--help"])
     assert result.exit_code == 0
-    out = result.output.lower()
+    out = clean(result.output).lower()
     assert "--format" in out
     assert "--out" in out
     assert "ontology_a" in out

@@ -18,10 +18,10 @@ _NO_ONTOLOGY_TURTLE = (
 )
 
 
-def test_cli_load_help_lists_options():
-    result = runner.invoke(app, ["load", "--help"])
+def test_cli_load_help_lists_options(help_runner, clean):
+    result = help_runner.invoke(app, ["load", "--help"])
     assert result.exit_code == 0
-    out = result.output.lower()
+    out = clean(result.output).lower()
     assert "--format" in out
     assert "--strict" in out
     assert "--timeout" in out
