@@ -120,3 +120,36 @@ def test_orchestrator_diffresult_metadata_counts_hierarchy_changes():
     )
     structural = [c for c in result.changes if c.layer == "structural"]
     assert result.metadata["layer_counts"]["structural"] == len(structural)
+
+
+RESTR = DIFF / "restrictions"
+
+
+def _canon_restr(name: str) -> OntologySnapshot:
+    return canonicalize(load(str(RESTR / name)))
+
+
+def _run_restr():
+    return orchestrator.run(
+        _canon_restr("era_restrictions_v1.ttl"), _canon_restr("era_restrictions_v2.ttl")
+    )
+
+
+def test_orchestrator_runs_restrictions_after_hierarchy():
+    # era_restrictions has no hierarchy changes; only the restriction slice emits
+    # restriction_* kinds, confirming it ran as part of the pipeline.
+    result = _run_restr()
+    assert any(c.layer == "structural" and c.kind == "restriction_changed" for c in result.changes)
+
+
+def test_orchestrator_layer1_changes_include_restrictions():
+    result = _run_restr()
+    kinds = {c.kind for c in result.changes if c.layer == "structural"}
+    assert {"restriction_changed", "restriction_added", "restriction_removed"} <= kinds
+
+
+def test_orchestrator_diffresult_metadata_counts_restriction_changes():
+    result = _run_restr()
+    structural = [c for c in result.changes if c.layer == "structural"]
+    assert result.metadata["layer_counts"]["structural"] == len(structural)
+    assert len([c for c in structural if c.kind.startswith("restriction_")]) == 3

@@ -1,0 +1,17 @@
+# fixture: someValues_to_allValues_before.ttl
+# Purpose: baseline for a value-restriction kind change. ex:Track has an
+# existential (someValuesFrom ex:Gauge) restriction on ex:hasGauge. Pairs with
+# someValues_to_allValues_after.ttl, where it becomes universal (allValuesFrom).
+# Universal is strictly stronger than existential, so the change is breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Gauge a owl:Class .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasGauge ;
+        owl:someValuesFrom ex:Gauge
+    ] .

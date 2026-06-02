@@ -1,0 +1,16 @@
+# fixture: range_removed_before.ttl
+# Purpose: baseline for dropping one of several ranges. ex:hasPart has two
+# declared ranges, ex:Wheel and ex:Axle. Pairs with range_removed_after.ttl,
+# which drops ex:Axle. Removing a range loosens the constraint, so range_removed
+# is non_breaking; because both sides are multi-valued it is an add/remove, not
+# a single-value range_changed.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Wheel a owl:Class .
+ex:Axle a owl:Class .
+ex:hasPart a owl:ObjectProperty ;
+    rdfs:range ex:Wheel ,
+        ex:Axle .

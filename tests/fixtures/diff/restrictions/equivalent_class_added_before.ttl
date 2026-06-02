@@ -1,0 +1,11 @@
+# fixture: equivalent_class_added_before.ttl
+# Purpose: baseline for an equivalent-class assertion. ex:A and ex:B are two
+# independent classes. Pairs with equivalent_class_added_after.ttl, which adds
+# ex:A owl:equivalentClass ex:B. A new equivalence is information, not a
+# constraint on existing data, so equivalent_class_added is non_breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:A a owl:Class .
+ex:B a owl:Class .

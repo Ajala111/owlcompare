@@ -1,0 +1,15 @@
+# fixture: all_disjoint_classes.ttl
+# Purpose: exercise the n-ary owl:AllDisjointClasses construct. ex:A, ex:B and
+# ex:C are declared mutually disjoint via a single AllDisjointClasses node whose
+# owl:members list holds all three. The restriction index must expand this into
+# the symmetric pairs {A,B}, {A,C}, {B,C}. Used by a build() unit test only.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:A a owl:Class .
+ex:B a owl:Class .
+ex:C a owl:Class .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( ex:A ex:B ex:C ) .

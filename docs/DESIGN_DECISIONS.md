@@ -306,3 +306,43 @@ The pure-Python build of mypy (mypyc disabled — the default when building from
 - *Disable Smart App Control:* system-wide security downgrade requiring a Windows reset to toggle. Out of proportion to the problem.
 - *Remove the console script:* would force every user (not just SAC-affected Windows users) to type the longer form. Rejected.
 - *Sign the generated wrapper:* `uv` would have to ship a signed wrapper; out of our control.
+
+---
+
+## DD-017: Ruff version pin to avoid the 0.15.x f-string-lambda format panic
+
+**Status:** accepted
+**Date:** 2026-06-02
+
+**Decision:** Pin the `ruff` dev dependency to `>=0.14,<0.16` (in `pyproject.toml` `[dependency-groups].dev`). Separately, project code avoids placing a `lambda` inside an implicitly-concatenated multi-line f-string.
+
+**Problem:** During Component 08, `uv run ruff format` (ruff 0.15.14) panicked with:
+
+```
+error: Failed to format src\owlcompare\diff\structural\restrictions.py:
+Invalid document: Expected end tag of kind Group but found Indent.
+```
+
+The file was valid Python (mypy strict and pytest both accepted it); only the *formatter* crashed, and it named the whole file with no line number. The minimal reproduction is a `lambda` inside an **implicitly-concatenated, multi-line** f-string — the formatter's grouping logic only engages (and trips the IR assertion) once it tries to wrap the f-string:
+
+```python
+summary = (
+    f"Restriction changed on {ctx.short(before.attached_to)}: "
+    f"{ce.describe_change(before, after, lambda i: ctx.short(i))}"
+)
+```
+
+A single-line f-string with the same lambda formats fine; the bug needs the multi-line concatenation. No matching open issue was found on the `astral-sh/ruff` tracker as of 2026-06 (the "Expected end tag…" message is a generic formatter-IR assertion that also appears in Biome), so the workaround is tagged in code with a `# ruff-bug-0.15.x:` comment to revisit when the pin is lifted.
+
+**Two-part mitigation:**
+1. *Code:* expose the IRI shortener as the bound method `_Ctx.short` and compute the f-string's inner phrase on its own line, so no `lambda` ever sits inside an f-string replacement field. This reads at least as cleanly as the inline lambda, so it is not a pure workaround.
+2. *Version pin:* cap ruff at `<0.16` so a future `uv sync` cannot silently pull a release whose formatter behaves differently again without a deliberate, reviewed bump. Lower bound `>=0.14` keeps us on the line we have validated (CI and local both run 0.15.x green with the code change in place).
+
+**Implication:**
+- `ruff format` and `ruff check` are green on 0.15.x today; the pin is belt-and-suspenders against unreviewed upgrades, mirroring the explicit upper pin rationale in [[DD-014]] (Typer).
+- When bumping past 0.16, re-test the f-string-lambda case; if fixed upstream, the `# ruff-bug-0.15.x:` site may revert to an inline lambda and the upper bound can widen.
+
+**Alternatives considered:**
+- *Leave ruff unpinned (`>=0.6`) and only change the code:* the code change alone fixes today's failure, but a later ruff release could reformat the whole tree or reintroduce a panic with no guardrail. Rejected — the pin is cheap insurance.
+- *Disable the formatter / skip `ruff format` in CI:* loses deterministic formatting, a core convention. Rejected.
+- *`# fmt: off` around the call site:* narrower, but leaves the landmine for the next contributor who writes a lambda in an f-string elsewhere. The bound-method refactor plus the documented pin is more durable.

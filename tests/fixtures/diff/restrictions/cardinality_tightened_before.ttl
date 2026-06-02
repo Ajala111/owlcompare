@@ -1,0 +1,17 @@
+# fixture: cardinality_tightened_before.ttl
+# Purpose: baseline for tightening a max-cardinality. ex:Track has a max 5
+# restriction on ex:hasSpeed. Pairs with cardinality_tightened_after.ttl, where
+# the bound drops to max 3 — a stricter constraint that may invalidate existing
+# data, so the restriction_changed must be classified breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasSpeed ;
+        owl:maxCardinality "5"^^xsd:nonNegativeInteger
+    ] .

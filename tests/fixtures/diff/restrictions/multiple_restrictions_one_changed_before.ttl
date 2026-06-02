@@ -1,0 +1,30 @@
+# fixture: multiple_restrictions_one_changed_before.ttl
+# Purpose: baseline for the "many restrictions, one edit" case. ex:Track carries
+# three restrictions on three different properties: max 1 on ex:hasSpeed,
+# someValuesFrom ex:Gauge on ex:hasGauge, and min 1 on ex:hasPart. Pairs with
+# multiple_restrictions_one_changed_after.ttl, where only the ex:hasSpeed bound
+# changes (max 1 -> max 2). Exactly one restriction_changed must be emitted; the
+# other two restrictions are identical and produce no change.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Gauge a owl:Class .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasSpeed ;
+        owl:maxCardinality "1"^^xsd:nonNegativeInteger
+    ] ,
+    [
+        a owl:Restriction ;
+        owl:onProperty ex:hasGauge ;
+        owl:someValuesFrom ex:Gauge
+    ] ,
+    [
+        a owl:Restriction ;
+        owl:onProperty ex:hasPart ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] .

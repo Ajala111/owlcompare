@@ -1,0 +1,14 @@
+# fixture: malformed_restriction.ttl
+# Purpose: a restriction with no owl:onProperty, which the decoder must classify
+# as kind="complex" rather than guessing a shape. Used by a build() unit test.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Gauge a owl:Class .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:someValuesFrom ex:Gauge
+    ] .

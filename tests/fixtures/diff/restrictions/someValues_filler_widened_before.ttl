@@ -1,0 +1,19 @@
+# fixture: someValues_filler_widened_before.ttl
+# Purpose: baseline for filler widening (the inverse of narrowing). ex:Track has
+# someValuesFrom ex:NarrowGauge on ex:hasGauge. Pairs with
+# someValues_filler_widened_after.ttl, where the filler becomes the superclass
+# ex:Gauge — looser, so existing data stays valid and the change is non_breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Gauge a owl:Class .
+ex:NarrowGauge a owl:Class ;
+    rdfs:subClassOf ex:Gauge .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasGauge ;
+        owl:someValuesFrom ex:NarrowGauge
+    ] .

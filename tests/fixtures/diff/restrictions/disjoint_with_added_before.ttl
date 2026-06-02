@@ -1,0 +1,11 @@
+# fixture: disjoint_with_added_before.ttl
+# Purpose: baseline for an introduced disjointness. ex:Track and ex:Person are
+# two independent classes. Pairs with disjoint_with_added_after.ttl, which adds
+# ex:Track owl:disjointWith ex:Person. Existing individuals may now violate the
+# disjointness, so disjoint_added is breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:Track a owl:Class .
+ex:Person a owl:Class .

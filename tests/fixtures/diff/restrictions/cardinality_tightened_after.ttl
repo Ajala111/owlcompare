@@ -1,0 +1,15 @@
+# fixture: cardinality_tightened_after.ttl
+# Purpose: tightened version of cardinality_tightened_before.ttl. The max
+# bound on ex:hasSpeed drops from 5 to 3 (breaking).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasSpeed ;
+        owl:maxCardinality "3"^^xsd:nonNegativeInteger
+    ] .

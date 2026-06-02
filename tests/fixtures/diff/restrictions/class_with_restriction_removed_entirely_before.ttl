@@ -1,0 +1,20 @@
+# fixture: class_with_restriction_removed_entirely_before.ttl
+# Purpose: baseline for the Component 06 coordination case. ex:Obsolete is a
+# class carrying a max 1 restriction on ex:hasFoo; ex:Keep is an unrelated class
+# that persists. Pairs with class_with_restriction_removed_entirely_after.ttl,
+# where ex:Obsolete is deleted entirely. Component 06 emits class_removed for
+# ex:Obsolete and Component 08 must NOT emit a separate restriction_removed —
+# the restriction triples are subsumed under the class_removed change.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Keep a owl:Class .
+ex:Obsolete a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasFoo ;
+        owl:maxCardinality "1"^^xsd:nonNegativeInteger
+    ] .

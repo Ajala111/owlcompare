@@ -186,13 +186,96 @@ def test_era_hierarchy_fixture_subsumes_subclassof_triples():
 
 
 def test_era_evolution_fixture_unchanged_results():
-    # Regression: era_evolution has no hierarchy changes, so adding Component 07
-    # to the orchestrator must not alter the structural output versus running the
-    # entity slice alone.
+    # Regression: era_evolution has no hierarchy changes, so the only structural
+    # change beyond the entity slice is Component 08's restriction_changed (the
+    # era:Track max-cardinality tuning). Everything the entity slice emits must
+    # still appear verbatim — Components 07/08 only add, never alter, those.
     a, b = _canon("era_evolution_v1.ttl"), _canon("era_evolution_v2.ttl")
     layer0 = syntactic.diff(a, b)
     entities_only = entities.diff(a, b, layer0, SubsumptionRegistry())
 
     result = orchestrator.run(a, b)
     structural = [c for c in result.changes if c.layer == "structural"]
-    assert structural == entities_only
+    entity_kinds = {"class_added", "object_property_removed"}
+    assert [c for c in structural if c.kind in entity_kinds] == entities_only
+    restriction_changes = [c for c in structural if c.kind == "restriction_changed"]
+    assert len(restriction_changes) == 1
+
+
+RESTR = DIFF / "restrictions"
+
+
+def _canon_restr(name: str):
+    return canonicalize(load(str(RESTR / name)))
+
+
+def _run_restr(v_a: str, v_b: str):
+    return orchestrator.run(_canon_restr(v_a), _canon_restr(v_b))
+
+
+def test_era_restrictions_fixture_emits_three_changes():
+    result = _run_restr("era_restrictions_v1.ttl", "era_restrictions_v2.ttl")
+    structural = [c for c in result.changes if c.layer == "structural"]
+    changed = [c for c in structural if c.kind == "restriction_changed"]
+    removed = [c for c in structural if c.kind == "restriction_removed"]
+    added = [c for c in structural if c.kind == "restriction_added"]
+    assert len(changed) == 1  # era:hasMaxSpeed max 5 -> max 3 (tightened)
+    assert len(removed) == 1  # era:hasGauge someValuesFrom era:Gauge dropped
+    assert len(added) == 1  # era:servesPlatform someValuesFrom era:Platform added
+    assert changed[0].severity == "breaking"
+
+
+def test_era_restrictions_subsumes_all_restriction_triples():
+    result = _run_restr("era_restrictions_v1.ttl", "era_restrictions_v2.ttl")
+    registry = result.metadata["subsumption_registry"]
+    restriction_triples = [
+        c
+        for c in result.changes
+        if c.layer == "syntactic"
+        and "urn:owlcompare:restriction:" in (c.details.get("subject") or "")
+    ]
+    # Also the subClassOf edges that point at restriction URNs.
+    edge_triples = [
+        c
+        for c in result.changes
+        if c.layer == "syntactic"
+        and "urn:owlcompare:restriction:" in (c.details.get("object") or "")
+    ]
+    assert restriction_triples
+    for triple in restriction_triples + edge_triples:
+        assert registry.is_explained(triple.details["change_id"])
+
+
+def test_era_evolution_fixture_now_subsumes_restriction_triples():
+    result = _run("era_evolution_v1.ttl", "era_evolution_v2.ttl")
+    registry = result.metadata["subsumption_registry"]
+    # The two reified restriction URNs from era_evolution (max 1 / max 2 on
+    # era:hasMaxSpeed) are now folded into a single restriction_changed.
+    restriction_triples = [
+        c
+        for c in result.changes
+        if c.layer == "syntactic"
+        and (
+            "urn:owlcompare:restriction:" in (c.details.get("subject") or "")
+            or "urn:owlcompare:restriction:" in (c.details.get("object") or "")
+        )
+    ]
+    assert restriction_triples
+    for triple in restriction_triples:
+        assert registry.is_explained(triple.details["change_id"])
+
+    layer0 = [c for c in result.changes if c.layer == "syntactic"]
+    unexplained = [c for c in layer0 if not registry.is_explained(c.details["change_id"])]
+    # Down from 14 (Component 06/07 era) to the handful of label/version triples
+    # that Component 09 and later will explain.
+    assert len(unexplained) <= 6
+
+
+def test_era_evolution_emits_cardinality_change_for_maxspeed():
+    result = _run("era_evolution_v1.ttl", "era_evolution_v2.ttl")
+    changed = [c for c in result.changes if c.kind == "restriction_changed"]
+    assert len(changed) == 1
+    change = changed[0]
+    assert change.details["entity_iri"] == "http://data.europa.eu/949/Track"
+    assert change.details["before"]["cardinality"] == 1
+    assert change.details["after"]["cardinality"] == 2

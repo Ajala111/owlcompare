@@ -1,0 +1,10 @@
+# fixture: disjoint_with_added_after.ttl
+# Purpose: ex:Track becomes owl:disjointWith ex:Person relative to
+# disjoint_with_added_before.ttl (breaking disjoint_added).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:Track a owl:Class ;
+    owl:disjointWith ex:Person .
+ex:Person a owl:Class .

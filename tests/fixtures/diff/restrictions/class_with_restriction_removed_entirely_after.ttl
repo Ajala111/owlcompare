@@ -1,0 +1,8 @@
+# fixture: class_with_restriction_removed_entirely_after.ttl
+# Purpose: ex:Obsolete (and its restriction) is gone entirely relative to
+# class_with_restriction_removed_entirely_before.ttl; only ex:Keep remains.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:Keep a owl:Class .

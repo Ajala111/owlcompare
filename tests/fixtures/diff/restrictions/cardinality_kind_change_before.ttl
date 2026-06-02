@@ -1,0 +1,18 @@
+# fixture: cardinality_kind_change_before.ttl
+# Purpose: baseline for a cardinality *kind* change. ex:Track has a min 1
+# restriction on ex:hasPart. Pairs with cardinality_kind_change_after.ttl, where
+# the same property carries an exact (owl:cardinality) 1 restriction instead —
+# a different shape on the same (via, property) group, so the matcher pairs them
+# across kinds and emits a single restriction_changed.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasPart ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] .

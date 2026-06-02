@@ -1,0 +1,12 @@
+# fixture: range_removed_after.ttl
+# Purpose: ex:hasPart loses ex:Axle from its range set relative to
+# range_removed_before.ttl, keeping only ex:Wheel (non_breaking range_removed).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Wheel a owl:Class .
+ex:Axle a owl:Class .
+ex:hasPart a owl:ObjectProperty ;
+    rdfs:range ex:Wheel .

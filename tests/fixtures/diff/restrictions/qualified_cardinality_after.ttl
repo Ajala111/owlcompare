@@ -1,0 +1,17 @@
+# fixture: qualified_cardinality_after.ttl
+# Purpose: the min qualified cardinality on ex:hasGauge rises from 1 to 2
+# relative to qualified_cardinality_before.ttl (tightened min -> breaking).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Gauge a owl:Class .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasGauge ;
+        owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+        owl:onClass ex:Gauge
+    ] .

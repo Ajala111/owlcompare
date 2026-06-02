@@ -1,0 +1,17 @@
+# fixture: has_value.ttl
+# Purpose: a single owl:hasValue restriction for the index decoder. ex:Track has
+# a hasValue restriction on ex:hasGauge pointing at the individual
+# ex:StandardGauge. Used by a build() unit test to check the has_value kind and
+# its filler are decoded.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:StandardGauge a owl:NamedIndividual .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasGauge ;
+        owl:hasValue ex:StandardGauge
+    ] .

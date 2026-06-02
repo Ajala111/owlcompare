@@ -1,0 +1,16 @@
+# fixture: equivalent_restriction.ttl
+# Purpose: a defined class whose restriction is attached via owl:equivalentClass
+# rather than rdfs:subClassOf. ex:Engine is defined as equivalent to a
+# someValuesFrom restriction on ex:hasPart. Used by a build() unit test to check
+# via_predicate is recorded as 'owl:equivalentClass'.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:Wheel a owl:Class .
+ex:Engine a owl:Class ;
+    owl:equivalentClass [
+        a owl:Restriction ;
+        owl:onProperty ex:hasPart ;
+        owl:someValuesFrom ex:Wheel
+    ] .

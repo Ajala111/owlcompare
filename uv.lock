@@ -432,7 +432,7 @@ dev = [
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-cov", specifier = ">=5.0" },
     { name = "respx", specifier = ">=0.23.1" },
-    { name = "ruff", specifier = ">=0.6" },
+    { name = "ruff", specifier = ">=0.14,<0.16" },
 ]
 
 [[package]]

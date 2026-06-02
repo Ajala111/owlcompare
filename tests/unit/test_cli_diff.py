@@ -184,7 +184,11 @@ def test_cli_diff_json_includes_change_id_in_details(capsys):
 def test_cli_diff_table_has_no_truncation_artifacts(capsys):
     # era_evolution involves restriction URNs; the display layer must shorten
     # them so no full URN leaks and no ellipsis truncates restriction rows.
-    rc = main(["diff", _fx("era_evolution_v1.ttl"), _fx("era_evolution_v2.ttl")])
+    # Since Component 08 those triples are subsumed and hidden by default, so we
+    # ask for --show-syntactic to bring the (shortened) URN rows back into view.
+    rc = main(
+        ["diff", _fx("era_evolution_v1.ttl"), _fx("era_evolution_v2.ttl"), "--show-syntactic"]
+    )
     assert rc == 10
     out = capsys.readouterr().out
     assert "_restriction:" in out

@@ -1,0 +1,27 @@
+# fixture: multiple_restrictions_one_changed_after.ttl
+# Purpose: only the ex:hasSpeed bound changes (max 1 -> max 2) relative to
+# multiple_restrictions_one_changed_before.ttl. The ex:hasGauge and ex:hasPart
+# restrictions are unchanged.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Gauge a owl:Class .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasSpeed ;
+        owl:maxCardinality "2"^^xsd:nonNegativeInteger
+    ] ,
+    [
+        a owl:Restriction ;
+        owl:onProperty ex:hasGauge ;
+        owl:someValuesFrom ex:Gauge
+    ] ,
+    [
+        a owl:Restriction ;
+        owl:onProperty ex:hasPart ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] .

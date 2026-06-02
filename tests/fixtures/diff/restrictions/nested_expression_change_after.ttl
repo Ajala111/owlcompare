@@ -1,0 +1,22 @@
+# fixture: nested_expression_change_after.ttl
+# Purpose: only the inner filler changes (ex:Gauge -> ex:NarrowGauge) relative to
+# nested_expression_change_before.ttl; the outer someValuesFrom on ex:hasPart is
+# unchanged. Expect complex_class_expression_changed.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Gauge a owl:Class .
+ex:NarrowGauge a owl:Class ;
+    rdfs:subClassOf ex:Gauge .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasPart ;
+        owl:someValuesFrom [
+            a owl:Restriction ;
+            owl:onProperty ex:hasGauge ;
+            owl:someValuesFrom ex:NarrowGauge
+        ]
+    ] .

@@ -1,0 +1,21 @@
+# fixture: someValues_filler_narrowed_before.ttl
+# Purpose: baseline for filler narrowing. ex:Track has someValuesFrom ex:Gauge
+# on ex:hasGauge. Pairs with someValues_filler_narrowed_after.ttl, where the
+# filler becomes ex:NarrowGauge — an asserted subclass of ex:Gauge. Narrowing
+# the filler (new ⊏ old) may invalidate existing data, so it is breaking. The
+# ex:NarrowGauge ⊏ ex:Gauge edge is present in both sides so the hierarchy diff
+# sees no change and only the restriction filler narrowing is reported.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Gauge a owl:Class .
+ex:NarrowGauge a owl:Class ;
+    rdfs:subClassOf ex:Gauge .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasGauge ;
+        owl:someValuesFrom ex:Gauge
+    ] .

@@ -1,0 +1,15 @@
+# fixture: cardinality_kind_change_after.ttl
+# Purpose: exact-cardinality version of cardinality_kind_change_before.ttl. The
+# min 1 restriction on ex:hasPart becomes an exact (owl:cardinality) 1.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasPart ;
+        owl:cardinality "1"^^xsd:nonNegativeInteger
+    ] .

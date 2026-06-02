@@ -1,0 +1,10 @@
+# fixture: complement_set_after.ttl
+# Purpose: ex:NotVehicle becomes owl:complementOf ex:Vehicle relative to
+# complement_set_before.ttl (breaking complement_set).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:Vehicle a owl:Class .
+ex:NotVehicle a owl:Class ;
+    owl:complementOf ex:Vehicle .

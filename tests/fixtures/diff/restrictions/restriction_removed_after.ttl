@@ -1,0 +1,16 @@
+# fixture: restriction_removed_after.ttl
+# Purpose: ex:Track loses its max 1 cardinality restriction on ex:hasSpeed
+# relative to restriction_removed_before.ttl; the someValuesFrom ex:Gauge
+# restriction is retained unchanged (non_breaking removal).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Gauge a owl:Class .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasGauge ;
+        owl:someValuesFrom ex:Gauge
+    ] .

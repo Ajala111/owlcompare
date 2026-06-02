@@ -1,0 +1,18 @@
+# fixture: someValues_filler_narrowed_after.ttl
+# Purpose: narrowed version of someValues_filler_narrowed_before.ttl. The
+# someValuesFrom filler on ex:hasGauge moves from ex:Gauge to its subclass
+# ex:NarrowGauge (breaking).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Gauge a owl:Class .
+ex:NarrowGauge a owl:Class ;
+    rdfs:subClassOf ex:Gauge .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasGauge ;
+        owl:someValuesFrom ex:NarrowGauge
+    ] .

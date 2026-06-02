@@ -1,0 +1,15 @@
+# fixture: restriction_added_after.ttl
+# Purpose: ex:Track gains a max 1 cardinality restriction on ex:hasSpeed
+# relative to restriction_added_before.ttl (breaking).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasSpeed ;
+        owl:maxCardinality "1"^^xsd:nonNegativeInteger
+    ] .

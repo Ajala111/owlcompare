@@ -1,0 +1,37 @@
+# fixture: era_restrictions_v2.ttl
+# Purpose: version 2 of the flagship restriction fragment. See
+# era_restrictions_v1.ttl for the full list of intended edits. Relative to v1,
+# on era:Track:
+#   ~ era:hasMaxSpeed bound tightened max 5 -> max 3   (restriction_changed, breaking)
+#   - era:hasGauge someValuesFrom era:Gauge removed     (restriction_removed)
+#   + era:servesPlatform someValuesFrom era:Platform added (restriction_added)
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://data.europa.eu/949/restrictions> a owl:Ontology ;
+    owl:versionInfo "2.0.0" .
+
+era:Gauge a owl:Class ;
+    rdfs:label "Gauge"@en .
+era:Platform a owl:Class ;
+    rdfs:label "Platform"@en .
+
+era:hasMaxSpeed a owl:DatatypeProperty .
+era:hasGauge a owl:ObjectProperty .
+era:servesPlatform a owl:ObjectProperty .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty era:hasMaxSpeed ;
+        owl:maxCardinality "3"^^xsd:nonNegativeInteger
+    ] ,
+    [
+        a owl:Restriction ;
+        owl:onProperty era:servesPlatform ;
+        owl:someValuesFrom era:Platform
+    ] .

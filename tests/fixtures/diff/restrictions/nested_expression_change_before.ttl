@@ -1,0 +1,26 @@
+# fixture: nested_expression_change_before.ttl
+# Purpose: baseline for a deep (nested) class-expression change. ex:Track is a
+# subclass of a someValuesFrom restriction on ex:hasPart whose *filler* is itself
+# a restriction (someValuesFrom ex:Gauge on ex:hasGauge). Pairs with
+# nested_expression_change_after.ttl, where only the inner filler changes
+# (ex:Gauge -> ex:NarrowGauge). The outer shape (someValuesFrom on ex:hasPart) is
+# unchanged, so the diff must fall back to complex_class_expression_changed
+# rather than trying to summarize the inner edit.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Gauge a owl:Class .
+ex:NarrowGauge a owl:Class ;
+    rdfs:subClassOf ex:Gauge .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasPart ;
+        owl:someValuesFrom [
+            a owl:Restriction ;
+            owl:onProperty ex:hasGauge ;
+            owl:someValuesFrom ex:Gauge
+        ]
+    ] .

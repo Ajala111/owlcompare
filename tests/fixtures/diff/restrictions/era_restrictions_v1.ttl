@@ -1,0 +1,42 @@
+# fixture: era_restrictions_v1.ttl
+# Purpose: flagship restriction fixture, version 1 (ERA-style railway fragment).
+# era:Track carries two restrictions:
+#   - max 5 on era:hasMaxSpeed          (a cardinality bound)
+#   - someValuesFrom era:Gauge on era:hasGauge  (an existential restriction)
+# Pairs with era_restrictions_v2.ttl, which exercises three behaviors in one
+# diff:
+#   ~ the era:hasMaxSpeed bound is tightened max 5 -> max 3   (restriction_changed, breaking)
+#   - the era:hasGauge existential restriction is removed     (restriction_removed)
+#   + a new existential someValuesFrom era:Platform on era:servesPlatform is added (restriction_added)
+# All properties and filler classes are declared in both versions so the only
+# structural changes are the three restriction edits.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://data.europa.eu/949/restrictions> a owl:Ontology ;
+    owl:versionInfo "1.0.0" .
+
+era:Gauge a owl:Class ;
+    rdfs:label "Gauge"@en .
+era:Platform a owl:Class ;
+    rdfs:label "Platform"@en .
+
+era:hasMaxSpeed a owl:DatatypeProperty .
+era:hasGauge a owl:ObjectProperty .
+era:servesPlatform a owl:ObjectProperty .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty era:hasMaxSpeed ;
+        owl:maxCardinality "5"^^xsd:nonNegativeInteger
+    ] ,
+    [
+        a owl:Restriction ;
+        owl:onProperty era:hasGauge ;
+        owl:someValuesFrom era:Gauge
+    ] .

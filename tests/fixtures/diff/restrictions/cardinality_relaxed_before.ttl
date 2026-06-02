@@ -1,0 +1,17 @@
+# fixture: cardinality_relaxed_before.ttl
+# Purpose: baseline for relaxing a max-cardinality. ex:Track has a max 3
+# restriction on ex:hasSpeed. Pairs with cardinality_relaxed_after.ttl, where
+# the bound rises to max 5 — looser, so existing data stays valid and the
+# restriction_changed must be classified non_breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasSpeed ;
+        owl:maxCardinality "3"^^xsd:nonNegativeInteger
+    ] .

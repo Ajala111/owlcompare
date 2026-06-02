@@ -39,7 +39,7 @@ This is the source of truth for what's done, what's in progress, and what's defe
 - [x] Component 05: Layer 0 syntactic diff — `specs/05-syntactic-diff.md`
 - [x] Component 06: Layer 1 structural diff (entities) — `specs/06-structural-entities.md`
 - [x] Component 07: Layer 1 structural diff (hierarchy) — `specs/07-structural-hierarchy.md`
-- [ ] Component 08: Layer 1 structural diff (restrictions) — `specs/08-structural-restrictions.md`
+- [x] Component 08: Layer 1 structural diff (restrictions) — `specs/08-structural-restrictions.md`
 - [ ] Component 09: Layer 1 structural diff (annotations) — `specs/09-structural-annotations.md`
 - [ ] Component 10: Severity classification — `specs/10-severity.md`
 
@@ -95,7 +95,6 @@ This is the source of truth for what's done, what's in progress, and what's defe
 - DCAT-specific diff mode
 - Hosted webapp (drop two files, get a sharable URL)
 - Preserve namespace prefix bindings through canonicalization (Component 04). After canonicalization, rdflib's namespace manager loses some bindings, causing the Layer 0 text summary to render full IRIs (e.g., `<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>`) instead of prefixed forms (`rdf:type`). The data is correct; only the display is verbose. Fix in Component 04 or its renderer helper.
-- Consolidate related restriction triples in Layer 1. After canonicalization a restriction surfaces as three Layer 0 triple changes (`rdf:type`, `owl:onProperty`, `owl:maxCardinality`). Layer 1 (Component 06+) should fold these into a single "restriction changed" Change record with the full structure in details. Verify this when Component 06 lands; remove backlog item if covered.
 
 ## Out of scope (deliberately)
 

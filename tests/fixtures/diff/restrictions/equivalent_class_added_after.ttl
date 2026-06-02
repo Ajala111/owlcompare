@@ -1,0 +1,10 @@
+# fixture: equivalent_class_added_after.ttl
+# Purpose: ex:A becomes owl:equivalentClass ex:B relative to
+# equivalent_class_added_before.ttl (non_breaking equivalent_class_added).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:A a owl:Class ;
+    owl:equivalentClass ex:B .
+ex:B a owl:Class .

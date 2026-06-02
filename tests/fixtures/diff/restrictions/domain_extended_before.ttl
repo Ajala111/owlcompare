@@ -1,0 +1,14 @@
+# fixture: domain_extended_before.ttl
+# Purpose: baseline for a multi-domain extension. ex:locatedOn has rdfs:domain
+# ex:Signal. Pairs with domain_extended_after.ttl, which adds ex:Platform as a
+# second domain. Broadening the domain set is non_breaking, and because both
+# sides are no longer single-valued it is reported as domain_added (not changed).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Signal a owl:Class .
+ex:Platform a owl:Class .
+ex:locatedOn a owl:ObjectProperty ;
+    rdfs:domain ex:Signal .

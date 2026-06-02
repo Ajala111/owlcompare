@@ -1,0 +1,15 @@
+# fixture: someValues_to_allValues_after.ttl
+# Purpose: universal version of someValues_to_allValues_before.ttl. The
+# restriction on ex:hasGauge becomes allValuesFrom ex:Gauge (breaking).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Gauge a owl:Class .
+ex:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasGauge ;
+        owl:allValuesFrom ex:Gauge
+    ] .

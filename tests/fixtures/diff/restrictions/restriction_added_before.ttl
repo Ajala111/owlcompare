@@ -1,0 +1,10 @@
+# fixture: restriction_added_before.ttl
+# Purpose: baseline for a restriction addition. ex:Track is a plain class with no
+# restrictions. Pairs with restriction_added_after.ttl, where it gains a max 1
+# cardinality restriction on ex:hasSpeed — a new constraint that may invalidate
+# existing data, so restriction_added is breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:Track a owl:Class .

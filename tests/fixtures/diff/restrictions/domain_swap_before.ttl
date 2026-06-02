@@ -1,0 +1,13 @@
+# fixture: domain_swap_before.ttl
+# Purpose: baseline for a single-domain swap. ex:locatedOn has rdfs:domain
+# ex:Signal. Pairs with domain_swap_after.ttl, where the single domain becomes
+# ex:Asset — a domain swap, which is breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Signal a owl:Class .
+ex:Asset a owl:Class .
+ex:locatedOn a owl:ObjectProperty ;
+    rdfs:domain ex:Signal .

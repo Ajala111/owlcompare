@@ -1,0 +1,11 @@
+# fixture: complement_set_before.ttl
+# Purpose: baseline for setting a complement. ex:NotVehicle and ex:Vehicle are
+# independent classes. Pairs with complement_set_after.ttl, where ex:NotVehicle
+# becomes owl:complementOf ex:Vehicle. Defining a complement is breaking; the
+# change carries before=None and after=ex:Vehicle.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:Vehicle a owl:Class .
+ex:NotVehicle a owl:Class .
