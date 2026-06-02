@@ -153,3 +153,43 @@ def test_orchestrator_diffresult_metadata_counts_restriction_changes():
     structural = [c for c in result.changes if c.layer == "structural"]
     assert result.metadata["layer_counts"]["structural"] == len(structural)
     assert len([c for c in structural if c.kind.startswith("restriction_")]) == 3
+
+
+ANNO = DIFF / "annotations"
+
+
+def _canon_anno(name: str) -> OntologySnapshot:
+    return canonicalize(load(str(ANNO / name)))
+
+
+def _run_anno() -> object:
+    return orchestrator.run(
+        _canon_anno("era_annotations_v1.ttl"), _canon_anno("era_annotations_v2.ttl")
+    )
+
+
+def test_orchestrator_runs_annotations_after_restrictions():
+    # era_annotations has no restriction changes; only the annotation slice emits
+    # annotation_* / ontology_metadata_changed kinds, confirming it ran.
+    result = _run_anno()
+    assert any(c.layer == "structural" and c.kind == "annotation_changed" for c in result.changes)
+
+
+def test_orchestrator_layer1_changes_include_annotations():
+    result = _run_anno()
+    kinds = {c.kind for c in result.changes if c.layer == "structural"}
+    assert {"annotation_changed", "entity_deprecated", "ontology_metadata_changed"} <= kinds
+
+
+def test_orchestrator_layer1_pipeline_order_entities_hierarchy_restrictions_annotations():
+    # era_evolution exercises the entity, restriction and annotation slices; the
+    # orchestrator concatenates them in pipeline order, so entity changes precede
+    # the restriction change, which precedes the annotation changes.
+    result = orchestrator.run(_canon("era_evolution_v1.ttl"), _canon("era_evolution_v2.ttl"))
+    structural = [c for c in result.changes if c.layer == "structural"]
+    entity_kinds = {"class_added", "object_property_removed"}
+    annotation_kinds = {"annotation_changed", "ontology_metadata_changed"}
+    last_entity = max(i for i, c in enumerate(structural) if c.kind in entity_kinds)
+    restriction_idx = next(i for i, c in enumerate(structural) if c.kind == "restriction_changed")
+    first_annotation = min(i for i, c in enumerate(structural) if c.kind in annotation_kinds)
+    assert last_entity < restriction_idx < first_annotation

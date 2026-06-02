@@ -1,0 +1,13 @@
+# fixture: ontology_modified_changed_before.ttl
+# Purpose: baseline ontology with dcterms:modified "2024-01-15". Pairs with
+# ontology_modified_changed_after.ttl, where the date advances — one
+# ontology_metadata_changed (info) for the dcterms:modified property.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://example.org/ontology> a owl:Ontology ;
+    dcterms:modified "2024-01-15" .
+
+ex:Track a owl:Class .

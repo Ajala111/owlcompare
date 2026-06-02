@@ -1,0 +1,11 @@
+# fixture: label_changed_different_lang_before.ttl
+# Purpose: baseline for a French label value change. ex:Track has
+# rdfs:label "Voie"@fr. Pairs with label_changed_different_lang_after.ttl, where
+# the @fr label becomes "Voie ferrée" — one annotation_changed, language fr.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Voie"@fr .

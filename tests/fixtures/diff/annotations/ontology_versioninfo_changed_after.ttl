@@ -1,0 +1,13 @@
+# fixture: ontology_versioninfo_changed_after.ttl
+# Purpose: v2 bumps the ontology version to "2.0.0". See
+# ontology_versioninfo_changed_before.ttl.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/ontology> a owl:Ontology ;
+    owl:versionInfo "2.0.0" ;
+    rdfs:label "Example Ontology"@en .
+
+ex:Track a owl:Class .

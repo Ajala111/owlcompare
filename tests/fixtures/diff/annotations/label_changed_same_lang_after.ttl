@@ -1,0 +1,10 @@
+# fixture: label_changed_same_lang_after.ttl
+# Purpose: v2 of the same-language label change. ex:Track's @en label is now
+# "Railway Track". See label_changed_same_lang_before.ttl.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Railway Track"@en .

@@ -1,0 +1,13 @@
+# fixture: annotation_on_restriction_urn_skipped_after.ttl
+# Purpose: v2 changes the restriction URN's label. Component 09 still skips it.
+# See annotation_on_restriction_urn_skipped_before.ttl.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en .
+
+<urn:owlcompare:restriction:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef>
+    rdfs:label "Restriction note v2"@en .

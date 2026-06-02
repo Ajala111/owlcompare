@@ -1,0 +1,9 @@
+# fixture: comment_changed_after.ttl
+# Purpose: v2 with a refined comment. See comment_changed_before.ttl.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:comment "A pair of rails on which railway vehicles run."@en .

@@ -1,0 +1,12 @@
+# fixture: blank_node_annotation.ttl
+# Purpose: a blank-node subject carrying an annotation, used to verify that the
+# annotation index skips anonymous (blank-node) subjects — they are not tracked
+# entities. ex:Track itself carries a normal label that IS indexed.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:seeAlso [ rdfs:label "anonymous note"@en ] .

@@ -1,0 +1,10 @@
+# fixture: deprecated_added_after.ttl
+# Purpose: v2 marks ex:Track deprecated. See deprecated_added_before.ttl.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    owl:deprecated true .

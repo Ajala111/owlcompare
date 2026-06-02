@@ -1,0 +1,11 @@
+# fixture: comment_changed_before.ttl
+# Purpose: baseline with an English rdfs:comment. Pairs with
+# comment_changed_after.ttl, where the comment text changes — one
+# annotation_changed whose summary omits the (long) value text (Q1).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:comment "A length of railway on which trains run."@en .

@@ -1,0 +1,15 @@
+# fixture: user_declared_annotation.ttl
+# Purpose: a property declared as owl:AnnotationProperty that is not in the
+# well-known set, used with a no-language-tag literal value. Verifies the index
+# (a) recognizes user-declared annotation properties and (b) records a literal
+# with no @lang as language=None.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:editorialStatus a owl:AnnotationProperty .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    ex:editorialStatus "approved" .

@@ -1,0 +1,11 @@
+# fixture: label_changed_same_lang_before.ttl
+# Purpose: baseline for an English label value change. ex:Track has
+# rdfs:label "Track"@en. Pairs with label_changed_same_lang_after.ttl, where the
+# same @en label becomes "Railway Track" — one annotation_changed (info).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en .

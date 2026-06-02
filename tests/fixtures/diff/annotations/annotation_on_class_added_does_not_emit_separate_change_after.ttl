@@ -1,0 +1,14 @@
+# fixture: annotation_on_class_added_does_not_emit_separate_change_after.ttl
+# Purpose: v2 adds ex:Platform with its own label. The label rides along with the
+# class_added (Component 06); Component 09 stays silent for ex:Platform. See the
+# _before fixture.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en .
+
+ex:Platform a owl:Class ;
+    rdfs:label "Platform"@en .

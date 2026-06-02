@@ -1,0 +1,28 @@
+# fixture: era_annotations_v1.ttl
+# Purpose: flagship annotation diff, version 1 of a small ERA-style fragment.
+# Pairs with era_annotations_v2.ttl, which applies four editorial edits exercised
+# by Component 09:
+#   ~ era:Track French label "Voie" -> "Voie ferrée"   (annotation_changed, fr)
+#   ~ era:Track rdfs:comment refined                   (annotation_changed, omits value)
+#   + era:Signal marked owl:deprecated true            (entity_deprecated)
+#   ~ owl:versionInfo "1.0.0" -> "2.0.0"               (ontology_metadata_changed)
+# Three entities; English labels stay constant so only the intended edits show.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://data.europa.eu/949/ontology> a owl:Ontology ;
+    owl:versionInfo "1.0.0" ;
+    rdfs:label "ERA Annotations Fragment"@en .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:label "Voie"@fr ;
+    rdfs:comment "A length of railway on which trains run."@en .
+
+era:Signal a owl:Class ;
+    rdfs:label "Signal"@en .
+
+era:Platform a owl:Class ;
+    rdfs:label "Platform"@en .

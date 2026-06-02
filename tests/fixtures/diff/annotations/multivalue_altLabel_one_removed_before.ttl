@@ -1,0 +1,15 @@
+# fixture: multivalue_altLabel_one_removed_before.ttl
+# Purpose: baseline with three English skos:altLabel values on ex:Track. Pairs
+# with multivalue_altLabel_one_removed_after.ttl, which drops one — a multi-value
+# bucket, so the diff emits one annotation_removed (no annotation_changed, Q2).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    skos:altLabel "Rail"@en ;
+    skos:altLabel "Permanent Way"@en ;
+    skos:altLabel "Track Bed"@en .

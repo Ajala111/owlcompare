@@ -40,8 +40,12 @@ This is the source of truth for what's done, what's in progress, and what's defe
 - [x] Component 06: Layer 1 structural diff (entities) — `specs/06-structural-entities.md`
 - [x] Component 07: Layer 1 structural diff (hierarchy) — `specs/07-structural-hierarchy.md`
 - [x] Component 08: Layer 1 structural diff (restrictions) — `specs/08-structural-restrictions.md`
-- [ ] Component 09: Layer 1 structural diff (annotations) — `specs/09-structural-annotations.md`
+- [x] Component 09: Layer 1 structural diff (annotations) — `specs/09-structural-annotations.md`
 - [ ] Component 10: Severity classification — `specs/10-severity.md`
+
+**Layer 1 is now feature-complete.** Components 06–09 cover entities, hierarchy,
+restrictions and annotations; only Component 10 (severity classifier polish)
+remains in Phase 2.
 
 **Exit criteria:** `owlcompare diff a.ttl b.ttl --format json` produces a complete, accurate Layer 0 + Layer 1 diff for the test fixtures.
 

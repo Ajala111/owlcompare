@@ -1,0 +1,11 @@
+# fixture: label_added_after.ttl
+# Purpose: v2 adds a German label alongside the unchanged English one. See
+# label_added_before.ttl.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:label "Gleis"@de .

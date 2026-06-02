@@ -1,0 +1,15 @@
+# fixture: annotation_on_restriction_urn_skipped_before.ttl
+# Purpose: a canonicalization-minted restriction URN that (unusually) carries its
+# own rdfs:label. Component 09 must skip urn:owlcompare:restriction:* subjects —
+# they are Component 08's territory. Pairs with the _after fixture, which changes
+# the URN's label; no annotation change must be emitted for the URN.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en .
+
+<urn:owlcompare:restriction:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef>
+    rdfs:label "Restriction note v1"@en .

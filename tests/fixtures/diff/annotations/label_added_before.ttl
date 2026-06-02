@@ -1,0 +1,11 @@
+# fixture: label_added_before.ttl
+# Purpose: baseline with no German label. ex:Track has only an English label.
+# Pairs with label_added_after.ttl, which adds rdfs:label "Gleis"@de — one
+# annotation_added, language de.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en .

@@ -279,3 +279,74 @@ def test_era_evolution_emits_cardinality_change_for_maxspeed():
     assert change.details["entity_iri"] == "http://data.europa.eu/949/Track"
     assert change.details["before"]["cardinality"] == 1
     assert change.details["after"]["cardinality"] == 2
+
+
+ANNO = DIFF / "annotations"
+
+
+def _canon_anno(name: str):
+    return canonicalize(load(str(ANNO / name)))
+
+
+def _run_anno(v_a: str, v_b: str):
+    return orchestrator.run(_canon_anno(v_a), _canon_anno(v_b))
+
+
+def test_era_evolution_fixture_after_component_09():
+    # After Component 09 the two French label triples fold into one
+    # annotation_changed and the two owl:versionInfo triples into one
+    # ontology_metadata_changed; Layer 0 unexplained drops to zero.
+    result = _run("era_evolution_v1.ttl", "era_evolution_v2.ttl")
+    registry = result.metadata["subsumption_registry"]
+
+    label_changes = [
+        c
+        for c in result.changes
+        if c.kind == "annotation_changed"
+        and c.subject == "http://data.europa.eu/949/Track"
+        and c.details.get("language") == "fr"
+    ]
+    assert len(label_changes) == 1
+    assert label_changes[0].details["before"]["value"] == "Voie"
+    assert label_changes[0].details["after"]["value"] == "Voie ferrée"
+
+    version_changes = [c for c in result.changes if c.kind == "ontology_metadata_changed"]
+    assert len(version_changes) == 1
+    assert version_changes[0].details["before"]["value"] == "1.0.0"
+    assert version_changes[0].details["after"]["value"] == "2.0.0"
+
+    layer0 = [c for c in result.changes if c.layer == "syntactic"]
+    unexplained = [c for c in layer0 if not registry.is_explained(c.details["change_id"])]
+    assert unexplained == []
+
+
+def test_era_evolution_emits_label_changed_for_voie_voie_ferree():
+    result = _run("era_evolution_v1.ttl", "era_evolution_v2.ttl")
+    change = next(
+        c
+        for c in result.changes
+        if c.kind == "annotation_changed" and c.details.get("language") == "fr"
+    )
+    assert change.severity == "info"
+    assert "Voie" in change.summary
+    assert "Voie ferrée" in change.summary
+
+
+def test_era_evolution_emits_ontology_metadata_changed_for_versioninfo():
+    result = _run("era_evolution_v1.ttl", "era_evolution_v2.ttl")
+    change = next(c for c in result.changes if c.kind == "ontology_metadata_changed")
+    assert change.details["predicate_short"] == "versionInfo"
+    assert change.subject == "http://data.europa.eu/949/ontology"
+
+
+def test_era_annotations_fixture_emits_expected_changes():
+    result = _run_anno("era_annotations_v1.ttl", "era_annotations_v2.ttl")
+    structural = [c for c in result.changes if c.layer == "structural"]
+    kinds = sorted(c.kind for c in structural)
+    # French label change + comment change + Signal deprecation + version bump.
+    assert kinds == [
+        "annotation_changed",
+        "annotation_changed",
+        "entity_deprecated",
+        "ontology_metadata_changed",
+    ]

@@ -1,0 +1,10 @@
+# fixture: iri_valued_annotation_after.ttl
+# Purpose: v2 points rdfs:seeAlso at a different resource. See
+# iri_valued_annotation_before.ttl.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:seeAlso <http://example.org/other> .

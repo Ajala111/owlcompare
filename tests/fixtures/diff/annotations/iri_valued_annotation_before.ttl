@@ -1,0 +1,11 @@
+# fixture: iri_valued_annotation_before.ttl
+# Purpose: baseline with an IRI-valued annotation (rdfs:seeAlso pointing at a
+# resource). Pairs with iri_valued_annotation_after.ttl, where the target IRI
+# changes — one annotation_changed with is_iri_value=True on both sides.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:seeAlso <http://example.org/related> .

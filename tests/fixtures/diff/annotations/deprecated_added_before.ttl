@@ -1,0 +1,11 @@
+# fixture: deprecated_added_before.ttl
+# Purpose: baseline where ex:Track is live (no owl:deprecated). Pairs with
+# deprecated_added_after.ttl, which asserts owl:deprecated true — one
+# entity_deprecated (non_breaking), NOT a generic annotation_added.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en .

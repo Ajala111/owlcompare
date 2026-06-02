@@ -1,0 +1,11 @@
+# fixture: annotation_on_class_added_does_not_emit_separate_change_before.ttl
+# Purpose: baseline with a single class. Pairs with the _after fixture, which
+# adds a brand-new class carrying a label. Component 06 emits class_added and
+# subsumes the label; Component 09 must NOT emit a separate annotation_added.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Track a owl:Class ;
+    rdfs:label "Track"@en .

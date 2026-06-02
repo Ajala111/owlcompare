@@ -1,0 +1,14 @@
+# fixture: ontology_versioninfo_changed_before.ttl
+# Purpose: baseline ontology declaration with owl:versionInfo "1.0.0". Pairs with
+# ontology_versioninfo_changed_after.ttl, which bumps it to "2.0.0" — one
+# ontology_metadata_changed (info) on the owl:Ontology subject.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/ontology> a owl:Ontology ;
+    owl:versionInfo "1.0.0" ;
+    rdfs:label "Example Ontology"@en .
+
+ex:Track a owl:Class .
