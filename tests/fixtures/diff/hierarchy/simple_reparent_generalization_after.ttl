@@ -1,0 +1,14 @@
+# fixture: simple_reparent_generalization_after.ttl
+# Purpose: ex:A reparented from ex:B up to ex:C (which was ex:B's parent in the
+# baseline). Expected: one class_reparented with direction=generalization and
+# severity=non_breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:C a owl:Class .
+ex:B a owl:Class ;
+    rdfs:subClassOf ex:C .
+ex:A a owl:Class ;
+    rdfs:subClassOf ex:C .

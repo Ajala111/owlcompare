@@ -1,0 +1,7 @@
+# fixture: empty_ontology.ttl
+# Purpose: an ontology with no subClassOf / subPropertyOf edges at all. build()
+# must produce a HierarchyIndex whose four maps are all empty.
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/onto> a owl:Ontology .

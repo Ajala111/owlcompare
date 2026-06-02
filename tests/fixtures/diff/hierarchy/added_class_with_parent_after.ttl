@@ -1,0 +1,12 @@
+# fixture: added_class_with_parent_after.ttl
+# Purpose: ex:Child is newly added with a parent ex:Base. Expected: Component 06
+# emits class_added for ex:Child; Component 07 emits NO class_parent_added and
+# instead defers the subClassOf triple to ex:Child's class_added change.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Base a owl:Class .
+ex:Child a owl:Class ;
+    rdfs:subClassOf ex:Base .

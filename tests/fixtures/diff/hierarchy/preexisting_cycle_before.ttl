@@ -1,0 +1,14 @@
+# fixture: preexisting_cycle_before.ttl
+# Purpose: B already contains a cycle ex:A <-> ex:B before the diff. Both
+# versions assert the same two edges, so the cycle is pre-existing and must NOT
+# be flagged. ex:C is an unrelated class kept stable across both versions.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:A a owl:Class ;
+    rdfs:subClassOf ex:B .
+ex:B a owl:Class ;
+    rdfs:subClassOf ex:A .
+ex:C a owl:Class .

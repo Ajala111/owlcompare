@@ -1,0 +1,32 @@
+# fixture: era_hierarchy_v2.ttl
+# Purpose: flagship hierarchy fixture, version 2. Relative to v1:
+#   + era:Asset added (brand-new class, declaration + English label)
+#   ~ era:Signal reparented from era:Equipment to era:Asset
+# era:Asset has no relation to era:Equipment, so the reparent is lateral
+# (breaking). era:Track subClassOf era:TransportInfrastructure is unchanged.
+# Expected: Component 06 emits one class_added (era:Asset); Component 07 emits
+# exactly one class_reparented (era:Signal) subsuming the two subClassOf triples.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://data.europa.eu/949/hierarchy> a owl:Ontology ;
+    owl:versionInfo "2.0.0" .
+
+era:TransportInfrastructure a owl:Class ;
+    rdfs:label "Transport infrastructure"@en .
+
+era:Equipment a owl:Class ;
+    rdfs:label "Equipment"@en .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:TransportInfrastructure .
+
+era:Signal a owl:Class ;
+    rdfs:label "Signal"@en ;
+    rdfs:subClassOf era:Asset .

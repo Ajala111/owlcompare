@@ -1,0 +1,8 @@
+# fixture: self_loop_before.ttl
+# Purpose: ex:A is a plain class with no parent. Pairs with the _after file,
+# which adds the invalid self-edge ex:A subClassOf ex:A.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:A a owl:Class .

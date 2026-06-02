@@ -1,0 +1,14 @@
+# fixture: simple_reparent_generalization_before.ttl
+# Purpose: baseline for a generalization reparent. ex:A is a subclass of ex:B,
+# and ex:B is a subclass of ex:C. Pairs with the _after file, where ex:A is
+# reparented directly under ex:C (moving up the chain B -> C = generalization).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:C a owl:Class .
+ex:B a owl:Class ;
+    rdfs:subClassOf ex:C .
+ex:A a owl:Class ;
+    rdfs:subClassOf ex:B .

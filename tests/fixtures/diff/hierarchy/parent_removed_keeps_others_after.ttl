@@ -1,0 +1,12 @@
+# fixture: parent_removed_keeps_others_after.ttl
+# Purpose: ex:Dog loses ex:Pet but retains ex:Mammal. Expected: one
+# class_parent_removed with severity=non_breaking (other parents remain).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Mammal a owl:Class .
+ex:Pet a owl:Class .
+ex:Dog a owl:Class ;
+    rdfs:subClassOf ex:Mammal .

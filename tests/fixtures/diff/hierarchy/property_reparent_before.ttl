@@ -1,0 +1,13 @@
+# fixture: property_reparent_before.ttl
+# Purpose: baseline where ex:hasGauge is a sub-property of ex:hasDimension. Both
+# ex:hasDimension and ex:hasMeasurement are declared in both versions. Pairs
+# with the _after file, where ex:hasGauge is reparented to ex:hasMeasurement.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:hasDimension a owl:ObjectProperty .
+ex:hasMeasurement a owl:ObjectProperty .
+ex:hasGauge a owl:ObjectProperty ;
+    rdfs:subPropertyOf ex:hasDimension .

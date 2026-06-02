@@ -1,0 +1,14 @@
+# fixture: parent_removed_keeps_others_before.ttl
+# Purpose: baseline where ex:Dog has two parents (ex:Mammal and ex:Pet). Pairs
+# with parent_removed_keeps_others_after.ttl, which drops ex:Pet. Because ex:Dog
+# still has ex:Mammal, the removal is non_breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Mammal a owl:Class .
+ex:Pet a owl:Class .
+ex:Dog a owl:Class ;
+    rdfs:subClassOf ex:Mammal ;
+    rdfs:subClassOf ex:Pet .

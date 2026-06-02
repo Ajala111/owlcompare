@@ -1,0 +1,10 @@
+# fixture: property_parent_added_before.ttl
+# Purpose: baseline where ex:hasGauge is a top-level object property. Pairs with
+# the _after file, where it gains a parent ex:hasMeasurement via
+# rdfs:subPropertyOf. Exercises the property side of parent-added.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:hasMeasurement a owl:ObjectProperty .
+ex:hasGauge a owl:ObjectProperty .

@@ -1,0 +1,16 @@
+# fixture: multi_parent_reparent_after.ttl
+# Purpose: ex:A reparented from {ex:B, ex:C} to {ex:D, ex:E}. Expected: one
+# class_reparented with direction=lateral, severity=breaking, and a summary that
+# uses brace notation for both parent sets.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:B a owl:Class .
+ex:C a owl:Class .
+ex:D a owl:Class .
+ex:E a owl:Class .
+ex:A a owl:Class ;
+    rdfs:subClassOf ex:D ;
+    rdfs:subClassOf ex:E .

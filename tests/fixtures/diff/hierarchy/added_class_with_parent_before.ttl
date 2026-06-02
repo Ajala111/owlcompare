@@ -1,0 +1,10 @@
+# fixture: added_class_with_parent_before.ttl
+# Purpose: baseline with a single stable class ex:Base. Pairs with the _after
+# file, which introduces ex:Child as a brand-new class that is asserted to be a
+# subclass of ex:Base. Exercises the Component 06 / 07 hand-off: the new class's
+# subClassOf edge belongs to its introduction, not to a standalone parent-added.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:Base a owl:Class .

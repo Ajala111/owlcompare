@@ -1,0 +1,11 @@
+# fixture: property_parent_added_after.ttl
+# Purpose: ex:hasGauge gains ex:hasMeasurement as a super-property. Expected:
+# one property_parent_added change.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:hasMeasurement a owl:ObjectProperty .
+ex:hasGauge a owl:ObjectProperty ;
+    rdfs:subPropertyOf ex:hasMeasurement .

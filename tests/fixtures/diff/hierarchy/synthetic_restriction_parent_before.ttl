@@ -1,0 +1,18 @@
+# fixture: synthetic_restriction_parent_before.ttl
+# Purpose: ex:Door is a subclass of an anonymous owl:Restriction. After
+# canonicalization the restriction becomes a urn:owlcompare:restriction:* URN,
+# which the hierarchy index must ignore. Pairs with the _after file, which drops
+# the restriction. Expected: NO hierarchy change (Component 08's territory).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Handle a owl:Class .
+ex:hasPart a owl:ObjectProperty .
+ex:Door a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasPart ;
+        owl:someValuesFrom ex:Handle
+    ] .

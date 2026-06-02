@@ -18,7 +18,7 @@ from owlcompare.model import OntologySnapshot
 from . import syntactic
 from ._common import Change, DiffOptions, DiffResult
 from ._subsumption import SubsumptionRegistry
-from .structural import entities
+from .structural import entities, hierarchy
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +66,11 @@ def run(
         layer_counts["syntactic"] = len(layer0)
 
     if "structural" in layers:
+        # Run entity-level first, then hierarchy: both share one registry, so the
+        # hierarchy slice can defer a new/removed entity's edges to Component 06's
+        # change instead of double-reporting them.
         structural_changes = entities.diff(a, b, layer0, registry, opts)
+        structural_changes += hierarchy.diff(a, b, layer0, registry, opts)
         all_changes.extend(structural_changes)
         layer_counts["structural"] = len(structural_changes)
 

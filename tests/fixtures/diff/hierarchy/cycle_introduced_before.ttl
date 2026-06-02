@@ -1,0 +1,13 @@
+# fixture: cycle_introduced_before.ttl
+# Purpose: an acyclic chain ex:A -> ex:B -> ex:C. Pairs with the _after file,
+# which adds ex:C subClassOf ex:A, closing a cycle A -> B -> C -> A.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:A a owl:Class ;
+    rdfs:subClassOf ex:B .
+ex:B a owl:Class ;
+    rdfs:subClassOf ex:C .
+ex:C a owl:Class .

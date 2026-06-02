@@ -1,0 +1,13 @@
+# fixture: simple_reparent_lateral_before.ttl
+# Purpose: baseline for a lateral reparent. ex:A is a subclass of ex:B; ex:D is
+# an unrelated class. Pairs with the _after file, where ex:A moves to ex:D,
+# which has no hierarchy relation to ex:B.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:B a owl:Class .
+ex:D a owl:Class .
+ex:A a owl:Class ;
+    rdfs:subClassOf ex:B .

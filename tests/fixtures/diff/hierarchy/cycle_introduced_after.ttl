@@ -1,0 +1,16 @@
+# fixture: cycle_introduced_after.ttl
+# Purpose: adds ex:C subClassOf ex:A to the baseline chain, introducing the
+# cycle A -> B -> C -> A. Expected: one cycle per entity (Q3: three
+# class_hierarchy_cycle_introduced changes sharing the same path), and no
+# class_parent_added for the cycle-closing edge.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:A a owl:Class ;
+    rdfs:subClassOf ex:B .
+ex:B a owl:Class ;
+    rdfs:subClassOf ex:C .
+ex:C a owl:Class ;
+    rdfs:subClassOf ex:A .

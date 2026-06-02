@@ -1,0 +1,15 @@
+# fixture: parent_added_before.ttl
+# Purpose: baseline for the additive "class gains a new parent" case. ex:Dog is
+# a subclass of ex:Mammal, which is itself a subclass of ex:Animal. Pairs with
+# parent_added_after.ttl, where ex:Dog additionally gains ex:Animal as a direct
+# parent (a broader supertype -> generalization -> additive).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Animal a owl:Class .
+ex:Mammal a owl:Class ;
+    rdfs:subClassOf ex:Animal .
+ex:Dog a owl:Class ;
+    rdfs:subClassOf ex:Mammal .

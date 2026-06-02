@@ -1,0 +1,15 @@
+# fixture: preexisting_cycle_after.ttl
+# Purpose: identical cycle edges to the _before file (ex:A <-> ex:B), plus a
+# benign label addition on the unrelated ex:C so the snapshots are not byte
+# equal. Expected: no class_hierarchy_cycle_introduced (cycle is not new).
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:A a owl:Class ;
+    rdfs:subClassOf ex:B .
+ex:B a owl:Class ;
+    rdfs:subClassOf ex:A .
+ex:C a owl:Class ;
+    rdfs:label "C"@en .

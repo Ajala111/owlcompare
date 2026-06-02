@@ -17,15 +17,23 @@ from rdflib import RDF
 
 from owlcompare.canonicalize import canonicalize
 from owlcompare.diff import orchestrator, syntactic
+from owlcompare.diff._subsumption import SubsumptionRegistry
+from owlcompare.diff.structural import entities
 from owlcompare.loader import load
 
 FIXTURES = Path(__file__).resolve().parent.parent / "fixtures"
 DIFF = FIXTURES / "diff"
+HIER = DIFF / "hierarchy"
 _RDF_TYPE = str(RDF.type)
+_SUBCLASS_OF = "http://www.w3.org/2000/01/rdf-schema#subClassOf"
 
 
 def _canon(name: str):
     return canonicalize(load(str(DIFF / name)))
+
+
+def _canon_hier(name: str):
+    return canonicalize(load(str(HIER / name)))
 
 
 def test_era_evolution_fixture_produces_expected_change_counts():
@@ -136,3 +144,55 @@ def test_era_evolution_total_change_count_reduces_with_subsumption():
     assert visible_by_default < len(result.changes)
     # And strictly fewer than Component 05's flat 18 Layer 0 changes.
     assert visible_by_default < 18
+
+
+def _run_hier(v_a: str, v_b: str):
+    return orchestrator.run(_canon_hier(v_a), _canon_hier(v_b))
+
+
+def test_era_hierarchy_fixture_emits_one_reparented_change():
+    result = _run_hier("era_hierarchy_v1.ttl", "era_hierarchy_v2.ttl")
+    reparented = [c for c in result.changes if c.kind == "class_reparented"]
+    assert len(reparented) == 1
+    assert reparented[0].subject == "http://data.europa.eu/949/Signal"
+    assert reparented[0].details["parents_before"] == ["http://data.europa.eu/949/Equipment"]
+    assert reparented[0].details["parents_after"] == ["http://data.europa.eu/949/Asset"]
+
+
+def test_era_hierarchy_fixture_emits_one_class_added_for_asset():
+    result = _run_hier("era_hierarchy_v1.ttl", "era_hierarchy_v2.ttl")
+    class_added = [c for c in result.changes if c.kind == "class_added"]
+    assert len(class_added) == 1
+    assert class_added[0].subject == "http://data.europa.eu/949/Asset"
+
+
+def test_era_hierarchy_fixture_subsumes_subclassof_triples():
+    result = _run_hier("era_hierarchy_v1.ttl", "era_hierarchy_v2.ttl")
+    registry = result.metadata["subsumption_registry"]
+    reparented = next(c for c in result.changes if c.kind == "class_reparented")
+    # The reparent subsumes both the removed (Signal->Equipment) and added
+    # (Signal->Asset) subClassOf triples.
+    subclass_changes = [
+        c
+        for c in result.changes
+        if c.layer == "syntactic"
+        and c.subject == "http://data.europa.eu/949/Signal"
+        and c.details.get("predicate_iri") == _SUBCLASS_OF
+    ]
+    assert len(subclass_changes) == 2
+    assert len(reparented.details["subsumes"]) == 2
+    for change in subclass_changes:
+        assert registry.is_explained(change.details["change_id"])
+
+
+def test_era_evolution_fixture_unchanged_results():
+    # Regression: era_evolution has no hierarchy changes, so adding Component 07
+    # to the orchestrator must not alter the structural output versus running the
+    # entity slice alone.
+    a, b = _canon("era_evolution_v1.ttl"), _canon("era_evolution_v2.ttl")
+    layer0 = syntactic.diff(a, b)
+    entities_only = entities.diff(a, b, layer0, SubsumptionRegistry())
+
+    result = orchestrator.run(a, b)
+    structural = [c for c in result.changes if c.layer == "structural"]
+    assert structural == entities_only

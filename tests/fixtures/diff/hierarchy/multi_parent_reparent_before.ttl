@@ -1,0 +1,16 @@
+# fixture: multi_parent_reparent_before.ttl
+# Purpose: baseline for a multi-parent reparent. ex:A is a subclass of both ex:B
+# and ex:C. Pairs with the _after file, where both parents are swapped for ex:D
+# and ex:E. A multi-to-multi move is lateral and renders with brace notation.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:B a owl:Class .
+ex:C a owl:Class .
+ex:D a owl:Class .
+ex:E a owl:Class .
+ex:A a owl:Class ;
+    rdfs:subClassOf ex:B ;
+    rdfs:subClassOf ex:C .

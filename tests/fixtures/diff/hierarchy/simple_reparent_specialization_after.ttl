@@ -1,0 +1,14 @@
+# fixture: simple_reparent_specialization_after.ttl
+# Purpose: ex:A reparented from ex:C down to ex:B (a descendant of ex:C in the
+# new hierarchy). Expected: one class_reparented with direction=specialization
+# and severity=breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:C a owl:Class .
+ex:B a owl:Class ;
+    rdfs:subClassOf ex:C .
+ex:A a owl:Class ;
+    rdfs:subClassOf ex:B .

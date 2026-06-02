@@ -1,0 +1,12 @@
+# fixture: parent_removed_orphan_before.ttl
+# Purpose: baseline where ex:Dog has exactly one parent ex:Mammal. Pairs with
+# parent_removed_orphan_after.ttl, which removes it, leaving ex:Dog with no
+# asserted parent -> classification-rootless -> breaking.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Mammal a owl:Class .
+ex:Dog a owl:Class ;
+    rdfs:subClassOf ex:Mammal .

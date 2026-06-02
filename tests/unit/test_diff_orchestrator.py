@@ -88,3 +88,35 @@ def test_orchestrator_with_only_structural_layer_still_runs_syntactic():
             _canon("class_added_after.ttl"),
             DiffOptions(include_layers=("structural",)),
         )
+
+
+HIER = DIFF / "hierarchy"
+
+
+def _canon_hier(name: str) -> OntologySnapshot:
+    return canonicalize(load(str(HIER / name)))
+
+
+def test_orchestrator_runs_hierarchy_after_entities():
+    # era_hierarchy reparents era:Signal; only the hierarchy slice emits that.
+    result = orchestrator.run(
+        _canon_hier("era_hierarchy_v1.ttl"), _canon_hier("era_hierarchy_v2.ttl")
+    )
+    assert any(c.layer == "structural" and c.kind == "class_reparented" for c in result.changes)
+
+
+def test_orchestrator_layer1_changes_include_both_entities_and_hierarchy():
+    result = orchestrator.run(
+        _canon_hier("era_hierarchy_v1.ttl"), _canon_hier("era_hierarchy_v2.ttl")
+    )
+    kinds = {c.kind for c in result.changes if c.layer == "structural"}
+    assert "class_added" in kinds  # entities slice (era:Asset)
+    assert "class_reparented" in kinds  # hierarchy slice (era:Signal)
+
+
+def test_orchestrator_diffresult_metadata_counts_hierarchy_changes():
+    result = orchestrator.run(
+        _canon_hier("era_hierarchy_v1.ttl"), _canon_hier("era_hierarchy_v2.ttl")
+    )
+    structural = [c for c in result.changes if c.layer == "structural"]
+    assert result.metadata["layer_counts"]["structural"] == len(structural)

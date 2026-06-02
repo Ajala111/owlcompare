@@ -1,0 +1,12 @@
+# fixture: blank_node_parent.ttl
+# Purpose: a subClassOf edge whose object is an anonymous (blank-node) class
+# expression. Loaded WITHOUT canonicalization so the blank node stays blank;
+# build() must skip blank-node endpoints, leaving ex:A with no indexed parent.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:B a owl:Class .
+ex:A a owl:Class ;
+    rdfs:subClassOf [ a owl:Class ] .

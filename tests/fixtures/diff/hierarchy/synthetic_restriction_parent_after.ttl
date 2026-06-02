@@ -1,0 +1,11 @@
+# fixture: synthetic_restriction_parent_after.ttl
+# Purpose: ex:Door without the restriction superclass. The only delta versus the
+# _before file is a synthetic restriction edge, so Component 07 emits no
+# hierarchy change for ex:Door.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ex:Handle a owl:Class .
+ex:hasPart a owl:ObjectProperty .
+ex:Door a owl:Class .

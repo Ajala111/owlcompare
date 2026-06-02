@@ -1,0 +1,14 @@
+# fixture: simple_reparent_specialization_before.ttl
+# Purpose: baseline for a specialization reparent (inverse of the generalization
+# pair). ex:A is a direct subclass of ex:C; ex:B is also a subclass of ex:C.
+# Pairs with the _after file, where ex:A moves down under ex:B.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:C a owl:Class .
+ex:B a owl:Class ;
+    rdfs:subClassOf ex:C .
+ex:A a owl:Class ;
+    rdfs:subClassOf ex:C .

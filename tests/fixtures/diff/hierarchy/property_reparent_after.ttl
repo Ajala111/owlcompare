@@ -1,0 +1,12 @@
+# fixture: property_reparent_after.ttl
+# Purpose: ex:hasGauge reparented from ex:hasDimension to ex:hasMeasurement
+# (incomparable -> lateral). Expected: one property_reparented change.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:hasDimension a owl:ObjectProperty .
+ex:hasMeasurement a owl:ObjectProperty .
+ex:hasGauge a owl:ObjectProperty ;
+    rdfs:subPropertyOf ex:hasMeasurement .

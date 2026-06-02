@@ -1,0 +1,28 @@
+# fixture: era_hierarchy_v1.ttl
+# Purpose: flagship hierarchy fixture, version 1 — a small ERA-style class tree.
+#   era:Track       subClassOf era:TransportInfrastructure
+#   era:Signal      subClassOf era:Equipment
+# Pairs with era_hierarchy_v2.ttl, which exercises reparenting and a new class
+# together: era:Signal is reparented from era:Equipment to era:Asset, and
+# era:Asset is a brand-new class added independently (Component 06 + 07 interplay).
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://data.europa.eu/949/hierarchy> a owl:Ontology ;
+    owl:versionInfo "1.0.0" .
+
+era:TransportInfrastructure a owl:Class ;
+    rdfs:label "Transport infrastructure"@en .
+
+era:Equipment a owl:Class ;
+    rdfs:label "Equipment"@en .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:TransportInfrastructure .
+
+era:Signal a owl:Class ;
+    rdfs:label "Signal"@en ;
+    rdfs:subClassOf era:Equipment .
