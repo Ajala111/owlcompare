@@ -2,7 +2,7 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 3 — Rename detection (Component 11 complete; Components 12–13 remain, both optional refinements)
+**Current phase:** Phase 3 COMPLETE (Components 11–12 delivered). Next up: Phase 4 — Report renderers.
 
 ---
 
@@ -53,27 +53,36 @@ orchestrator pipeline and records its audit trail in
 
 ---
 
-## Phase 3 — Rename detection — IN PROGRESS
+## Phase 3 — Rename detection ✅ COMPLETE
 
 - [x] Component 11: Rename detector — `specs/11-rename-detection.md`
       (Delivered as a single component covering all three tiers: label-based
       **high** confidence, structural-fingerprint **medium** confidence, and
       user-supplied mapping **certain** confidence, plus cascade consolidation
-      of referencing changes. The originally-planned split into 11/12/13 was
-      folded into one spec/component.)
-- [ ] Component 12: Rename detector refinements (optional) — deferred
-- [ ] Component 13: Rename mapping file enhancements (optional) — deferred
+      of referencing changes.)
+- [x] Component 12: Rename refinements — `specs/12-rename-refinements.md`
+      (Part A: post-rename axiom re-diffing — the [[DD-018]] fix — surfaces
+      structural additions on a renamed entity as independent Layer 1 changes via
+      `rename.re_diff_renamed_entities`, run inside `detect()`. Part B:
+      `--export-rename-mapping` / `rename_mapping.dump()` writes detected renames
+      as a `--rename-mapping`-loadable TOML file.)
+- [x] Component 13: **considered, deferred from v1.** The originally-sketched
+      Component 13 scope is captured in the backlog (see below); none of it is
+      needed for the v1 rename system.
 
-**Phase 3 has begun.** Component 11 detects renames at three confidence tiers and
-consolidates each rename plus its cascade consequences into a single
+**Phase 3 is COMPLETE.** Component 11 detects renames at three confidence tiers
+and consolidates each rename plus its cascade consequences into a single
 `*_renamed` change, running between the Layer 1 slices and the severity
-classifier. Components 12 and 13 are now optional refinements of this one and are
-deferred.
+classifier. Component 12 closes the DD-018 gap (renames that *also* add structure
+now show both facts) and adds the rename-mapping export workflow.
 
 **Exit criteria (met):** A pair of fixture ontologies where entities have been
 renamed produces one rename record each, not an add + remove pair — see
 `tests/fixtures/rename/era_renames_*.ttl` (2 class renames + 1 property rename,
-cascade consequences subsumed, zero unexplained Layer 0 changes).
+cascade consequences subsumed, zero unexplained Layer 0 changes); and a rename
+that *also* adds structure surfaces both — see
+`tests/fixtures/rename/redidiff/era_rename_with_additions_*.ttl` (2 renames + 1
+restriction_added + 1 annotation_removed = 4 visible changes).
 
 ---
 
@@ -102,7 +111,22 @@ cascade consequences subsumed, zero unexplained Layer 0 changes).
 
 ## Backlog (post-v1)
 
-- Surface structural additions on renamed entities. Currently when a class is renamed and also gains new structural axioms (restrictions, hierarchy edges, annotations) in v2, those additions are deferred into the `class_added` change by Component 08, then absorbed when the rename consolidates the add+remove pair. Net effect: the rename hides the additions from the diff narrative. Possible v2 fix: after rename detection consolidates a pair, re-run a delta pass on the renamed entity's axioms (after IRI substitution) to surface any structural additions as independent Layer 1 changes. See [[DD-018]] and `specs/11-rename-detection.md` § Known limitations.
+- ~~Surface structural additions on renamed entities.~~ **Done in Component 12 Part A** (the [[DD-018]] fix): after rename detection consolidates a pair, `rename.re_diff_renamed_entities` re-runs the Layer 1 slices over the renamed entity's IRI-substituted axioms and surfaces any genuine additions as independent changes.
+
+### Component 13 scope — considered, deferred from v1
+
+These were the refinements originally sketched for a Component 13; each was
+weighed during Component 12 and deliberately left out of v1 (see
+`specs/12-rename-refinements.md` § Out of scope):
+
+- Many-to-many rename disambiguation via secondary signals (medium priority).
+- Confidence calibration with numeric scores beyond the three tiers (low priority).
+- Multi-language label weighting in the match heuristics (low priority).
+- Negative-evidence scoring (penalize structural mismatches) (low priority).
+- `--list-renames` flag (use `--format json | jq` for now) (low priority).
+- Surfacing "uncertain" candidates the user might confirm (low priority).
+- Reverse-mapping consistency check on imported mappings (low priority).
+
 - Quad-graph aware loader (resolves Component 04 known limitation)
 - Layer 2 inferential diff with HermiT
 - Layer 2 inferential diff with ELK

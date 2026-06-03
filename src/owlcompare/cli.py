@@ -47,6 +47,7 @@ from owlcompare.loader import load as _load_ontology
 from owlcompare.logging_config import configure_logging
 from owlcompare.model import LoadOptions
 from owlcompare.rename_mapping import RenameMapping
+from owlcompare.rename_mapping import dump as _dump_rename_mapping
 from owlcompare.rename_mapping import load as _load_rename_mapping
 from owlcompare.severity_config import SeverityConfig
 from owlcompare.severity_config import load as _load_severity_config
@@ -228,6 +229,14 @@ def diff(
             "or 'none' (disable rename detection).",
         ),
     ] = RenameConfidenceLevel.high,
+    export_rename_mapping: Annotated[
+        Path | None,
+        typer.Option(
+            "--export-rename-mapping",
+            help="Write the detected renames to a TOML file loadable by --rename-mapping. "
+            "Additive: does not affect stdout/stderr output. Overwrites any existing file.",
+        ),
+    ] = None,
 ) -> None:
     """Compare two ontologies at the syntactic (Layer 0) and structural (Layer 1) layers.
 
@@ -277,6 +286,18 @@ def diff(
         rename_min_confidence=min_confidence,
         detect_renames=detect_renames,
     )
+    # Export (Component 12 Part B) runs on the final DiffResult, before rendering,
+    # so a rendering failure can't lose it. It is additive — normal output still
+    # follows. Empty when no renames were detected or detection was disabled, in
+    # which case dump() logs INFO. Raises RenameMappingError (exit 5) on write
+    # failure, which main() maps to the process exit code.
+    if export_rename_mapping is not None:
+        _dump_rename_mapping(
+            result,
+            export_rename_mapping,
+            include_medium=rename_confidence is RenameConfidenceLevel.medium,
+        )
+
     changes = list(result.changes)
     registry = result.metadata["subsumption_registry"]
     refinements = result.metadata["severity_refinements"]

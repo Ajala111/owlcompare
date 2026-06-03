@@ -1,0 +1,16 @@
+# fixture: rename_pure_no_structural_change_v1.ttl
+# Purpose (Component 12 Part A regression canary): a clean rename with NO other
+# structural change. era:Track -> era:RailwayTrack with its label and single
+# parent carried over verbatim. The post-rename re-diff must emit ZERO new
+# changes — if it emits anything, its cascade-exclusion logic is wrong.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:Asset .

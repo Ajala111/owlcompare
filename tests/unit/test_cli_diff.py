@@ -9,6 +9,7 @@ only where Click itself produces the exit code (``--help``, missing arguments).
 from __future__ import annotations
 
 import json
+import tomllib
 from pathlib import Path
 
 from typer.testing import CliRunner
@@ -442,3 +443,121 @@ def test_cli_diff_json_includes_rename_evidence_and_confidence(capsys):
     assert "confidence" in details
     assert "evidence" in details
     assert "cascade_subsumes" in details
+
+
+# --------------------------------------------------------------------------- #
+# Component 12 Part B — --export-rename-mapping
+# --------------------------------------------------------------------------- #
+
+
+def test_cli_diff_export_rename_mapping_writes_file(tmp_path: Path):
+    out_toml = tmp_path / "renames.toml"
+    main(
+        [
+            "diff",
+            _ren("simple_class_rename_v1.ttl"),
+            _ren("simple_class_rename_v2.ttl"),
+            "--export-rename-mapping",
+            str(out_toml),
+        ]
+    )
+    data = tomllib.loads(out_toml.read_text(encoding="utf-8"))
+    assert data["classes"] == [
+        {
+            "old": "http://data.europa.eu/949/Track",
+            "new": "http://data.europa.eu/949/RailwayTrack",
+        }
+    ]
+
+
+def test_cli_diff_export_rename_mapping_with_no_renames_writes_empty_file(tmp_path: Path):
+    out_toml = tmp_path / "empty.toml"
+    main(
+        [
+            "diff",
+            _ren("no_rename_just_replacement_v1.ttl"),
+            _ren("no_rename_just_replacement_v2.ttl"),
+            "--export-rename-mapping",
+            str(out_toml),
+        ]
+    )
+    assert tomllib.loads(out_toml.read_text(encoding="utf-8")) == {"schema_version": 1}
+
+
+def test_cli_diff_export_rename_mapping_with_rename_confidence_none_writes_empty(tmp_path: Path):
+    out_toml = tmp_path / "none.toml"
+    main(
+        [
+            "diff",
+            _ren("simple_class_rename_v1.ttl"),
+            _ren("simple_class_rename_v2.ttl"),
+            "--rename-confidence",
+            "none",
+            "--export-rename-mapping",
+            str(out_toml),
+        ]
+    )
+    assert tomllib.loads(out_toml.read_text(encoding="utf-8")) == {"schema_version": 1}
+
+
+def test_cli_diff_export_rename_mapping_round_trip(capsys, tmp_path: Path):
+    out_toml = tmp_path / "era.toml"
+    main(
+        [
+            "diff",
+            _ren("era_renames_v1.ttl"),
+            _ren("era_renames_v2.ttl"),
+            "--export-rename-mapping",
+            str(out_toml),
+        ]
+    )
+    capsys.readouterr()  # drain the first invocation's output
+    main(
+        [
+            "diff",
+            _ren("era_renames_v1.ttl"),
+            _ren("era_renames_v2.ttl"),
+            "--format",
+            "json",
+            "--rename-mapping",
+            str(out_toml),
+            "--rename-confidence",
+            "certain",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+    renamed = [c for c in payload["changes"] if c["kind"].endswith("_renamed")]
+    assert len(renamed) == 3
+    assert all(c["details"]["confidence"] == "certain" for c in renamed)
+
+
+def test_cli_diff_export_rename_mapping_unwritable_path_exits_5(tmp_path: Path):
+    # A directory path is not writable as a file -> RenameMappingError exit 5.
+    rc = main(
+        [
+            "diff",
+            _ren("simple_class_rename_v1.ttl"),
+            _ren("simple_class_rename_v2.ttl"),
+            "--export-rename-mapping",
+            str(tmp_path),
+        ]
+    )
+    assert rc == 5
+
+
+def test_cli_diff_export_does_not_suppress_normal_output(capsys, tmp_path: Path):
+    out_toml = tmp_path / "renames.toml"
+    main(
+        [
+            "diff",
+            _ren("simple_class_rename_v1.ttl"),
+            _ren("simple_class_rename_v2.ttl"),
+            "--format",
+            "json",
+            "--export-rename-mapping",
+            str(out_toml),
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+    assert any(c["kind"] == "class_renamed" for c in payload["changes"])
+    assert out_toml.exists()

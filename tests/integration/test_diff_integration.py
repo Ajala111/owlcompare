@@ -491,6 +491,56 @@ def test_severity_classifier_runs_after_renames():
     assert renamed.details["change_id"] not in refined_ids
 
 
+REDIDIFF = REN / "redidiff"
+
+
+def _canon_redidiff(name: str):
+    return canonicalize(load(str(REDIDIFF / name)))
+
+
+def _run_redidiff(v_a: str, v_b: str, **kwargs):
+    return orchestrator.run(_canon_redidiff(v_a), _canon_redidiff(v_b), **kwargs)
+
+
+def test_era_rename_with_additions_emits_expected_4_changes():
+    # Flagship for Component 12 Part A: 2 renames + 1 restriction_added + 1
+    # annotation_removed surfaced by the post-rename re-diff.
+    result = _run_redidiff("era_rename_with_additions_v1.ttl", "era_rename_with_additions_v2.ttl")
+    structural = [c for c in result.changes if c.layer == "structural"]
+    assert sorted(c.kind for c in structural) == [
+        "annotation_removed",
+        "class_renamed",
+        "class_renamed",
+        "restriction_added",
+    ]
+
+
+def test_era_renames_export_round_trip(tmp_path):
+    from owlcompare.rename_mapping import dump
+    from owlcompare.rename_mapping import load as load_mapping
+
+    result = _run_ren("era_renames_v1.ttl", "era_renames_v2.ttl")
+    path = tmp_path / "m.toml"
+    dump(result, path)
+    mapping = load_mapping(path)
+    rerun = orchestrator.run(
+        _canon_ren("era_renames_v1.ttl"),
+        _canon_ren("era_renames_v2.ttl"),
+        rename_mapping=mapping,
+        rename_min_confidence="certain",
+    )
+    renamed = [c for c in rerun.changes if c.kind.endswith("_renamed")]
+    assert len(renamed) == 3
+    assert all(c.details["confidence"] == "certain" for c in renamed)
+
+
+def test_simple_rename_fixture_now_no_phantom_changes():
+    # Regression: Component 12's re-diff introduces no new changes for a pure rename.
+    result = _run_ren("simple_class_rename_v1.ttl", "simple_class_rename_v2.ttl")
+    structural = [c for c in result.changes if c.layer == "structural"]
+    assert sorted(c.kind for c in structural) == ["class_renamed"]
+
+
 def test_reparent_with_new_restriction_fixture_upgrades_severity():
     # era:Track is reparented (a generalization Component 07 alone rates
     # non_breaking) and simultaneously gains a restriction; Rule 5 upgrades the

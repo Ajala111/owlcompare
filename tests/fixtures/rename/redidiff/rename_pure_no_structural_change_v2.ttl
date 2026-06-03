@@ -1,0 +1,15 @@
+# fixture: rename_pure_no_structural_change_v2.ttl
+# Pairs with rename_pure_no_structural_change_v1.ttl. era:Track -> era:RailwayTrack;
+# label "Track"@en and parent era:Asset carried over verbatim. Nothing else
+# changes, so after rename detection the re-diff is a no-op (zero new changes).
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:RailwayTrack a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:Asset .

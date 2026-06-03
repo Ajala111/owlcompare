@@ -1,0 +1,24 @@
+# fixture: rename_plus_new_restriction_v2.ttl
+# Pairs with rename_plus_new_restriction_v1.ttl. era:Track -> era:RailwayTrack
+# (label preserved) and the renamed class gains a new max-cardinality 1
+# restriction on era:hasGauge. Re-diff should emit one restriction_added
+# (breaking) independent of the class_renamed.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:RailwayTrack a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:Asset ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty era:hasGauge ;
+        owl:maxCardinality 1
+    ] .
+
+era:hasGauge a owl:ObjectProperty ;
+    rdfs:label "has gauge"@en .

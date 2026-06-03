@@ -351,7 +351,7 @@ A single-line f-string with the same lambda formats fine; the bug needs the mult
 
 ## DD-018: Rename detection absorbs structural additions on the renamed entity
 
-**Status:** accepted
+**Status:** resolved (addressed by Component 12 Part A)
 **Date:** 2026-06-03
 
 **Decision:** Component 11's cascade subsumes the `*_added` change for the renamed entity, which silently absorbs any restriction / hierarchy / annotation additions that Components 08–09 had deferred into it. A rename that *also* introduces a new constraint on the same entity produces one `*_renamed` row instead of two rows ("renamed" plus "new constraint").
@@ -369,3 +369,5 @@ A single-line f-string with the same lambda formats fine; the bug needs the mult
 **Alternatives considered:**
 - *Re-diff the renamed entity's axioms during Component 11:* the correct long-term fix, but it duplicates Component 08/09 logic under IRI substitution and complicates the cascade for a rare case. Deferred to v2 rather than rushed into v1.
 - *Stop Components 08/09 from deferring axioms into `*_added` for entities that turn out to be renamed:* impossible at deferral time — rename detection runs *after* those slices, so they cannot know an entity is about to be paired as a rename.
+
+**Resolution (2026-06-03, Component 12 Part A):** addressed by Component 12 Part A; structural additions on renamed entities now surface as independent Layer 1 changes via post-rename axiom re-diffing. `rename.re_diff_renamed_entities` runs inside `detect()` (after the cascade pass, before severity refinement): for each accepted rename it builds a minimal one-entity sub-snapshot of the renamed entity's own axioms (subject-position triples plus their synthetic restriction/list URN closure) with the old IRI substituted for the new, then re-runs the hierarchy / restriction / annotation slices over the A/B sub-snapshots. Anything that is *not* explained by pure IRI substitution surfaces as its own `restriction_added` / `annotation_removed` / `class_parent_added` / `restriction_changed` etc., classified and severity-rated by the same Layer 1 slices as the rest of the pipeline, with a fresh `change_id` recorded in the rename's `details.cascade_subsumes`. The chosen Q1 resolution — restrict the re-diff to the entity's *own* (subject-side) axioms — structurally excludes the cascade triples (references to the entity from *other* entities, which live in object position and are already handled by `_cascade`), so there is no double-counting and pure renames emit zero new changes. The chosen alternative (re-running the real slices on sub-snapshots rather than re-implementing classification) keeps the re-diff consistent with Components 07–09. The flagship `tests/fixtures/rename/redidiff/era_rename_with_additions_*.ttl` (2 renames + 1 restriction_added + 1 annotation_removed) and the `rename_pure_no_structural_change_*` canary pin the behaviour.

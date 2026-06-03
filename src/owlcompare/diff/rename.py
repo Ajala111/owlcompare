@@ -21,7 +21,11 @@ import logging
 from dataclasses import dataclass, replace
 from typing import Literal
 
-from owlcompare.model import shorten_iri
+import rdflib
+from rdflib.term import Node, URIRef
+
+from owlcompare.loader import _build_index
+from owlcompare.model import OntologyMetadata, OntologySnapshot, shorten_iri
 from owlcompare.rename_mapping import RenameMapping, empty
 
 from ._common import Change, DiffOptions, DiffResult
@@ -34,6 +38,9 @@ from ._rename_evidence import (
     shared_counts,
 )
 from ._subsumption import SubsumptionRegistry
+from .structural import annotations as annotations_slice
+from .structural import hierarchy as hierarchy_slice
+from .structural import restrictions as restrictions_slice
 from .structural._hierarchy_index import build as build_hierarchy
 
 logger = logging.getLogger(__name__)
@@ -173,7 +180,12 @@ def detect(
     new_metadata = dict(result.metadata)
     new_metadata["rename_candidates"] = tuple(considered)
     new_metadata["renames_applied"] = tuple(applied)
-    return replace(result, changes=tuple(new_changes), metadata=new_metadata)
+    consolidated = replace(result, changes=tuple(new_changes), metadata=new_metadata)
+
+    # Component 12 Part A (DD-018 fix): structural axioms a renamed entity *gained*
+    # in B were absorbed by the cascade above; re-diff the renamed entity's own
+    # axioms (IRIs substituted) to surface them as independent Layer 1 changes.
+    return re_diff_renamed_entities(consolidated, result.a, result.b)
 
 
 # --------------------------------------------------------------------------- #
@@ -601,3 +613,170 @@ def _cid(change: Change) -> str:
     if isinstance(stored, str):
         return stored
     return SubsumptionRegistry.change_id(change)
+
+
+# --------------------------------------------------------------------------- #
+# Component 12 Part A — post-rename axiom re-diffing (DD-018 fix)
+# --------------------------------------------------------------------------- #
+
+# A renamed entity's own axioms live in the triples where it is the *subject*
+# (plus the transitive closure of any synthetic restriction/list URNs they
+# point at). References to it from *other* entities — the entity in object
+# position — are cascade consequences already handled by ``_cascade`` above, so
+# restricting the re-diff to subject-side axioms is exactly the Q1 exclusion of
+# "triples already accounted for by the rename's cascade".
+_EMPTY_METADATA = OntologyMetadata(
+    iri=None,
+    version_iri=None,
+    imports=(),
+    labels=(),
+    comments=(),
+    version_info=None,
+    prior_version=None,
+    other_annotations=(),
+)
+
+
+def re_diff_renamed_entities(
+    result: DiffResult,
+    a: OntologySnapshot,
+    b: OntologySnapshot,
+) -> DiffResult:
+    """Surface structural additions on renamed entities as independent changes.
+
+    For each rename in ``result.metadata['renames_applied']``, re-diff the renamed
+    entity's own axioms (with every accepted rename's IRI substituted into A) and
+    emit any genuinely new structural axioms — restrictions, parent edges,
+    domain/range, annotations — as their own Layer 1 ``Change`` records. This
+    complements Component 11's cascade, which absorbs add+remove pairs that differ
+    only by the renamed IRI; anything that *can't* be matched that way is emitted
+    here (the DD-018 fix).
+
+    Each new change classifies through the same Layer 1 slices as the rest of the
+    pipeline (run over minimal one-entity sub-snapshots), gets a fresh
+    ``change_id``, and is recorded in the rename's ``details.cascade_subsumes`` for
+    the audit trail. Returns a new ``DiffResult``; the original is not mutated.
+    """
+    applied = result.metadata.get("renames_applied", ())
+    if not applied:
+        return result
+
+    substitutions = {cand.removed_iri: cand.added_iri for cand in applied}
+    prefixes = {**a.prefixes, **b.prefixes}
+    changes = list(result.changes)
+    # Locate each consolidated ``*_renamed`` change by (kind, new IRI) so we can
+    # extend its cascade audit trail in place on our working copy.
+    rename_positions = {
+        (change.kind, change.subject): position
+        for position, change in enumerate(changes)
+        if change.kind.endswith("_renamed")
+    }
+
+    for cand in sorted(applied, key=lambda c: c.removed_iri):
+        sub_a = _entity_sub_snapshot(a, cand.removed_iri, substitutions, prefixes)
+        sub_b = _entity_sub_snapshot(b, cand.added_iri, {}, prefixes)
+        new_changes = _re_diff_slices(sub_a, sub_b)
+        if not new_changes:
+            continue
+        changes.extend(new_changes)
+        _record_under_rename(changes, rename_positions, cand, new_changes)
+
+    return replace(result, changes=tuple(changes))
+
+
+def _entity_sub_snapshot(
+    snapshot: OntologySnapshot,
+    entity_iri: str,
+    substitutions: dict[str, str],
+    prefixes: dict[str, str],
+) -> OntologySnapshot:
+    """A minimal canonical snapshot holding only ``entity_iri``'s own axioms."""
+    graph = rdflib.Graph(bind_namespaces="none")
+    for subject, predicate, obj in _entity_axioms(snapshot.graph, entity_iri):
+        graph.add(
+            (
+                _subst_term(subject, substitutions),
+                _subst_term(predicate, substitutions),
+                _subst_term(obj, substitutions),
+            )
+        )
+    return OntologySnapshot(
+        metadata=_EMPTY_METADATA,
+        entities=_build_index(graph),
+        graph=graph,
+        prefixes=prefixes,
+        source="<rename re-diff>",
+        format="turtle",
+        canonical=True,
+    )
+
+
+def _entity_axioms(graph: rdflib.Graph, entity_iri: str) -> set[tuple[Node, Node, Node]]:
+    """Every triple with ``entity_iri`` as subject, plus its synthetic-URN closure.
+
+    Synthetic restriction/list URNs reachable in object position are followed so a
+    reified restriction attached to the entity is decoded whole; ordinary named
+    objects are *not* followed (they are other entities, not this one's axioms).
+    """
+    collected: set[tuple[Node, Node, Node]] = set()
+    seen: set[Node] = set()
+    pending: list[Node] = [URIRef(entity_iri)]
+    while pending:
+        subject = pending.pop()
+        if subject in seen:
+            continue
+        seen.add(subject)
+        for predicate, obj in graph.predicate_objects(subject):
+            collected.add((subject, predicate, obj))
+            if isinstance(obj, URIRef) and str(obj).startswith(_SYNTHETIC_PREFIX):
+                pending.append(obj)
+    return collected
+
+
+def _subst_term(term: Node, substitutions: dict[str, str]) -> Node:
+    """Replace ``term`` with its renamed IRI if it is a substituted URIRef."""
+    if isinstance(term, URIRef):
+        replacement = substitutions.get(str(term))
+        if replacement is not None:
+            return URIRef(replacement)
+    return term
+
+
+def _re_diff_slices(sub_a: OntologySnapshot, sub_b: OntologySnapshot) -> list[Change]:
+    """Run the hierarchy / restriction / annotation slices over the sub-snapshots.
+
+    A fresh registry and empty Layer 0 input keep these changes self-contained:
+    the entity exists on both sides (post-substitution), so no slice defers, and
+    nothing is registered against the main pipeline's subsumption registry.
+    """
+    registry = SubsumptionRegistry()
+    changes: list[Change] = []
+    changes.extend(hierarchy_slice.diff(sub_a, sub_b, [], registry))
+    changes.extend(restrictions_slice.diff(sub_a, sub_b, [], registry))
+    changes.extend(annotations_slice.diff(sub_a, sub_b, [], registry))
+    return changes
+
+
+def _record_under_rename(
+    changes: list[Change],
+    rename_positions: dict[tuple[str, str | None], int],
+    cand: RenameCandidate,
+    new_changes: list[Change],
+) -> None:
+    """Append the re-diffed change ids to their rename's ``cascade_subsumes``.
+
+    Replaces the rename ``Change`` in ``changes`` with a copy carrying the extended
+    audit trail and a recomputed ``change_id`` (cascade_subsumes feeds the id hash),
+    leaving the caller's original ``Change`` object untouched.
+    """
+    position = rename_positions.get((f"{cand.entity_kind}_renamed", cand.added_iri))
+    if position is None:
+        return
+    rename_change = changes[position]
+    details = dict(rename_change.details)
+    existing = list(details.get("cascade_subsumes", []))
+    added_ids = [_cid(change) for change in new_changes]
+    details["cascade_subsumes"] = sorted(set(existing) | set(added_ids))
+    updated = replace(rename_change, details=details)
+    details["change_id"] = SubsumptionRegistry.change_id(updated)
+    changes[position] = updated

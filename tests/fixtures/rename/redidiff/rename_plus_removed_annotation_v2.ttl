@@ -1,0 +1,15 @@
+# fixture: rename_plus_removed_annotation_v2.ttl
+# Pairs with rename_plus_removed_annotation_v1.ttl. era:Signal -> era:RailwaySignal
+# (English label preserved -> high confidence); the French label "Signalisation"@fr
+# is removed. Re-diff should emit one annotation_removed (info) for the fr label.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:RailwaySignal a owl:Class ;
+    rdfs:label "Signal"@en ;
+    rdfs:subClassOf era:Asset .

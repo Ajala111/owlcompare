@@ -1,13 +1,18 @@
-"""Unit tests for the rename mapping loader — specs/11-rename-detection.md."""
+"""Unit tests for the rename mapping loader and exporter — specs/11 & 12."""
 
 from __future__ import annotations
 
+import tomllib
 from pathlib import Path
 
 import pytest
 
+from owlcompare.canonicalize import canonicalize
+from owlcompare.diff._common import DiffResult
+from owlcompare.diff.rename import RenameCandidate
 from owlcompare.exceptions import RenameMappingError
-from owlcompare.rename_mapping import RenameMapping, empty, load
+from owlcompare.loader import load as load_ontology
+from owlcompare.rename_mapping import RenameMapping, dump, empty, load
 
 FIXTURES = Path(__file__).resolve().parent.parent / "fixtures" / "rename"
 
@@ -89,3 +94,102 @@ def test_load_entry_missing_new_raises(tmp_path: Path):
     with pytest.raises(RenameMappingError) as exc:
         load(path)
     assert exc.value.exit_code == 6
+
+
+# --------------------------------------------------------------------------- #
+# Component 12 Part B — dump() / export
+# --------------------------------------------------------------------------- #
+
+
+def _result_with(*candidates: RenameCandidate) -> DiffResult:
+    """A minimal DiffResult carrying the given accepted renames in metadata."""
+    a = canonicalize(load_ontology(str(_fx("simple_class_rename_v1.ttl"))))
+    b = canonicalize(load_ontology(str(_fx("simple_class_rename_v2.ttl"))))
+    return DiffResult(a=a, b=b, changes=(), metadata={"renames_applied": candidates})
+
+
+def _cand(old: str, new: str, kind: str, confidence: str) -> RenameCandidate:
+    return RenameCandidate(
+        removed_iri=old,
+        added_iri=new,
+        entity_kind=kind,
+        confidence=confidence,
+        evidence=(),
+        score=1.0,
+    )
+
+
+def test_dump_writes_valid_toml(tmp_path: Path):
+    path = tmp_path / "out.toml"
+    dump(RenameMapping(classes=(("urn:a", "urn:b"),)), path)
+    data = tomllib.loads(path.read_text(encoding="utf-8"))
+    assert data["schema_version"] == 1
+    assert data["classes"] == [{"old": "urn:a", "new": "urn:b"}]
+
+
+def test_dump_empty_mapping_writes_schema_version_only(tmp_path: Path):
+    path = tmp_path / "out.toml"
+    dump(empty(), path)
+    assert tomllib.loads(path.read_text(encoding="utf-8")) == {"schema_version": 1}
+
+
+def test_dump_classes_sorted_by_old_iri(tmp_path: Path):
+    path = tmp_path / "out.toml"
+    dump(RenameMapping(classes=(("urn:z", "urn:1"), ("urn:a", "urn:2"))), path)
+    data = tomllib.loads(path.read_text(encoding="utf-8"))
+    assert [c["old"] for c in data["classes"]] == ["urn:a", "urn:z"]
+
+
+def test_dump_properties_sorted_by_old_iri(tmp_path: Path):
+    path = tmp_path / "out.toml"
+    dump(RenameMapping(object_properties=(("urn:z", "urn:1"), ("urn:a", "urn:2"))), path)
+    data = tomllib.loads(path.read_text(encoding="utf-8"))
+    assert [p["old"] for p in data["object_properties"]] == ["urn:a", "urn:z"]
+
+
+def test_dump_accepts_renamemapping_directly(tmp_path: Path):
+    path = tmp_path / "out.toml"
+    dump(RenameMapping(classes=(("urn:a", "urn:b"),)), path)
+    assert load(path).classes == (("urn:a", "urn:b"),)
+
+
+def test_dump_accepts_diffresult_extracts_renames_applied(tmp_path: Path):
+    path = tmp_path / "out.toml"
+    dump(_result_with(_cand("urn:old", "urn:new", "class", "high")), path)
+    assert load(path).classes == (("urn:old", "urn:new"),)
+
+
+def test_dump_excludes_medium_confidence_by_default(tmp_path: Path):
+    path = tmp_path / "out.toml"
+    dump(
+        _result_with(
+            _cand("urn:m_old", "urn:m_new", "class", "medium"),
+            _cand("urn:h_old", "urn:h_new", "class", "high"),
+        ),
+        path,
+    )
+    classes = load(path).classes
+    assert ("urn:h_old", "urn:h_new") in classes
+    assert ("urn:m_old", "urn:m_new") not in classes
+
+
+def test_dump_includes_medium_confidence_when_user_opted_in(tmp_path: Path):
+    path = tmp_path / "out.toml"
+    dump(
+        _result_with(_cand("urn:m_old", "urn:m_new", "class", "medium")), path, include_medium=True
+    )
+    assert ("urn:m_old", "urn:m_new") in load(path).classes
+
+
+def test_dump_round_trip(tmp_path: Path):
+    path = tmp_path / "out.toml"
+    source = RenameMapping(classes=(("urn:a", "urn:b"),), object_properties=(("urn:c", "urn:d"),))
+    dump(source, path)
+    assert load(path) == source
+
+
+def test_dump_write_failure_raises_rename_mapping_error_exit_code_5(tmp_path: Path):
+    # tmp_path is a directory; writing a file to that path fails.
+    with pytest.raises(RenameMappingError) as exc:
+        dump(empty(), tmp_path)
+    assert exc.value.exit_code == 5

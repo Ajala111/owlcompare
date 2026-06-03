@@ -1,0 +1,17 @@
+# fixture: rename_plus_removed_annotation_v1.ttl
+# Purpose (Component 12 Part A / DD-018): a class is renamed AND loses an
+# annotation. era:Signal -> era:RailwaySignal (label "Signal"@en preserved ->
+# high-confidence rename). The French label "Signalisation"@fr present here is
+# dropped in v2; the post-rename re-diff must surface it as one annotation_removed.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Signal a owl:Class ;
+    rdfs:label "Signal"@en ;
+    rdfs:label "Signalisation"@fr ;
+    rdfs:subClassOf era:Asset .

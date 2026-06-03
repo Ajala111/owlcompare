@@ -1,0 +1,27 @@
+# fixture: era_rename_with_additions_v1.ttl
+# Flagship for Component 12 Part A (DD-018). Two classes are renamed in v2, each
+# label preserved (high-confidence), and each *also* changes structurally on its
+# new IRI:
+#   - era:Track  -> era:RailwayTrack   AND gains a new max-cardinality restriction
+#   - era:Signal -> era:RailwaySignal  AND loses its French label
+# Expected after detection: 2 *_renamed + 1 restriction_added + 1 annotation_removed
+# = exactly 4 visible structural changes.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:Asset .
+
+era:Signal a owl:Class ;
+    rdfs:label "Signal"@en ;
+    rdfs:label "Signalisation"@fr ;
+    rdfs:subClassOf era:Asset .
+
+era:hasGauge a owl:ObjectProperty ;
+    rdfs:label "has gauge"@en .

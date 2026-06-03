@@ -1,0 +1,30 @@
+# fixture: era_rename_with_additions_v2.ttl
+# Pairs with era_rename_with_additions_v1.ttl. Applies the two renames and the two
+# additions:
+#   - era:RailwayTrack  (was era:Track),  gains a max-cardinality 1 restriction on era:hasGauge
+#   - era:RailwaySignal (was era:Signal), drops the French label "Signalisation"@fr
+# Labels "Track"@en / "Signal"@en are preserved so both pair at high confidence.
+# Expected: 2 *_renamed + 1 restriction_added + 1 annotation_removed = 4 changes.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:RailwayTrack a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:Asset ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty era:hasGauge ;
+        owl:maxCardinality 1
+    ] .
+
+era:RailwaySignal a owl:Class ;
+    rdfs:label "Signal"@en ;
+    rdfs:subClassOf era:Asset .
+
+era:hasGauge a owl:ObjectProperty ;
+    rdfs:label "has gauge"@en .

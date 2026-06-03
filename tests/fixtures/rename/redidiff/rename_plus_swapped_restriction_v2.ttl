@@ -1,0 +1,27 @@
+# fixture: rename_plus_swapped_restriction_v2.ttl
+# Pairs with rename_plus_swapped_restriction_v1.ttl. era:Track -> era:RailwayTrack
+# (label preserved -> high confidence); the restriction on era:hasGauge changes
+# from someValuesFrom to allValuesFrom era:Gauge. Re-diff should emit one
+# restriction_changed (kind change -> breaking).
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Gauge a owl:Class ;
+    rdfs:label "Gauge"@en .
+
+era:hasGauge a owl:ObjectProperty ;
+    rdfs:label "has gauge"@en .
+
+era:RailwayTrack a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:Asset ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty era:hasGauge ;
+        owl:allValuesFrom era:Gauge
+    ] .
