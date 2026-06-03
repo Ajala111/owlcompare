@@ -1,0 +1,22 @@
+# fixture: restriction_after_property_removed_v1.ttl
+# Purpose: Rule 3 precondition. era:Track carries a someValuesFrom restriction on
+# era:hasSignal. In v2 the property era:hasSignal is removed entirely, which also
+# drops the restriction. The restriction_removed (non_breaking) is a *consequence*
+# of the object_property_removed (breaking), so Rule 3 demotes it to info.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Track a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty era:hasSignal ;
+        owl:someValuesFrom era:Signal
+    ] .
+
+era:Signal a owl:Class .
+
+era:hasSignal a owl:ObjectProperty ;
+    rdfs:domain era:Track ;
+    rdfs:range era:Signal .

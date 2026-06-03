@@ -18,10 +18,15 @@ from owlcompare.cli import app, main
 runner = CliRunner()
 FIXTURES = Path(__file__).resolve().parent.parent / "fixtures"
 DIFF = FIXTURES / "diff"
+SEV = FIXTURES / "severity"
 
 
 def _fx(name: str) -> str:
     return str(DIFF / name)
+
+
+def _sev(name: str) -> str:
+    return str(SEV / name)
 
 
 def test_cli_diff_help_lists_layers_format_out(help_runner, clean):
@@ -197,3 +202,108 @@ def test_cli_diff_table_has_no_truncation_artifacts(capsys):
     assert restriction_lines
     for line in restriction_lines:
         assert "…" not in line  # Unicode ellipsis from summary truncation
+
+
+# --------------------------------------------------------------------------- #
+# Component 10 — severity config / refinement flags
+# --------------------------------------------------------------------------- #
+
+
+def test_cli_diff_severity_config_flag_loads_config():
+    # A valid config loads and the diff completes; era:locatedOn is still removed
+    # (kept breaking by the "*_removed structural -> breaking" override) -> exit 10.
+    rc = main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--severity-config",
+            _sev("valid_config.toml"),
+        ]
+    )
+    assert rc == 10
+
+
+def test_cli_diff_severity_config_missing_file_exits_2():
+    rc = main(
+        [
+            "diff",
+            _fx("identical_a.ttl"),
+            _fx("identical_b.ttl"),
+            "--severity-config",
+            _sev("nope.toml"),
+        ]
+    )
+    assert rc == 2
+
+
+def test_cli_diff_severity_config_malformed_exits_6():
+    rc = main(
+        [
+            "diff",
+            _fx("identical_a.ttl"),
+            _fx("identical_b.ttl"),
+            "--severity-config",
+            _sev("malformed.toml"),
+        ]
+    )
+    assert rc == 6
+
+
+def test_cli_diff_no_severity_refinement_flag_skips_classifier(capsys):
+    main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--no-severity-refinement",
+            "--format",
+            "json",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+    # The audit trail is present but empty, and Rule 6 did NOT run: a subsumed
+    # Layer 0 removal keeps its original breaking severity.
+    assert payload["metadata"]["severity_refinements"] == []
+    syntactic_breaking = [
+        c for c in payload["changes"] if c["layer"] == "syntactic" and c["severity"] == "breaking"
+    ]
+    assert syntactic_breaking
+
+
+def test_cli_diff_explain_severity_flag_prints_refinement_panel(capsys):
+    main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--explain-severity",
+        ]
+    )
+    out = capsys.readouterr().out
+    assert "Severity explanations" in out
+    assert "subsumed-layer0-info" in out
+
+
+def test_cli_diff_json_includes_severity_refinements_in_metadata(capsys):
+    main(["diff", _fx("era_evolution_v1.ttl"), _fx("era_evolution_v2.ttl"), "--format", "json"])
+    payload = json.loads(capsys.readouterr().out)
+    refinements = payload["metadata"]["severity_refinements"]
+    assert isinstance(refinements, list)
+    # era_evolution subsumes plenty of Layer 0 changes -> Rule 6 fires.
+    assert any(r["rule_id"] == "subsumed-layer0-info" for r in refinements)
+
+
+def test_cli_diff_exit_code_respects_user_override():
+    # demote_all forces every change (including the breaking property removal) to
+    # info, so the diff exits 0 even though structurally it is a breaking change.
+    rc = main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--severity-config",
+            _sev("demote_all.toml"),
+        ]
+    )
+    assert rc == 0

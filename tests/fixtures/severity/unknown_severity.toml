@@ -1,0 +1,8 @@
+# fixture: unknown_severity.toml
+# Purpose: an override naming a severity value that is not one of the four valid
+# literals. The loader must raise SeverityConfigError (exit 6).
+schema_version = 1
+
+[[overrides]]
+kind_pattern = "class_removed"
+severity = "blocking"

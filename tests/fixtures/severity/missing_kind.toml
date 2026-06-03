@@ -1,0 +1,8 @@
+# fixture: missing_kind.toml
+# Purpose: an override with no kind_pattern. kind_pattern is required; the loader
+# must raise SeverityConfigError (exit 6).
+schema_version = 1
+
+[[overrides]]
+subject_pattern = "*Track*"
+severity = "info"

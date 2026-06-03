@@ -10,12 +10,14 @@ in exactly one place. See ``specs/06-structural-entities.md`` § Orchestrator.
 from __future__ import annotations
 
 import logging
+from dataclasses import replace
 
 from owlcompare.canonicalize import canonicalize
 from owlcompare.exceptions import DiffError
 from owlcompare.model import OntologySnapshot
+from owlcompare.severity_config import SeverityConfig
 
-from . import syntactic
+from . import severity, syntactic
 from ._common import Change, DiffOptions, DiffResult
 from ._subsumption import SubsumptionRegistry
 
@@ -32,18 +34,26 @@ def run(
     a: OntologySnapshot,
     b: OntologySnapshot,
     options: DiffOptions | None = None,
+    severity_config: SeverityConfig | None = None,
+    refine_severity: bool = True,
 ) -> DiffResult:
     """Run the diff pipeline end-to-end across all enabled layers.
 
     Canonicalizes non-canonical inputs silently (Q3 — logged at INFO), runs
     Layer 0 then any enabled Layer 1 slice with a shared subsumption registry,
-    and returns a :class:`DiffResult` carrying every change plus metadata
-    (per-layer counts and the registry).
+    and finally (Component 10) refines severities with cross-cutting rules and any
+    user overrides. Returns a :class:`DiffResult` carrying every change plus
+    metadata (per-layer counts, the registry, and the severity-refinement audit
+    trail).
 
     Args:
         a: Baseline snapshot (canonical or not).
         b: Comparison snapshot (canonical or not).
         options: Layer selection and future knobs.
+        severity_config: Optional user severity overrides (Component 10).
+        refine_severity: When ``False``, skip Component 10 entirely (the CLI's
+            ``--no-severity-refinement``); metadata still gets an empty
+            ``severity_refinements`` tuple so the schema is stable.
 
     Returns:
         Aggregated :class:`DiffResult`.
@@ -87,7 +97,15 @@ def run(
         "layer_counts": layer_counts,
         "subsumption_registry": registry,
     }
-    return DiffResult(a=a, b=b, changes=tuple(all_changes), metadata=metadata)
+    result = DiffResult(a=a, b=b, changes=tuple(all_changes), metadata=metadata)
+
+    if refine_severity:
+        # Component 10 runs after every Layer 1 slice: it is the one place with
+        # all changes (and the populated registry) in view. See specs/10-severity.md.
+        return severity.refine(result, severity_config)
+    new_metadata = dict(result.metadata)
+    new_metadata["severity_refinements"] = ()
+    return replace(result, metadata=new_metadata)
 
 
 def _ensure_canonical(snapshot: OntologySnapshot) -> OntologySnapshot:

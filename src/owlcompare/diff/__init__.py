@@ -7,9 +7,10 @@ Layers 2-3 are planned.
 
 from __future__ import annotations
 
-from . import orchestrator, structural, syntactic
+from . import orchestrator, severity, structural, syntactic
 from ._common import Change, DiffLayer, DiffOptions, DiffResult, Severity
 from ._subsumption import SubsumptionRegistry
+from .severity import SeverityRefinement
 
 __all__ = [
     "Change",
@@ -17,8 +18,10 @@ __all__ = [
     "DiffOptions",
     "DiffResult",
     "Severity",
+    "SeverityRefinement",
     "SubsumptionRegistry",
     "orchestrator",
+    "severity",
     "structural",
     "syntactic",
 ]

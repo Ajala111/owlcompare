@@ -1,0 +1,29 @@
+# fixture: valid_config.toml
+# Purpose: a well-formed severity config exercising every override shape —
+# kind glob only, kind glob + subject glob, exact kind, and kind glob + layer
+# filter. Used by the config loader tests and the CLI --severity-config tests.
+schema_version = 1
+
+# Force all annotation changes to info (kind glob only).
+[[overrides]]
+kind_pattern = "annotation_*"
+severity = "info"
+
+# A specific legacy entity is being retired; ignore its restriction changes
+# (kind glob + subject glob on the full IRI).
+[[overrides]]
+kind_pattern = "restriction_*"
+subject_pattern = "*LegacyTrack*"
+severity = "info"
+
+# Our project considers class reparenting (any direction) to be breaking
+# (exact kind).
+[[overrides]]
+kind_pattern = "class_reparented"
+severity = "breaking"
+
+# Treat every structural removal as breaking (kind glob + exact layer filter).
+[[overrides]]
+kind_pattern = "*_removed"
+layer = "structural"
+severity = "breaking"

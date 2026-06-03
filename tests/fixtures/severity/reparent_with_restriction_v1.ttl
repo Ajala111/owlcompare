@@ -1,0 +1,23 @@
+# fixture: reparent_with_restriction_v1.ttl
+# Purpose: Rule 5 precondition. era:Track sits under era:Siding (a specific
+# subclass of era:Infrastructure). In v2 it is reparented straight to
+# era:Infrastructure — a generalization, which Component 07 alone rates
+# non_breaking — AND it simultaneously gains a new cardinality restriction. The
+# combination is breaking, so Rule 5 upgrades the class_reparented to breaking.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Entity a owl:Class .
+
+era:Infrastructure a owl:Class ;
+    rdfs:subClassOf era:Entity .
+
+era:Siding a owl:Class ;
+    rdfs:subClassOf era:Infrastructure .
+
+era:Track a owl:Class ;
+    rdfs:subClassOf era:Siding .
+
+era:hasMaxSpeed a owl:DatatypeProperty .

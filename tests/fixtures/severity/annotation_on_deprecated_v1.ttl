@@ -1,0 +1,18 @@
+# fixture: annotation_on_deprecated_v1.ttl
+# Purpose: Rule 2 precondition. era:Track has a French label. In v2 the French
+# label changes AND era:Track is marked owl:deprecated true — so an
+# annotation_changed and an entity_deprecated land on the SAME entity. Rule 2
+# treats the editorial edit as reduced significance (info) given the deprecation.
+# (Kept separate from the Component 09 era_annotations fixture so its exact-count
+# test is unaffected.)
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:label "Voie"@fr .
+
+era:Signal a owl:Class ;
+    rdfs:label "Signal"@en .

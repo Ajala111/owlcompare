@@ -2,7 +2,7 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 2 — Syntactic and structural diff (Phase 1 complete)
+**Current phase:** Phase 3 — Rename detection (Phases 1 and 2 complete)
 
 ---
 
@@ -34,20 +34,22 @@ This is the source of truth for what's done, what's in progress, and what's defe
 
 ---
 
-## Phase 2 — Syntactic and structural diff
+## Phase 2 — Syntactic and structural diff ✅ COMPLETE
 
 - [x] Component 05: Layer 0 syntactic diff — `specs/05-syntactic-diff.md`
 - [x] Component 06: Layer 1 structural diff (entities) — `specs/06-structural-entities.md`
 - [x] Component 07: Layer 1 structural diff (hierarchy) — `specs/07-structural-hierarchy.md`
 - [x] Component 08: Layer 1 structural diff (restrictions) — `specs/08-structural-restrictions.md`
 - [x] Component 09: Layer 1 structural diff (annotations) — `specs/09-structural-annotations.md`
-- [ ] Component 10: Severity classification — `specs/10-severity.md`
+- [x] Component 10: Severity classification — `specs/10-severity.md`
 
-**Layer 1 is now feature-complete.** Components 06–09 cover entities, hierarchy,
-restrictions and annotations; only Component 10 (severity classifier polish)
-remains in Phase 2.
+**Phase 2 is COMPLETE.** Components 06–09 cover entities, hierarchy,
+restrictions and annotations; Component 10 adds the cross-cutting severity
+classifier (six built-in rules + TOML user overrides) that runs last in the
+orchestrator pipeline and records its audit trail in
+`metadata.severity_refinements`.
 
-**Exit criteria:** `owlcompare diff a.ttl b.ttl --format json` produces a complete, accurate Layer 0 + Layer 1 diff for the test fixtures.
+**Exit criteria (met):** `owlcompare diff a.ttl b.ttl --format json` produces a complete, accurate Layer 0 + Layer 1 diff for the test fixtures, with refined severities and the refinement audit trail in the JSON metadata.
 
 ---
 

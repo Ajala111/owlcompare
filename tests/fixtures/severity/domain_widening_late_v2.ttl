@@ -1,0 +1,19 @@
+# fixture: domain_widening_late_v2.ttl
+# Purpose: v2 of the Rule 4 pair. era:hasLocation's domain moves from era:Track to
+# era:Infrastructure, and a new edge era:Track rdfs:subClassOf era:Infrastructure
+# is asserted — so the new domain is an ancestor of the old (widening). See _v1.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Infrastructure a owl:Class .
+
+era:Track a owl:Class ;
+    rdfs:subClassOf era:Infrastructure .
+
+era:Asset a owl:Class .
+
+era:hasLocation a owl:ObjectProperty ;
+    rdfs:domain era:Infrastructure ;
+    rdfs:range era:Asset .

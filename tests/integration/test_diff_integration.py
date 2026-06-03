@@ -11,12 +11,13 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 from rdflib import RDF
 
 from owlcompare.canonicalize import canonicalize
-from owlcompare.diff import orchestrator, syntactic
+from owlcompare.diff import _severity_rules, orchestrator, syntactic
 from owlcompare.diff._subsumption import SubsumptionRegistry
 from owlcompare.diff.structural import entities
 from owlcompare.loader import load
@@ -24,6 +25,13 @@ from owlcompare.loader import load
 FIXTURES = Path(__file__).resolve().parent.parent / "fixtures"
 DIFF = FIXTURES / "diff"
 HIER = DIFF / "hierarchy"
+SEV = FIXTURES / "severity"
+
+
+def _run_sev(v_a: str, v_b: str):
+    return orchestrator.run(canonicalize(load(str(SEV / v_a))), canonicalize(load(str(SEV / v_b))))
+
+
 _RDF_TYPE = str(RDF.type)
 _SUBCLASS_OF = "http://www.w3.org/2000/01/rdf-schema#subClassOf"
 
@@ -350,3 +358,77 @@ def test_era_annotations_fixture_emits_expected_changes():
         "entity_deprecated",
         "ontology_metadata_changed",
     ]
+
+
+# --------------------------------------------------------------------------- #
+# Component 10 — severity refinement
+# --------------------------------------------------------------------------- #
+
+
+def test_era_evolution_severity_refinement_only_affects_subsumed_layer0():
+    # era_evolution has no genuine cross-cutting case, but Rule 6 (subsumed Layer 0
+    # -> info) is universal and fires on the triples folded into Layer 1 changes.
+    # The invariant is therefore not "no refinements" but "nothing meaningful was
+    # touched": only Rule 6 fired, and only on subsumed Layer 0 changes.
+    result = _run("era_evolution_v1.ttl", "era_evolution_v2.ttl")
+    registry = result.metadata["subsumption_registry"]
+    refinements = result.metadata["severity_refinements"]
+
+    # 1. Every refinement that happened is Rule 6 — no other rule misfired here.
+    assert refinements  # Rule 6 does fire (this fixture subsumes plenty)
+    assert all(r.rule_id == "subsumed-layer0-info" for r in refinements)
+
+    refined_ids = {r.change_id for r in refinements}
+
+    # 2. No Layer 1 (structural) change had its severity refined.
+    structural_ids = {c.details["change_id"] for c in result.changes if c.layer == "structural"}
+    assert refined_ids.isdisjoint(structural_ids)
+
+    # 3. No *unsubsumed* Layer 0 change had its severity refined.
+    unsubsumed_layer0_ids = {
+        c.details["change_id"]
+        for c in result.changes
+        if c.layer == "syntactic" and not registry.is_explained(c.details["change_id"])
+    }
+    assert refined_ids.isdisjoint(unsubsumed_layer0_ids)
+
+    # 4. Exit code unchanged: era:locatedOn's object_property_removed is still
+    #    breaking after refinement, so the CI signal stays 10.
+    assert any(c.severity == "breaking" for c in result.changes)
+
+
+def test_era_annotations_label_change_on_deprecated_entity_demoted():
+    # A label change AND a deprecation land on the same entity (era:Track). Rule 2
+    # treats the editorial edit as reduced significance.
+    result = _run_sev("annotation_on_deprecated_v1.ttl", "annotation_on_deprecated_v2.ttl")
+    track = "http://data.europa.eu/949/Track"
+
+    assert any(c.kind == "entity_deprecated" and c.subject == track for c in result.changes)
+    label = next(c for c in result.changes if c.kind == "annotation_changed" and c.subject == track)
+    # End state: the editorial change on the deprecating entity is info.
+    assert label.severity == "info"
+    # Rule 2 is what classifies it so — observable by forcing a non-info copy
+    # (in the real pipeline Component 09 already emits annotations as info, so the
+    # demotion is a no-op and is not written to the audit trail; Q3).
+    forced = replace(label, severity="breaking")
+    ref = _severity_rules.rule_annotation_on_deprecated(forced, result)
+    assert ref is not None
+    assert ref.refined_severity == "info"
+    assert ref.rule_id == "annotation-on-deprecated"
+
+
+def test_reparent_with_new_restriction_fixture_upgrades_severity():
+    # era:Track is reparented (a generalization Component 07 alone rates
+    # non_breaking) and simultaneously gains a restriction; Rule 5 upgrades the
+    # combined change to breaking.
+    result = _run_sev("reparent_with_restriction_v1.ttl", "reparent_with_restriction_v2.ttl")
+    reparent = next(c for c in result.changes if c.kind == "class_reparented")
+    assert reparent.severity == "breaking"
+    refs = [
+        r
+        for r in result.metadata["severity_refinements"]
+        if r.change_id == reparent.details["change_id"]
+    ]
+    assert len(refs) == 1
+    assert refs[0].rule_id == "reparent-with-new-restriction"
+    assert refs[0].original_severity == "non_breaking"

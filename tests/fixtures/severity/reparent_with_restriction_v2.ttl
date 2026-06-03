@@ -1,0 +1,27 @@
+# fixture: reparent_with_restriction_v2.ttl
+# Purpose: v2 of the Rule 5 pair. era:Track is reparented from era:Siding up to
+# era:Infrastructure (generalization) and gains a max-cardinality restriction on
+# era:hasMaxSpeed. See _v1 for the intent.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+era:Entity a owl:Class .
+
+era:Infrastructure a owl:Class ;
+    rdfs:subClassOf era:Entity .
+
+era:Siding a owl:Class ;
+    rdfs:subClassOf era:Infrastructure .
+
+era:Track a owl:Class ;
+    rdfs:subClassOf era:Infrastructure ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty era:hasMaxSpeed ;
+        owl:maxCardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+era:hasMaxSpeed a owl:DatatypeProperty .

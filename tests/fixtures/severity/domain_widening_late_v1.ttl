@@ -1,0 +1,21 @@
+# fixture: domain_widening_late_v1.ttl
+# Purpose: Rule 4 precondition. era:hasLocation has domain era:Track. In v1 there
+# is no asserted relationship between era:Track and era:Infrastructure, so a later
+# domain change to era:Infrastructure is, on v1's hierarchy alone, undecidable —
+# Component 08 defaults it to breaking. v2 ALSO adds era:Track rdfs:subClassOf
+# era:Infrastructure, making the new domain a proven ancestor of the old (a
+# widening). Rule 4 sees the combined hierarchy and demotes to non_breaking.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Infrastructure a owl:Class .
+
+era:Track a owl:Class .
+
+era:Asset a owl:Class .
+
+era:hasLocation a owl:ObjectProperty ;
+    rdfs:domain era:Track ;
+    rdfs:range era:Asset .

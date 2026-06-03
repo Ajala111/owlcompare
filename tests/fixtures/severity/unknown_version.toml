@@ -1,0 +1,8 @@
+# fixture: unknown_version.toml
+# Purpose: an unsupported schema_version. The loader must reject it with
+# SeverityConfigError (exit 6).
+schema_version = 99
+
+[[overrides]]
+kind_pattern = "annotation_*"
+severity = "info"

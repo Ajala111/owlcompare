@@ -1,0 +1,8 @@
+# fixture: malformed.toml
+# Purpose: broken TOML syntax (unterminated string). The loader must raise
+# SeverityConfigError (exit 6) on the parse error.
+schema_version = 1
+
+[[overrides]]
+kind_pattern = "annotation_*
+severity = "info"

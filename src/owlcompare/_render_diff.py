@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import sys
+from collections.abc import Sequence
 from typing import Any, TextIO
 
 from rich.console import Console
@@ -23,6 +24,7 @@ from rich.table import Table
 
 from owlcompare.diff._common import Change, shorten_synthetic_iri
 from owlcompare.diff._subsumption import SubsumptionRegistry
+from owlcompare.diff.severity import SeverityRefinement
 from owlcompare.model import OntologySnapshot
 
 # JSON output contract version (specs/05-syntactic-diff.md § CLI integration).
@@ -69,12 +71,33 @@ def change_to_dict(change: Change) -> dict[str, Any]:
     }
 
 
-def diff_json(changes: list[Change]) -> str:
-    """Render the change list as schema-versioned JSON (all layers included)."""
+def refinement_to_dict(refinement: SeverityRefinement) -> dict[str, Any]:
+    """Serialize one ``SeverityRefinement`` to a JSON-ready dict."""
+    return {
+        "change_id": refinement.change_id,
+        "original_severity": refinement.original_severity,
+        "refined_severity": refinement.refined_severity,
+        "rule_id": refinement.rule_id,
+        "rationale": refinement.rationale,
+    }
+
+
+def diff_json(
+    changes: list[Change],
+    refinements: Sequence[SeverityRefinement] = (),
+) -> str:
+    """Render the change list as schema-versioned JSON (all layers included).
+
+    The top-level ``metadata.severity_refinements`` array is part of the v1 JSON
+    schema (Component 10): always present, possibly empty.
+    """
     payload = {
         "schema_version": SCHEMA_VERSION,
         "summary": _counts(changes),
         "changes": [change_to_dict(c) for c in changes],
+        "metadata": {
+            "severity_refinements": [refinement_to_dict(r) for r in refinements],
+        },
     }
     return json.dumps(payload, indent=2, ensure_ascii=False)
 
@@ -244,3 +267,49 @@ def _change_table(changes: list[Change]) -> Table:
     if len(changes) > _TEXT_CHANGE_LIMIT:
         table.add_row("", f"[dim]...and {len(changes) - _TEXT_CHANGE_LIMIT} more[/dim]")
     return table
+
+
+# --------------------------------------------------------------------------- #
+# --explain-severity panel (Component 10)
+# --------------------------------------------------------------------------- #
+
+
+def severity_explanations_plain(refinements: Sequence[SeverityRefinement]) -> str:
+    """Plain-text ``--explain-severity`` panel for pipes, ``--out`` files and CI."""
+    if not refinements:
+        return "Severity explanations: none (no refinements applied)."
+    lines = [f"Severity explanations ({len(refinements)} refinement(s)):"]
+    for r in refinements:
+        lines.append(
+            f"  [{r.rule_id}] {r.original_severity} -> {r.refined_severity}: "
+            f"{r.rationale} ({r.change_id})"
+        )
+    return "\n".join(lines)
+
+
+def render_severity_explanations(
+    refinements: Sequence[SeverityRefinement],
+    stream: TextIO | None = None,
+) -> None:
+    """Print the ``--explain-severity`` panel (rich on a TTY, plain otherwise)."""
+    stream = stream if stream is not None else sys.stdout
+    is_terminal = getattr(stream, "isatty", lambda: False)()
+    if not is_terminal:
+        print(severity_explanations_plain(refinements), file=stream)
+        return
+    console = Console(file=stream)
+    if not refinements:
+        console.print("\n[bold]Severity explanations[/bold]\n[dim](no refinements applied)[/dim]")
+        return
+    console.print(f"\n[bold]Severity explanations ({len(refinements)})[/bold]")
+    table = Table(show_header=True, header_style="bold")
+    table.add_column("Rule")
+    table.add_column("Change")
+    table.add_column("Rationale")
+    for r in refinements:
+        table.add_row(
+            r.rule_id,
+            f"{r.original_severity} → {r.refined_severity}",
+            r.rationale,
+        )
+    console.print(table)

@@ -1,0 +1,9 @@
+# fixture: demote_all.toml
+# Purpose: a deliberately blunt config that forces every change to info. Exercises
+# the documented contract that user overrides can change the CLI exit code — with
+# nothing breaking, the diff exits 0.
+schema_version = 1
+
+[[overrides]]
+kind_pattern = "*"
+severity = "info"

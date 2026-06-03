@@ -24,7 +24,13 @@ from typer import Abort, Exit
 from typer._click.exceptions import ClickException
 
 from owlcompare._render import render_summary
-from owlcompare._render_diff import diff_json, diff_text_plain, render_diff_text
+from owlcompare._render_diff import (
+    diff_json,
+    diff_text_plain,
+    render_diff_text,
+    render_severity_explanations,
+    severity_explanations_plain,
+)
 from owlcompare._version import __version__
 from owlcompare.canonicalize import CanonicalizeOptions
 from owlcompare.canonicalize import canonicalize as _canonicalize
@@ -39,6 +45,8 @@ from owlcompare.exceptions import (
 from owlcompare.loader import load as _load_ontology
 from owlcompare.logging_config import configure_logging
 from owlcompare.model import LoadOptions
+from owlcompare.severity_config import SeverityConfig
+from owlcompare.severity_config import load as _load_severity_config
 from owlcompare.sources import resolve as _resolve_source
 
 logger = logging.getLogger("owlcompare")
@@ -165,12 +173,36 @@ def diff(
         Path | None,
         typer.Option("--out", help="Output file (default: stdout)."),
     ] = None,
+    severity_config: Annotated[
+        Path | None,
+        typer.Option(
+            "--severity-config",
+            help="Path to a TOML severity config (user overrides). Overrides can change "
+            "the exit code (e.g. demoting the last breaking change to info yields exit 0).",
+        ),
+    ] = None,
+    no_severity_refinement: Annotated[
+        bool,
+        typer.Option(
+            "--no-severity-refinement",
+            help="Skip cross-cutting severity refinement (debug/verification).",
+        ),
+    ] = False,
+    explain_severity: Annotated[
+        bool,
+        typer.Option(
+            "--explain-severity",
+            help="After the diff, print the rule that decided each refined severity.",
+        ),
+    ] = False,
 ) -> None:
     """Compare two ontologies at the syntactic (Layer 0) and structural (Layer 1) layers.
 
     Loads and canonicalizes both inputs, then reports the delta grouped by layer.
     Exits 0 when there are no breaking changes, 10 when at least one breaking
-    change is found (CI signal).
+    change is found (CI signal). Severity refinement (Component 10) runs last and
+    can be tuned with ``--severity-config`` or disabled with
+    ``--no-severity-refinement``.
     """
     requested = _parse_layers(layers)
     not_ready = [layer for layer in requested if layer not in _IMPLEMENTED_LAYERS]
@@ -181,35 +213,47 @@ def diff(
             + ' (only "syntactic" and "structural" are available in v1)'
         )
 
+    config: SeverityConfig | None = None
+    if severity_config is not None:
+        # Raises SeverityConfigError (exit 6, or 2 for a missing file); main()
+        # maps it to the process exit code.
+        config = _load_severity_config(severity_config)
+
     a = _load_ontology(ontology_a, LoadOptions())
     b = _load_ontology(ontology_b, LoadOptions())
     # ``requested`` is validated against _KNOWN_LAYERS, so each entry is a valid
     # DiffLayer; the cast tells mypy what _parse_layers already guarantees.
     include = cast("tuple[DiffLayer, ...]", tuple(requested))
-    result = _orchestrator.run(a, b, DiffOptions(include_layers=include))
+    result = _orchestrator.run(
+        a,
+        b,
+        DiffOptions(include_layers=include),
+        severity_config=config,
+        refine_severity=not no_severity_refinement,
+    )
     changes = list(result.changes)
     registry = result.metadata["subsumption_registry"]
+    refinements = result.metadata["severity_refinements"]
     layer1_enabled = "structural" in requested
 
     if output_format is DiffFormat.json:
-        rendered = diff_json(changes)
+        rendered = diff_json(changes, refinements)
         if out is not None:
             out.write_text(rendered + "\n", encoding="utf-8")
         else:
             typer.echo(rendered)
     elif out is not None:
-        out.write_text(
-            diff_text_plain(
-                changes,
-                registry,
-                result.a,
-                result.b,
-                layer1_enabled=layer1_enabled,
-                show_syntactic=show_syntactic,
-            )
-            + "\n",
-            encoding="utf-8",
+        text = diff_text_plain(
+            changes,
+            registry,
+            result.a,
+            result.b,
+            layer1_enabled=layer1_enabled,
+            show_syntactic=show_syntactic,
         )
+        if explain_severity:
+            text += "\n\n" + severity_explanations_plain(refinements)
+        out.write_text(text + "\n", encoding="utf-8")
     else:
         render_diff_text(
             changes,
@@ -219,6 +263,8 @@ def diff(
             layer1_enabled=layer1_enabled,
             show_syntactic=show_syntactic,
         )
+        if explain_severity:
+            render_severity_explanations(refinements)
 
     if any(change.severity == "breaking" for change in changes):
         raise typer.Exit(_BREAKING_EXIT_CODE)

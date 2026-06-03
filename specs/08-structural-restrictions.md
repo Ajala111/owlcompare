@@ -201,7 +201,16 @@ For each emitted Layer 1 restriction change, find the matching Layer 0 changes a
 | `complement_unset` | `non_breaking` |
 | `complex_class_expression_changed` | `breaking` (defensive: opaque change, assume breaking) |
 
-Domain/range "tightened vs. relaxed" requires hierarchy-aware comparison, which we have via Component 07's index. Use it when present; otherwise default to the more cautious `breaking` classification.
+### Note on domain/range narrowing detection
+
+This spec originally called for Component 08 to use Component 07's hierarchy index to classify a `domain_changed` / `range_changed` as narrowing (`breaking`) vs. widening (`non_breaking`), defaulting to `breaking` when the asserted hierarchy can't decide. **As implemented, Component 08 does *not* attempt that analysis for domain/range: `_dr_changed` defaults every single-value `domain_changed` / `range_changed` to `breaking` unconditionally.** The hierarchy-aware widening check for domain/range lives instead in **Rule 4 of Component 10's severity classifier** (`dr-widening-detected-late`), which demotes such a change to `non_breaking` when the combined asserted hierarchy shows the new value is an ancestor of the old.
+
+This placement is intentional, not an oversight:
+
+- By the time Component 10 runs, the orchestrator has executed *all* of Layer 1 — including Component 07, which may have added a `subClassOf` edge present only in v2. That late edge can be exactly what makes an otherwise-undecidable domain/range comparison decidable, so the check is strictly more capable when run after the full Layer 1 pass than inside Component 08.
+- Keeping Component 08's per-slice severity simple and cautious (default `breaking`) and concentrating all *cross-cutting* severity judgments in Component 10 matches the project's layering (DD-008): each slice sets a conservative default; the classifier refines with full context.
+
+Note this applies only to **domain/range**. Restriction **filler** narrowing/widening (the `restriction_changed` rows above) *is* decided inside Component 08, using Component 07's asserted hierarchy via `_combined_parents` / `_filler_severity`; that comparison does not depend on a late v2 edge in the same way and stays local to the slice.
 
 ### Subject and summary
 
@@ -415,8 +424,8 @@ Each fixture pair: `_before.ttl` / `_after.ttl`.
 - [x] **Q2 (resolved — adopted proposed):** For `restriction_changed` where the URN is *also* different (which it always is after canonicalization — same content yields same URN, different content yields different URN), do we report it as a content-change or as a URN-swap? Should `before.urn` and `after.urn` both be exposed?
   **Decision:** Expose both URNs in `details.before.urn` and `details.after.urn` (see `_decoded_dict`). The user-facing summary talks about cardinality/kind/filler — never about URNs. The shortened `_restriction:<8-hex>` form may still appear in detail-heavy renderings; that's fine.
 
-- [x] **Q3 (resolved — adopted proposed):** For domain/range comparison, should the "narrowed vs. widened" detection use Component 07's hierarchy index (which captures asserted subClassOf) or attempt minimal reasoning?
-  **Decision:** Use Component 07's asserted hierarchy only — `_combined_parents` merges both snapshots' `class_parents` and `_is_descendant` walks them; no reasoning. When the asserted hierarchy doesn't decide (incomparable swap), default to `breaking`. Narrowing detection is asserted-only; transitive cases via reasoning are deferred to Layer 2.
+- [x] **Q3 (resolved — adopted proposed, with the domain/range half relocated to Component 10):** For narrowing-vs-widening detection, should we use Component 07's hierarchy index (which captures asserted subClassOf) or attempt minimal reasoning?
+  **Decision:** Asserted hierarchy only, no reasoning (transitive cases via reasoning are deferred to Layer 2). For restriction **fillers**, this is done inside Component 08: `_combined_parents` merges both snapshots' `class_parents` and `_is_descendant` walks them, defaulting to `breaking` on an incomparable swap. For **domain/range**, the implementation deliberately does *not* run this check in Component 08 — `_dr_changed` defaults to `breaking`, and the asserted-hierarchy widening check runs later as **Rule 4 of Component 10** (`dr-widening-detected-late`), after the whole Layer 1 pass has applied any new v2 hierarchy edges. See the "Note on domain/range narrowing detection" subsection above.
 
 All three open questions were resolved by adopting the proposed answers during implementation.
 

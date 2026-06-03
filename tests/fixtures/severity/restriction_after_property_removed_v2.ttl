@@ -1,0 +1,11 @@
+# fixture: restriction_after_property_removed_v2.ttl
+# Purpose: v2 of the Rule 3 pair. era:hasSignal and the restriction it backed are
+# both gone; era:Track and era:Signal remain. See _v1 for the intent.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Track a owl:Class .
+
+era:Signal a owl:Class .

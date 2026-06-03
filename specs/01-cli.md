@@ -166,7 +166,8 @@ if __name__ == "__main__":
 | 3 | Load error (bad ontology, missing file, parse failure) |
 | 4 | Diff computation error |
 | 5 | Report generation error |
-| 10 | (reserved for v2) Diff completed but breaking changes found |
+| 6 | Severity config invalid (malformed TOML, unknown schema_version/severity, missing kind_pattern) — Component 10. A missing config *file* is a usage error (2), not 6. |
+| 10 | Diff completed but breaking changes found (active since Component 05; survives severity refinement in Component 10) |
 
 ## Edge cases & failure modes
 

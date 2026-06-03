@@ -51,6 +51,24 @@ class ReportError(OwlCompareError):
     exit_code: int = 5
 
 
+class SeverityConfigError(OwlCompareError):
+    """Invalid severity config file (Component 10).
+
+    Default exit code 6 ("config invalid": malformed TOML, unknown
+    ``schema_version``, unknown severity value, missing ``kind_pattern``). The
+    per-instance override exists for the one case the spec maps elsewhere — a
+    config path that does not exist on disk is a usage error (exit 2), not a
+    config-content error. See ``specs/10-severity.md`` § Edge cases.
+    """
+
+    exit_code: int = 6
+
+    def __init__(self, message: str, exit_code: int | None = None) -> None:
+        super().__init__(message)
+        if exit_code is not None:
+            self.exit_code = exit_code
+
+
 class NotImplementedYetError(OwlCompareError):
     """A planned feature stub. Used by Layer 2/3 stubs and the diff stub in v1."""
 
