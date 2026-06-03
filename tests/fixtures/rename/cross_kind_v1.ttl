@@ -1,0 +1,12 @@
+# fixture: cross_kind_v1.ttl
+# Purpose: guard that renames never pair across entity kinds. v1 has a class
+# era:Foo labelled "Shared"@en; v2 (see _v2) drops it and adds an object property
+# era:bar with the SAME label. A class can never be "renamed" into a property, so
+# no rename is emitted even though the labels match.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Foo a owl:Class ;
+    rdfs:label "Shared"@en .

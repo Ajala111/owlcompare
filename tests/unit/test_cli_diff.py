@@ -19,6 +19,7 @@ runner = CliRunner()
 FIXTURES = Path(__file__).resolve().parent.parent / "fixtures"
 DIFF = FIXTURES / "diff"
 SEV = FIXTURES / "severity"
+RENAME = FIXTURES / "rename"
 
 
 def _fx(name: str) -> str:
@@ -27,6 +28,10 @@ def _fx(name: str) -> str:
 
 def _sev(name: str) -> str:
     return str(SEV / name)
+
+
+def _ren(name: str) -> str:
+    return str(RENAME / name)
 
 
 def test_cli_diff_help_lists_layers_format_out(help_runner, clean):
@@ -307,3 +312,133 @@ def test_cli_diff_exit_code_respects_user_override():
         ]
     )
     assert rc == 0
+
+
+# --------------------------------------------------------------------------- #
+# Component 11 — rename detection flags
+# --------------------------------------------------------------------------- #
+
+
+def _rename_json(capsys, *args: str) -> dict:
+    main(
+        [
+            "diff",
+            _ren("simple_class_rename_v1.ttl"),
+            _ren("simple_class_rename_v2.ttl"),
+            "--format",
+            "json",
+            *args,
+        ]
+    )
+    return json.loads(capsys.readouterr().out)
+
+
+def test_cli_diff_help_lists_rename_flags(help_runner, clean):
+    result = help_runner.invoke(app, ["diff", "--help"])
+    out = clean(result.output).lower()
+    assert "--rename-mapping" in out
+    assert "--rename-confidence" in out
+
+
+def test_cli_diff_rename_mapping_flag_loads_mapping(capsys):
+    main(
+        [
+            "diff",
+            _ren("simple_class_rename_v1.ttl"),
+            _ren("simple_class_rename_v2.ttl"),
+            "--format",
+            "json",
+            "--rename-mapping",
+            _ren("valid_mapping.toml"),
+            "--rename-confidence",
+            "certain",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+    renamed = [c for c in payload["changes"] if c["kind"] == "class_renamed"]
+    assert len(renamed) == 1
+    assert renamed[0]["details"]["confidence"] == "certain"
+
+
+def test_cli_diff_rename_mapping_missing_file_exits_2():
+    rc = main(
+        [
+            "diff",
+            _ren("simple_class_rename_v1.ttl"),
+            _ren("simple_class_rename_v2.ttl"),
+            "--rename-mapping",
+            _ren("nope.toml"),
+        ]
+    )
+    assert rc == 2
+
+
+def test_cli_diff_rename_mapping_malformed_exits_6():
+    rc = main(
+        [
+            "diff",
+            _ren("simple_class_rename_v1.ttl"),
+            _ren("simple_class_rename_v2.ttl"),
+            "--rename-mapping",
+            _ren("mapping_malformed.toml"),
+        ]
+    )
+    assert rc == 6
+
+
+def test_cli_diff_rename_confidence_none_disables_detection(capsys):
+    payload = _rename_json(capsys, "--rename-confidence", "none")
+    kinds = {c["kind"] for c in payload["changes"]}
+    assert "class_renamed" not in kinds
+    assert "class_removed" in kinds
+    assert "class_added" in kinds
+
+
+def test_cli_diff_rename_confidence_certain_requires_mapping(capsys):
+    # certain with no mapping -> nothing is asserted, so the label-match rename
+    # is not detected (it stays a class_added + class_removed).
+    payload = _rename_json(capsys, "--rename-confidence", "certain")
+    kinds = {c["kind"] for c in payload["changes"]}
+    assert "class_renamed" not in kinds
+    assert "class_removed" in kinds
+
+
+def test_cli_diff_rename_confidence_medium_enables_fingerprint(capsys):
+    main(
+        [
+            "diff",
+            _ren("fingerprint_rename_v1.ttl"),
+            _ren("fingerprint_rename_v2.ttl"),
+            "--format",
+            "json",
+            "--rename-confidence",
+            "medium",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+    renamed = [c for c in payload["changes"] if c["kind"] == "class_renamed"]
+    assert len(renamed) == 1
+    assert renamed[0]["details"]["confidence"] == "medium"
+
+
+def test_cli_diff_text_output_shows_renames_specially(capsys):
+    main(
+        [
+            "diff",
+            _ren("simple_class_rename_v1.ttl"),
+            _ren("simple_class_rename_v2.ttl"),
+        ]
+    )
+    out = capsys.readouterr().out
+    assert "Renames" in out
+    assert "renamed" in out.lower()
+
+
+def test_cli_diff_json_includes_rename_evidence_and_confidence(capsys):
+    payload = _rename_json(capsys)
+    renamed = [c for c in payload["changes"] if c["kind"] == "class_renamed"]
+    assert len(renamed) == 1
+    details = renamed[0]["details"]
+    assert "confidence" in details
+    assert "evidence" in details
+    assert "cascade_subsumes" in details

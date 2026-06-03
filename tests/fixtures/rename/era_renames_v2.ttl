@@ -1,0 +1,48 @@
+# fixture: era_renames_v2.ttl
+# Pairs with era_renames_v1.ttl. Applies the three renames and moves every
+# reference to the new IRIs:
+#   - era:RailwayTrack  (was era:Track),  era:Tunnel now subClassOf it
+#   - era:RailwaySignal (was era:Signal), era:Platform's restriction now fills with it
+#   - era:hasLocation   (was era:locatedOn)
+# era:Asset, era:Tunnel, era:Platform, era:partOf and the ontology header are
+# unchanged. Labels are preserved on the renamed entities so all three pair at
+# high confidence; the Tunnel reparent and the Platform restriction_changed are
+# subsumed as cascade.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://data.europa.eu/949/renames> a owl:Ontology ;
+    owl:versionInfo "1.0.0" .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:RailwayTrack a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:Asset .
+
+era:RailwaySignal a owl:Class ;
+    rdfs:label "Signal"@en ;
+    rdfs:subClassOf era:Asset .
+
+era:Tunnel a owl:Class ;
+    rdfs:label "Tunnel"@en ;
+    rdfs:subClassOf era:RailwayTrack .
+
+era:Platform a owl:Class ;
+    rdfs:label "Platform"@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty era:partOf ;
+        owl:someValuesFrom era:RailwaySignal
+    ] .
+
+era:partOf a owl:ObjectProperty ;
+    rdfs:label "part of"@en .
+
+era:hasLocation a owl:ObjectProperty ;
+    rdfs:label "located on"@en ;
+    rdfs:domain era:Asset ;
+    rdfs:range era:Asset .

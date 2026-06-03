@@ -1,0 +1,9 @@
+# fixture: mapping_with_stale_iri.toml
+# A syntactically valid mapping whose IRIs do not appear in the diff. Each entry
+# must be silently skipped (logged at INFO) rather than raising — a stale mapping
+# should never block a diff.
+schema_version = 1
+
+[[classes]]
+old = "http://data.europa.eu/949/DoesNotExist"
+new = "http://data.europa.eu/949/AlsoMissing"

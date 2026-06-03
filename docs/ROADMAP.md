@@ -2,7 +2,7 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 3 — Rename detection (Phases 1 and 2 complete)
+**Current phase:** Phase 3 — Rename detection (Component 11 complete; Components 12–13 remain, both optional refinements)
 
 ---
 
@@ -53,13 +53,27 @@ orchestrator pipeline and records its audit trail in
 
 ---
 
-## Phase 3 — Rename detection
+## Phase 3 — Rename detection — IN PROGRESS
 
-- [ ] Component 11: Rename detector (label-based) — `specs/11-rename-labels.md`
-- [ ] Component 12: Rename detector (structural fingerprint) — `specs/12-rename-fingerprint.md`
-- [ ] Component 13: Rename mapping file support — `specs/13-rename-mapping.md`
+- [x] Component 11: Rename detector — `specs/11-rename-detection.md`
+      (Delivered as a single component covering all three tiers: label-based
+      **high** confidence, structural-fingerprint **medium** confidence, and
+      user-supplied mapping **certain** confidence, plus cascade consolidation
+      of referencing changes. The originally-planned split into 11/12/13 was
+      folded into one spec/component.)
+- [ ] Component 12: Rename detector refinements (optional) — deferred
+- [ ] Component 13: Rename mapping file enhancements (optional) — deferred
 
-**Exit criteria:** A pair of fixture ontologies where 5 entities have been renamed produces 5 high-confidence rename records, not 10 (5 add + 5 remove) entries.
+**Phase 3 has begun.** Component 11 detects renames at three confidence tiers and
+consolidates each rename plus its cascade consequences into a single
+`*_renamed` change, running between the Layer 1 slices and the severity
+classifier. Components 12 and 13 are now optional refinements of this one and are
+deferred.
+
+**Exit criteria (met):** A pair of fixture ontologies where entities have been
+renamed produces one rename record each, not an add + remove pair — see
+`tests/fixtures/rename/era_renames_*.ttl` (2 class renames + 1 property rename,
+cascade consequences subsumed, zero unexplained Layer 0 changes).
 
 ---
 
@@ -88,6 +102,7 @@ orchestrator pipeline and records its audit trail in
 
 ## Backlog (post-v1)
 
+- Surface structural additions on renamed entities. Currently when a class is renamed and also gains new structural axioms (restrictions, hierarchy edges, annotations) in v2, those additions are deferred into the `class_added` change by Component 08, then absorbed when the rename consolidates the add+remove pair. Net effect: the rename hides the additions from the diff narrative. Possible v2 fix: after rename detection consolidates a pair, re-run a delta pass on the renamed entity's axioms (after IRI substitution) to surface any structural additions as independent Layer 1 changes. See [[DD-018]] and `specs/11-rename-detection.md` § Known limitations.
 - Quad-graph aware loader (resolves Component 04 known limitation)
 - Layer 2 inferential diff with HermiT
 - Layer 2 inferential diff with ELK

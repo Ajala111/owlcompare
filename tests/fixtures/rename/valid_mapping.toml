@@ -1,0 +1,14 @@
+# fixture: valid_mapping.toml
+# A well-formed rename mapping for CLI / loader tests. Maps the simple_class_rename
+# pair (era:Track -> era:RailwayTrack) plus an extra object-property entry to
+# exercise multiple sections. The object-property entry is harmless when applied
+# to fixtures that lack it (a stale entry is silently skipped).
+schema_version = 1
+
+[[classes]]
+old = "http://data.europa.eu/949/Track"
+new = "http://data.europa.eu/949/RailwayTrack"
+
+[[object_properties]]
+old = "http://data.europa.eu/949/locatedOn"
+new = "http://data.europa.eu/949/hasLocation"

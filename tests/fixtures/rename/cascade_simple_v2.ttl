@@ -1,0 +1,23 @@
+# fixture: cascade_simple_v2.ttl
+# Pairs with cascade_simple_v1.ttl. era:Track -> era:RailwayTrack; era:Tunnel now
+# subClassOf era:RailwayTrack and era:measuredOn now ranges over era:RailwayTrack.
+# Both are pure consequences of the rename and are subsumed as cascade.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:RailwayTrack a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:Asset .
+
+era:Tunnel a owl:Class ;
+    rdfs:label "Tunnel"@en ;
+    rdfs:subClassOf era:RailwayTrack .
+
+era:measuredOn a owl:ObjectProperty ;
+    rdfs:label "measured on"@en ;
+    rdfs:range era:RailwayTrack .

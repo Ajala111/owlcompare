@@ -1,0 +1,13 @@
+# fixture: mapping_override_v1.ttl
+# Purpose: a user mapping must override what the heuristic would have inferred.
+# v1 has era:Track labelled "Track"@en. v2 (see _v2) renames it but adds TWO
+# candidates: era:RailwayTrack (label "Track"@en — the label heuristic would pair
+# this) and era:SteelTrack (label "Steel"@en). A mapping of Track -> SteelTrack
+# must win, leaving era:RailwayTrack as a plain class_added.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en .

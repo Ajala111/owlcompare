@@ -69,6 +69,25 @@ class SeverityConfigError(OwlCompareError):
             self.exit_code = exit_code
 
 
+class RenameMappingError(OwlCompareError):
+    """Invalid rename mapping config file (Component 11).
+
+    Default exit code 6 ("config invalid": malformed TOML, unknown
+    ``schema_version``, or a malformed entry). It shares the config-error code
+    with :class:`SeverityConfigError`. The per-instance override exists for the
+    one case the spec maps elsewhere — a mapping path that does not exist on disk
+    is a usage error (exit 2), not a config-content error. See
+    ``specs/11-rename-detection.md`` § Public API.
+    """
+
+    exit_code: int = 6
+
+    def __init__(self, message: str, exit_code: int | None = None) -> None:
+        super().__init__(message)
+        if exit_code is not None:
+            self.exit_code = exit_code
+
+
 class NotImplementedYetError(OwlCompareError):
     """A planned feature stub. Used by Layer 2/3 stubs and the diff stub in v1."""
 

@@ -1,0 +1,49 @@
+# fixture: era_renames_v1.ttl
+# Purpose: flagship realistic ERA rename scenario. v2 renames THREE entities,
+# each with its label preserved (so all are high-confidence label matches) and
+# each referenced elsewhere so the rename produces cascade consequences:
+#   - era:Track  -> era:RailwayTrack   (referenced by era:Tunnel's subClassOf -> reparent cascade)
+#   - era:Signal -> era:RailwaySignal  (referenced by era:Platform's restriction filler -> restriction_changed cascade)
+#   - era:locatedOn -> era:hasLocation (object property; its stable domain/range ride with the entity)
+# Each cascade consequence references exactly one renamed entity, so it is
+# subsumed under that rename. Expected after detection: 3 *_renamed changes
+# (2 class + 1 property), 0 unexplained Layer 0, and no leftover reparent /
+# restriction_changed / add / remove.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://data.europa.eu/949/renames> a owl:Ontology ;
+    owl:versionInfo "1.0.0" .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:Asset .
+
+era:Signal a owl:Class ;
+    rdfs:label "Signal"@en ;
+    rdfs:subClassOf era:Asset .
+
+era:Tunnel a owl:Class ;
+    rdfs:label "Tunnel"@en ;
+    rdfs:subClassOf era:Track .
+
+era:Platform a owl:Class ;
+    rdfs:label "Platform"@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty era:partOf ;
+        owl:someValuesFrom era:Signal
+    ] .
+
+era:partOf a owl:ObjectProperty ;
+    rdfs:label "part of"@en .
+
+era:locatedOn a owl:ObjectProperty ;
+    rdfs:label "located on"@en ;
+    rdfs:domain era:Asset ;
+    rdfs:range era:Asset .

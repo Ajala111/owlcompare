@@ -15,11 +15,13 @@ from dataclasses import replace
 from owlcompare.canonicalize import canonicalize
 from owlcompare.exceptions import DiffError
 from owlcompare.model import OntologySnapshot
+from owlcompare.rename_mapping import RenameMapping
 from owlcompare.severity_config import SeverityConfig
 
-from . import severity, syntactic
+from . import rename, severity, syntactic
 from ._common import Change, DiffOptions, DiffResult
 from ._subsumption import SubsumptionRegistry
+from .rename import RenameConfidence
 
 # Aliased: the bare name ``annotations`` would clash with the module-level
 # ``from __future__ import annotations`` binding above (a ``__future__._Feature``),
@@ -36,6 +38,9 @@ def run(
     options: DiffOptions | None = None,
     severity_config: SeverityConfig | None = None,
     refine_severity: bool = True,
+    rename_mapping: RenameMapping | None = None,
+    rename_min_confidence: RenameConfidence = "high",
+    detect_renames: bool = True,
 ) -> DiffResult:
     """Run the diff pipeline end-to-end across all enabled layers.
 
@@ -54,6 +59,11 @@ def run(
         refine_severity: When ``False``, skip Component 10 entirely (the CLI's
             ``--no-severity-refinement``); metadata still gets an empty
             ``severity_refinements`` tuple so the schema is stable.
+        rename_mapping: Optional user-supplied rename map (Component 11), applied
+            at ``certain`` confidence before any heuristic.
+        rename_min_confidence: Minimum confidence tier to accept a rename.
+        detect_renames: When ``False``, skip Component 11 entirely (the CLI's
+            ``--rename-confidence none``).
 
     Returns:
         Aggregated :class:`DiffResult`.
@@ -98,6 +108,13 @@ def run(
         "subsumption_registry": registry,
     }
     result = DiffResult(a=a, b=b, changes=tuple(all_changes), metadata=metadata)
+
+    if detect_renames:
+        # Component 11 runs between the Layer 1 slices and severity refinement:
+        # it consolidates paired add/remove changes (plus cascade consequences)
+        # into single ``*_renamed`` changes so the severity classifier sees the
+        # consolidated result, not the duplicated one. See specs/11-rename-detection.md.
+        result = rename.detect(result, rename_mapping, rename_min_confidence)
 
     if refine_severity:
         # Component 10 runs after every Layer 1 slice: it is the one place with

@@ -1,0 +1,31 @@
+# fixture: fingerprint_rename_v2.ttl
+# Pairs with fingerprint_rename_v1.ttl. era:Track -> era:RailwayTrack with a
+# changed label ("Railway Track"@en). All structural references move to the new
+# IRI (Tunnel's parent, hasPart's domain/range), so the fingerprint of the new
+# class matches the old one strongly enough (>= 0.6, well separated) for a
+# medium-confidence rename. At high confidence (no fingerprinting) it is NOT
+# detected.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Vehicle a owl:Class ;
+    rdfs:label "Vehicle"@en .
+
+era:RailwayTrack a owl:Class ;
+    rdfs:label "Railway Track"@en ;
+    rdfs:subClassOf era:Asset ;
+    rdfs:subClassOf era:Vehicle .
+
+era:Tunnel a owl:Class ;
+    rdfs:label "Tunnel"@en ;
+    rdfs:subClassOf era:RailwayTrack .
+
+era:hasPart a owl:ObjectProperty ;
+    rdfs:label "has part"@en ;
+    rdfs:domain era:RailwayTrack ;
+    rdfs:range era:RailwayTrack .

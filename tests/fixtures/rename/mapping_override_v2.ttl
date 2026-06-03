@@ -1,0 +1,14 @@
+# fixture: mapping_override_v2.ttl
+# Pairs with mapping_override_v1.ttl. Without a mapping, the label heuristic pairs
+# era:Track -> era:RailwayTrack (shared "Track"@en). With a mapping of
+# Track -> SteelTrack, the certain pairing wins and RailwayTrack stays added.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:RailwayTrack a owl:Class ;
+    rdfs:label "Track"@en .
+
+era:SteelTrack a owl:Class ;
+    rdfs:label "Steel"@en .

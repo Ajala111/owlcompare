@@ -1,0 +1,8 @@
+# fixture: mapping_malformed.toml
+# Broken TOML (unterminated array-of-tables header). Loading must raise
+# RenameMappingError with exit code 6.
+schema_version = 1
+
+[[classes]
+old = "http://data.europa.eu/949/Track"
+new = "http://data.europa.eu/949/RailwayTrack"

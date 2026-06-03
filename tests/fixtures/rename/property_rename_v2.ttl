@@ -1,0 +1,15 @@
+# fixture: property_rename_v2.ttl
+# Pairs with property_rename_v1.ttl. era:locatedOn -> era:hasLocation; label and
+# domain/range carried over so the label heuristic pairs them at high confidence.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:hasLocation a owl:ObjectProperty ;
+    rdfs:label "located on"@en ;
+    rdfs:domain era:Asset ;
+    rdfs:range era:Asset .

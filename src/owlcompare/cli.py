@@ -36,6 +36,7 @@ from owlcompare.canonicalize import CanonicalizeOptions
 from owlcompare.canonicalize import canonicalize as _canonicalize
 from owlcompare.diff import orchestrator as _orchestrator
 from owlcompare.diff._common import DiffLayer, DiffOptions
+from owlcompare.diff.rename import RenameConfidence
 from owlcompare.exceptions import (
     CanonicalizationError,
     NotImplementedYetError,
@@ -45,6 +46,8 @@ from owlcompare.exceptions import (
 from owlcompare.loader import load as _load_ontology
 from owlcompare.logging_config import configure_logging
 from owlcompare.model import LoadOptions
+from owlcompare.rename_mapping import RenameMapping
+from owlcompare.rename_mapping import load as _load_rename_mapping
 from owlcompare.severity_config import SeverityConfig
 from owlcompare.severity_config import load as _load_severity_config
 from owlcompare.sources import resolve as _resolve_source
@@ -76,6 +79,20 @@ _KNOWN_LAYERS: tuple[str, ...] = ("syntactic", "structural", "inferential", "imp
 _IMPLEMENTED_LAYERS: tuple[str, ...] = ("syntactic", "structural")
 # Exit code emitted when the diff finds at least one breaking change (DD-008).
 _BREAKING_EXIT_CODE = 10
+
+
+class RenameConfidenceLevel(enum.StrEnum):
+    """Accepted ``--rename-confidence`` values for ``owlcompare diff``.
+
+    ``certain`` applies user-mapping renames only; ``high`` (default) adds label
+    matching; ``medium`` adds structural fingerprint matching; ``none`` disables
+    rename detection (Component 11) entirely.
+    """
+
+    certain = "certain"
+    high = "high"
+    medium = "medium"
+    none = "none"
 
 
 class LoadFormatHint(enum.StrEnum):
@@ -195,6 +212,22 @@ def diff(
             help="After the diff, print the rule that decided each refined severity.",
         ),
     ] = False,
+    rename_mapping: Annotated[
+        Path | None,
+        typer.Option(
+            "--rename-mapping",
+            help="Path to a TOML rename mapping file (user-asserted renames, certain confidence).",
+        ),
+    ] = None,
+    rename_confidence: Annotated[
+        RenameConfidenceLevel,
+        typer.Option(
+            "--rename-confidence",
+            help="Lowest rename-detection confidence to accept: 'certain' (mapping only), "
+            "'high' (label matching, default), 'medium' (adds structural fingerprinting), "
+            "or 'none' (disable rename detection).",
+        ),
+    ] = RenameConfidenceLevel.high,
 ) -> None:
     """Compare two ontologies at the syntactic (Layer 0) and structural (Layer 1) layers.
 
@@ -219,17 +252,30 @@ def diff(
         # maps it to the process exit code.
         config = _load_severity_config(severity_config)
 
+    mapping: RenameMapping | None = None
+    if rename_mapping is not None:
+        # Raises RenameMappingError (exit 6, or 2 for a missing file); main()
+        # maps it to the process exit code, same as the severity config above.
+        mapping = _load_rename_mapping(rename_mapping)
+
     a = _load_ontology(ontology_a, LoadOptions())
     b = _load_ontology(ontology_b, LoadOptions())
     # ``requested`` is validated against _KNOWN_LAYERS, so each entry is a valid
     # DiffLayer; the cast tells mypy what _parse_layers already guarantees.
     include = cast("tuple[DiffLayer, ...]", tuple(requested))
+    detect_renames = rename_confidence is not RenameConfidenceLevel.none
+    # When detection is off the floor is unused; default it to a valid tier so the
+    # value passed to the orchestrator is always a real RenameConfidence.
+    min_confidence = cast("RenameConfidence", rename_confidence.value) if detect_renames else "high"
     result = _orchestrator.run(
         a,
         b,
         DiffOptions(include_layers=include),
         severity_config=config,
         refine_severity=not no_severity_refinement,
+        rename_mapping=mapping,
+        rename_min_confidence=min_confidence,
+        detect_renames=detect_renames,
     )
     changes = list(result.changes)
     registry = result.metadata["subsumption_registry"]

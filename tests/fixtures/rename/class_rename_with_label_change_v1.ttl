@@ -1,0 +1,25 @@
+# fixture: class_rename_with_label_change_v1.ttl
+# Purpose: rename + label change in one diff. era:Signal -> era:TrackSignal with
+# its label changed ("Signal"@en -> "Track Signal"@en). Without fingerprint
+# matching (high confidence) no rename is detected; with fingerprint matching
+# (medium) it is, on the strength of the two shared parents (era:Asset,
+# era:Device) plus the shared incoming era:controls range reference.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Device a owl:Class ;
+    rdfs:label "Device"@en .
+
+era:Signal a owl:Class ;
+    rdfs:label "Signal"@en ;
+    rdfs:subClassOf era:Asset ;
+    rdfs:subClassOf era:Device .
+
+era:controls a owl:ObjectProperty ;
+    rdfs:label "controls"@en ;
+    rdfs:range era:Signal .

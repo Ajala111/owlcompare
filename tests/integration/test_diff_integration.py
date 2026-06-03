@@ -16,6 +16,7 @@ from pathlib import Path
 
 from rdflib import RDF
 
+from owlcompare._render_diff import diff_json
 from owlcompare.canonicalize import canonicalize
 from owlcompare.diff import _severity_rules, orchestrator, syntactic
 from owlcompare.diff._subsumption import SubsumptionRegistry
@@ -415,6 +416,79 @@ def test_era_annotations_label_change_on_deprecated_entity_demoted():
     assert ref is not None
     assert ref.refined_severity == "info"
     assert ref.rule_id == "annotation-on-deprecated"
+
+
+# --------------------------------------------------------------------------- #
+# Component 11 — rename detection
+# --------------------------------------------------------------------------- #
+
+REN = FIXTURES / "rename"
+
+
+def _canon_ren(name: str):
+    return canonicalize(load(str(REN / name)))
+
+
+def _run_ren(v_a: str, v_b: str, **kwargs):
+    return orchestrator.run(_canon_ren(v_a), _canon_ren(v_b), **kwargs)
+
+
+def test_simple_rename_fixture_produces_one_renamed_change():
+    result = _run_ren("simple_class_rename_v1.ttl", "simple_class_rename_v2.ttl")
+    structural = [c for c in result.changes if c.layer == "structural"]
+    assert len([c for c in structural if c.kind == "class_renamed"]) == 1
+    assert [c for c in structural if c.kind == "class_removed"] == []
+    assert [c for c in structural if c.kind == "class_added"] == []
+
+
+def test_cascade_fixture_consolidates_referencing_changes():
+    result = _run_ren("cascade_simple_v1.ttl", "cascade_simple_v2.ttl")
+    structural = [c for c in result.changes if c.layer == "structural"]
+    assert sorted(c.kind for c in structural) == ["class_renamed"]
+    renamed = next(c for c in structural if c.kind == "class_renamed")
+    # Both the Tunnel reparent and the measuredOn range_changed are subsumed.
+    assert len(renamed.details["cascade_subsumes"]) == 2
+
+
+def test_era_renames_fixture_produces_expected_counts():
+    result = _run_ren("era_renames_v1.ttl", "era_renames_v2.ttl")
+    structural = [c for c in result.changes if c.layer == "structural"]
+    class_renames = [c for c in structural if c.kind == "class_renamed"]
+    prop_renames = [c for c in structural if c.kind == "object_property_renamed"]
+    assert len(class_renames) == 2
+    assert len(prop_renames) == 1
+    # No leftover add/remove or cascade consequences, and Layer 0 fully explained.
+    leftover = {"class_added", "class_removed", "class_reparented", "restriction_changed"}
+    assert not [c for c in structural if c.kind in leftover]
+    registry = result.metadata["subsumption_registry"]
+    layer0 = [c for c in result.changes if c.layer == "syntactic"]
+    unexplained = [c for c in layer0 if not registry.is_explained(c.details["change_id"])]
+    assert unexplained == []
+
+
+def test_era_evolution_fixture_unchanged_after_rename_detection():
+    # era_evolution has no renames, so enabling Component 11 must leave the diff
+    # byte-identical to the pre-Component-11 pipeline.
+    a, b = _canon("era_evolution_v1.ttl"), _canon("era_evolution_v2.ttl")
+    with_renames = orchestrator.run(a, b)
+    without_renames = orchestrator.run(a, b, detect_renames=False)
+    refined_with = with_renames.metadata["severity_refinements"]
+    refined_without = without_renames.metadata["severity_refinements"]
+    assert diff_json(list(with_renames.changes), refined_with) == diff_json(
+        list(without_renames.changes), refined_without
+    )
+
+
+def test_severity_classifier_runs_after_renames():
+    # The severity classifier sees the *consolidated* result: the cascade reparent
+    # is gone before refinement, and the rename itself is info.
+    result = _run_ren("cascade_simple_v1.ttl", "cascade_simple_v2.ttl")
+    renamed = next(c for c in result.changes if c.kind == "class_renamed")
+    assert renamed.severity == "info"
+    assert not any(c.kind == "class_reparented" for c in result.changes)
+    refinements = result.metadata["severity_refinements"]
+    refined_ids = {r.change_id for r in refinements}
+    assert renamed.details["change_id"] not in refined_ids
 
 
 def test_reparent_with_new_restriction_fixture_upgrades_severity():

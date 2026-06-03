@@ -1,0 +1,8 @@
+# fixture: mapping_unknown_version.toml
+# A future schema_version this build does not understand. Loading must raise
+# RenameMappingError (exit code 6) rather than silently mis-parsing it.
+schema_version = 99
+
+[[classes]]
+old = "http://data.europa.eu/949/Track"
+new = "http://data.europa.eu/949/RailwayTrack"

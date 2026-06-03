@@ -122,6 +122,18 @@ def _partition(
     return structural, layer0, unexplained
 
 
+def _split_renames(structural: list[Change]) -> tuple[list[Change], list[Change]]:
+    """Partition structural changes into ``(renames, everything_else)``.
+
+    Consolidated ``*_renamed`` changes (Component 11) are shown in their own
+    section so a safe refactor reads as a handful of renames rather than being
+    buried among the structural changes. Order within each group is preserved.
+    """
+    renames = [c for c in structural if c.kind.endswith("_renamed")]
+    others = [c for c in structural if not c.kind.endswith("_renamed")]
+    return renames, others
+
+
 def _layer0_heading(
     layer0: list[Change], unexplained: list[Change], *, layer1_enabled: bool, show_syntactic: bool
 ) -> str:
@@ -157,9 +169,14 @@ def diff_text_plain(
     lines.append(_summary_line(_counts(changes)))
 
     if layer1_enabled:
+        renames, others = _split_renames(structural)
+        if renames:
+            lines.append("")
+            lines.append(f"Renames ({len(renames)} consolidated)")
+            _append_change_lines(lines, renames)
         lines.append("")
-        lines.append(f"Layer 1 — Structural ({len(structural)} changes)")
-        _append_change_lines(lines, structural)
+        lines.append(f"Layer 1 — Structural ({len(others)} changes)")
+        _append_change_lines(lines, others)
 
     visible_layer0 = layer0 if show_syntactic else unexplained
     heading = _layer0_heading(
@@ -240,8 +257,12 @@ def _render_rich(
     structural, layer0, unexplained = _partition(changes, registry)
 
     if layer1_enabled:
-        console.print(f"\n[bold]Layer 1 — Structural ({len(structural)} changes)[/bold]")
-        console.print(_change_table(structural))
+        renames, others = _split_renames(structural)
+        if renames:
+            console.print(f"\n[bold]Renames ({len(renames)} consolidated)[/bold]")
+            console.print(_change_table(renames))
+        console.print(f"\n[bold]Layer 1 — Structural ({len(others)} changes)[/bold]")
+        console.print(_change_table(others))
 
     visible_layer0 = layer0 if show_syntactic else unexplained
     heading = _layer0_heading(

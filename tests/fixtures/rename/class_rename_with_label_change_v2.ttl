@@ -1,0 +1,23 @@
+# fixture: class_rename_with_label_change_v2.ttl
+# Pairs with class_rename_with_label_change_v1.ttl. era:Signal -> era:TrackSignal
+# with a changed label; the two parents and the incoming era:controls range
+# reference move to the new IRI, giving a fingerprint score >= 0.6 (medium).
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Device a owl:Class ;
+    rdfs:label "Device"@en .
+
+era:TrackSignal a owl:Class ;
+    rdfs:label "Track Signal"@en ;
+    rdfs:subClassOf era:Asset ;
+    rdfs:subClassOf era:Device .
+
+era:controls a owl:ObjectProperty ;
+    rdfs:label "controls"@en ;
+    rdfs:range era:TrackSignal .

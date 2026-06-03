@@ -1,0 +1,16 @@
+# fixture: no_rename_just_replacement_v1.ttl
+# Purpose: negative case. era:Foo (label "Foo"@en, parent era:Asset) is removed
+# and era:Bar (label "Bazzzz"@en, no parent) is added in v2 with NO label or
+# structural overlap. Neither label matching nor fingerprint matching should pair
+# them, even at medium confidence — this is a genuine remove + add.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Foo a owl:Class ;
+    rdfs:label "Foo"@en ;
+    rdfs:subClassOf era:Asset .

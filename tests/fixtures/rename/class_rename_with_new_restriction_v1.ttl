@@ -1,0 +1,27 @@
+# fixture: class_rename_with_new_restriction_v1.ttl
+# Purpose: a rename alongside a genuinely new, unrelated structural change. era:Track
+# is renamed to era:RailwayTrack (label preserved -> high confidence) while a brand
+# new restriction (era:hasGauge some era:Gauge) is added on the *persisting* class
+# era:Platform. The rename must be detected AND the restriction_added must survive
+# as an independent change (it is not explained by the IRI substitution).
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:Asset .
+
+era:Platform a owl:Class ;
+    rdfs:label "Platform"@en ;
+    rdfs:subClassOf era:Asset .
+
+era:Gauge a owl:Class ;
+    rdfs:label "Gauge"@en .
+
+era:hasGauge a owl:ObjectProperty ;
+    rdfs:label "has gauge"@en .

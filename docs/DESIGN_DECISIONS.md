@@ -346,3 +346,26 @@ A single-line f-string with the same lambda formats fine; the bug needs the mult
 - *Leave ruff unpinned (`>=0.6`) and only change the code:* the code change alone fixes today's failure, but a later ruff release could reformat the whole tree or reintroduce a panic with no guardrail. Rejected — the pin is cheap insurance.
 - *Disable the formatter / skip `ruff format` in CI:* loses deterministic formatting, a core convention. Rejected.
 - *`# fmt: off` around the call site:* narrower, but leaves the landmine for the next contributor who writes a lambda in an f-string elsewhere. The bound-method refactor plus the documented pin is more durable.
+
+---
+
+## DD-018: Rename detection absorbs structural additions on the renamed entity
+
+**Status:** accepted
+**Date:** 2026-06-03
+
+**Decision:** Component 11's cascade subsumes the `*_added` change for the renamed entity, which silently absorbs any restriction / hierarchy / annotation additions that Components 08–09 had deferred into it. A rename that *also* introduces a new constraint on the same entity produces one `*_renamed` row instead of two rows ("renamed" plus "new constraint").
+
+**Context:** A wholly-added entity's axioms (restrictions, parent edges, domain/range, annotations) are deferred by Components 08–09 into that entity's Component 06 `*_added` change rather than emitted as standalone Layer 1 changes. When Component 11 pairs the renamed entity's `*_added` with its `*_removed` and consolidates them into a single `*_renamed`, those deferred additions go with the `*_added` — so any structural axiom the entity gained *under its new IRI* never surfaces as an independent change. This only affects additions on the **renamed entity itself**; changes on *persisting* entities that merely reference the renamed IRI are preserved as independent changes unless they are a pure IRI substitution (the intentional, tested cascade behaviour).
+
+**Tradeoff:** The diff narrative is simpler (one rename row) but lossy in the rename-plus-new-constraint case: the user does not see that the renamed entity also gained a new axiom. For v1 this is acceptable — renames are overwhelmingly pure IRI substitutions, and the common case (rename only) is correct and clean; surfacing the rare compound case adds real complexity.
+
+**Deferred fix (v2):** After rename detection consolidates a pair, re-run a delta pass on the renamed entity's axioms — substituting the old IRI for the new one — and surface any remaining structural additions as independent Layer 1 changes alongside the `*_renamed`. This requires post-rename re-diffing of the renamed entity's axioms and is tracked in the roadmap backlog and `specs/11-rename-detection.md` § Known limitations.
+
+**Implication:**
+- The `class_rename_with_new_restriction_*` fixtures place the genuinely-new restriction on a *persisting* class (`era:Platform`), not the renamed class, so `test_cascade_preserves_independent_changes` exercises cascade-preserves-independence without depending on this absorbed-addition path.
+- Paired with [[DD-008]] (severity is set by the producing layer) and the Component 08 deferral logic that this decision interacts with.
+
+**Alternatives considered:**
+- *Re-diff the renamed entity's axioms during Component 11:* the correct long-term fix, but it duplicates Component 08/09 logic under IRI substitution and complicates the cascade for a rare case. Deferred to v2 rather than rushed into v1.
+- *Stop Components 08/09 from deferring axioms into `*_added` for entities that turn out to be renamed:* impossible at deferral time — rename detection runs *after* those slices, so they cannot know an entity is about to be paired as a rename.

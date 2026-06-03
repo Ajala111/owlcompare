@@ -1,0 +1,16 @@
+# fixture: simple_class_rename_v1.ttl
+# Purpose: the canonical label-match rename case. era:Track is renamed to
+# era:RailwayTrack in v2 with its rdfs:label "Track"@en preserved and its single
+# parent (era:Asset) unchanged. The shared label makes this a HIGH-confidence
+# rename; nothing else in the diff should remain (no class_added / class_removed).
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:Track a owl:Class ;
+    rdfs:label "Track"@en ;
+    rdfs:subClassOf era:Asset .

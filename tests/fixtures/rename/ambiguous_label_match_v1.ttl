@@ -1,0 +1,12 @@
+# fixture: ambiguous_label_match_v1.ttl
+# Purpose: ambiguity guard for the label heuristic. v1 has a single class
+# era:Thing labelled "Asset"@en; v2 (see _v2) introduces TWO classes that both
+# carry "Asset"@en. Because the removed class matches more than one added class,
+# a HIGH-confidence rename must NOT fire — the pairing is not unique.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Thing a owl:Class ;
+    rdfs:label "Asset"@en .

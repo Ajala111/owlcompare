@@ -1,0 +1,17 @@
+# fixture: property_rename_v1.ttl
+# Purpose: object-property rename. era:locatedOn -> era:hasLocation in v2 with the
+# label "located on"@en preserved (high-confidence label match). The property's
+# domain/range (era:Asset) are unchanged and ride along with the entity's
+# add/remove, so the only surviving change should be one object_property_renamed.
+
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+era:Asset a owl:Class ;
+    rdfs:label "Asset"@en .
+
+era:locatedOn a owl:ObjectProperty ;
+    rdfs:label "located on"@en ;
+    rdfs:domain era:Asset ;
+    rdfs:range era:Asset .
