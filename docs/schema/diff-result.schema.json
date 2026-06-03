@@ -1,0 +1,685 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Phelz/owlcompare/main/docs/schema/diff-result.schema.json",
+  "title": "owlcompare DiffResult",
+  "description": "The JSON output of `owlcompare diff --format json`. Schema version 1 (Component 14). See docs/schema/diff-result.md for the human-readable companion and DD-019 for the compatibility policy.",
+  "type": "object",
+  "required": ["schema_version", "summary", "changes"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "description": "Output contract version. v1 is the shape locked by Component 14.",
+      "const": 1
+    },
+    "summary": { "$ref": "#/$defs/Summary" },
+    "changes": {
+      "description": "Every change at every layer, in deterministic order. May be empty.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/Change" }
+    },
+    "metadata": { "$ref": "#/$defs/Metadata" }
+  },
+  "$defs": {
+    "Severity": {
+      "description": "How a change affects downstream consumers (DD-008).",
+      "enum": ["breaking", "non_breaking", "additive", "info"]
+    },
+    "Summary": {
+      "description": "Headline counts. `added`/`removed` count Layer 0 triples; `total` counts all changes; `breaking` counts changes whose severity is breaking.",
+      "type": "object",
+      "required": ["added", "removed", "total", "breaking"],
+      "additionalProperties": false,
+      "properties": {
+        "added": { "type": "integer", "minimum": 0 },
+        "removed": { "type": "integer", "minimum": 0 },
+        "total": { "type": "integer", "minimum": 0 },
+        "breaking": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "Metadata": {
+      "description": "Producer-side context. Permissive by design (Q1): tooling may add keys without a version bump. Only `severity_refinements` is emitted today; the other keys are reserved for known internal structures.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "severity_refinements": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/SeverityRefinement" }
+        },
+        "layer_counts": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" }
+        },
+        "subsumption_registry": { "type": "object" },
+        "rename_candidates": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/RenameCandidate" }
+        },
+        "renames_applied": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/RenameCandidate" }
+        }
+      }
+    },
+    "SeverityRefinement": {
+      "description": "One audit-trail entry from the severity classifier (Component 10).",
+      "type": "object",
+      "required": [
+        "change_id",
+        "original_severity",
+        "refined_severity",
+        "rule_id",
+        "rationale"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "change_id": { "type": "string" },
+        "original_severity": { "$ref": "#/$defs/Severity" },
+        "refined_severity": { "$ref": "#/$defs/Severity" },
+        "rule_id": { "type": "string" },
+        "rationale": { "type": "string" }
+      }
+    },
+    "RenameCandidate": {
+      "description": "A considered/accepted rename pairing (Components 11/12). Reserved metadata shape; not emitted in the JSON output today.",
+      "type": "object",
+      "required": [
+        "removed_iri",
+        "added_iri",
+        "entity_kind",
+        "confidence",
+        "evidence",
+        "score"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "removed_iri": { "type": "string" },
+        "added_iri": { "type": "string" },
+        "entity_kind": { "$ref": "#/$defs/RenameableKind" },
+        "confidence": { "$ref": "#/$defs/RenameConfidence" },
+        "evidence": { "type": "array", "items": { "type": "string" } },
+        "score": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+      }
+    },
+    "RenameableKind": {
+      "enum": ["class", "object_property", "data_property", "annotation_property"]
+    },
+    "RenameConfidence": {
+      "enum": ["certain", "high", "medium", "low"]
+    },
+    "ChangeIdList": {
+      "description": "Change ids subsumed by a structural change. Expected unique by construction; uniqueness is not schema-enforced (Q3).",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "RestrictionDecoded": {
+      "description": "The decoded form of a reified restriction (Component 08).",
+      "type": "object",
+      "required": ["kind", "cardinality", "filler", "urn"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "type": "string" },
+        "cardinality": { "type": ["integer", "null"] },
+        "filler": { "type": ["string", "null"] },
+        "urn": { "type": "string" }
+      }
+    },
+    "AnnotationValue": {
+      "description": "One annotation value: the literal text or IRI, plus whether it is an IRI.",
+      "type": "object",
+      "required": ["value", "is_iri_value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": "string" },
+        "is_iri_value": { "type": "boolean" }
+      }
+    },
+    "Change": {
+      "description": "One difference between the two ontologies. The `details` object is constrained per `kind` by the allOf/if-then block below; unknown kinds (forward-compat) fall through with a permissive object.",
+      "type": "object",
+      "required": [
+        "layer",
+        "kind",
+        "severity",
+        "subject",
+        "summary",
+        "details",
+        "before",
+        "after"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "layer": { "enum": ["syntactic", "structural"] },
+        "kind": { "type": "string" },
+        "severity": { "$ref": "#/$defs/Severity" },
+        "subject": { "type": ["string", "null"] },
+        "summary": { "type": "string" },
+        "details": { "type": "object" },
+        "before": true,
+        "after": true
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "kind": { "enum": ["triple_added", "triple_removed"] } }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/SyntacticDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "class_added",
+                  "class_removed",
+                  "object_property_added",
+                  "object_property_removed",
+                  "data_property_added",
+                  "data_property_removed",
+                  "annotation_property_added",
+                  "annotation_property_removed",
+                  "individual_added",
+                  "individual_removed",
+                  "datatype_added",
+                  "datatype_removed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/EntityDetails" } }
+          }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "entity_kind_changed" } } },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/EntityKindChangedDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "class_parent_added",
+                  "class_parent_removed",
+                  "property_parent_added",
+                  "property_parent_removed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/ParentEdgeDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": { "enum": ["class_reparented", "property_reparented"] }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/ReparentDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": { "const": "class_hierarchy_cycle_introduced" }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/CycleDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "restriction_added",
+                  "restriction_removed",
+                  "restriction_changed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/RestrictionDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": { "enum": ["domain_changed", "range_changed"] }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/DomainRangeChangedDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "domain_added",
+                  "domain_removed",
+                  "range_added",
+                  "range_removed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/DomainRangeValueDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "equivalent_class_added",
+                  "equivalent_class_removed",
+                  "disjoint_added",
+                  "disjoint_removed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/PairwiseClassDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": { "enum": ["complement_set", "complement_unset"] }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/ComplementDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": { "const": "complex_class_expression_changed" }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/ComplexClassExpressionDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "kind": { "const": "annotation_changed" } }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/AnnotationChangedDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": { "enum": ["annotation_added", "annotation_removed"] }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/AnnotationSingleDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": { "enum": ["entity_deprecated", "entity_undeprecated"] }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/DeprecationDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "kind": { "const": "ontology_metadata_changed" } }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/OntologyMetadataDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "class_renamed",
+                  "object_property_renamed",
+                  "data_property_renamed",
+                  "annotation_property_renamed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/RenameDetails" } }
+          }
+        }
+      ]
+    },
+    "SyntacticDetails": {
+      "description": "Layer 0 triple add/remove (Component 05). No `subsumes`: Layer 0 is the base.",
+      "type": "object",
+      "required": [
+        "subject",
+        "predicate",
+        "object",
+        "subject_iri",
+        "predicate_iri",
+        "change_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "subject": { "type": "string" },
+        "predicate": { "type": "string" },
+        "object": { "type": "string" },
+        "subject_iri": { "type": ["string", "null"] },
+        "predicate_iri": { "type": ["string", "null"] },
+        "change_id": { "type": "string" }
+      }
+    },
+    "EntityDetails": {
+      "description": "Entity add/remove (Component 06). `label`/`language` are always present, null when the entity has no label.",
+      "type": "object",
+      "required": ["entity_iri", "entity_kind", "label", "language", "subsumes", "change_id"],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "entity_kind": {
+          "enum": [
+            "class",
+            "object_property",
+            "data_property",
+            "annotation_property",
+            "individual",
+            "datatype"
+          ]
+        },
+        "label": { "type": ["string", "null"] },
+        "language": { "type": ["string", "null"] },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "EntityKindChangedDetails": {
+      "description": "An IRI that moved from one entity kind to another (Component 06).",
+      "type": "object",
+      "required": ["entity_iri", "from_kind", "to_kind", "subsumes", "change_id"],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "from_kind": { "type": "string" },
+        "to_kind": { "type": "string" },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "ParentEdgeDetails": {
+      "description": "A single gained/lost parent edge (Component 07). `entity_kind` is the coarse `class`/`property` axis here, not the full entity kind.",
+      "type": "object",
+      "required": ["entity_iri", "entity_kind", "parent_iri", "subsumes", "change_id"],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "entity_kind": { "type": "string" },
+        "parent_iri": { "type": "string" },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "ReparentDetails": {
+      "description": "A simultaneous parent gain and loss (Component 07).",
+      "type": "object",
+      "required": [
+        "entity_iri",
+        "entity_kind",
+        "parents_before",
+        "parents_after",
+        "direction",
+        "subsumes",
+        "change_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "entity_kind": { "type": "string" },
+        "parents_before": { "type": "array", "items": { "type": "string" } },
+        "parents_after": { "type": "array", "items": { "type": "string" } },
+        "direction": { "enum": ["generalization", "specialization", "lateral"] },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "CycleDetails": {
+      "description": "A subClassOf cycle a new edge introduced (Component 07).",
+      "type": "object",
+      "required": ["entity_iri", "path", "subsumes", "change_id"],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "path": { "type": "array", "items": { "type": "string" } },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "RestrictionDetails": {
+      "description": "Restriction add/remove/change (Component 08). `before`/`after` carry the decoded restriction or null. `on_property` is null for restrictions not pinned to a property.",
+      "type": "object",
+      "required": [
+        "entity_iri",
+        "via_predicate",
+        "on_property",
+        "before",
+        "after",
+        "subsumes",
+        "change_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "via_predicate": { "type": "string" },
+        "on_property": { "type": ["string", "null"] },
+        "before": {
+          "oneOf": [{ "$ref": "#/$defs/RestrictionDecoded" }, { "type": "null" }]
+        },
+        "after": {
+          "oneOf": [{ "$ref": "#/$defs/RestrictionDecoded" }, { "type": "null" }]
+        },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "DomainRangeChangedDetails": {
+      "description": "A single-value domain/range swap (Component 08).",
+      "type": "object",
+      "required": ["property_iri", "before", "after", "subsumes", "change_id"],
+      "additionalProperties": false,
+      "properties": {
+        "property_iri": { "type": "string" },
+        "before": { "type": "string" },
+        "after": { "type": "string" },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "DomainRangeValueDetails": {
+      "description": "A single domain/range value added or removed when the property has multiple (Component 08). Uses `value`, not before/after.",
+      "type": "object",
+      "required": ["property_iri", "value", "subsumes", "change_id"],
+      "additionalProperties": false,
+      "properties": {
+        "property_iri": { "type": "string" },
+        "value": { "type": "string" },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "PairwiseClassDetails": {
+      "description": "An equivalent-class or disjointness edge added/removed (Component 08).",
+      "type": "object",
+      "required": ["entity_iri", "other_iri", "subsumes", "change_id"],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "other_iri": { "type": "string" },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "ComplementDetails": {
+      "description": "An owl:complementOf target set or unset (Component 08).",
+      "type": "object",
+      "required": ["entity_iri", "before", "after", "subsumes", "change_id"],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "before": { "type": ["string", "null"] },
+        "after": { "type": ["string", "null"] },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "ComplexClassExpressionDetails": {
+      "description": "The opaque fallback for nested/malformed class expressions (Component 08).",
+      "type": "object",
+      "required": ["entity_iri", "depth", "note", "subsumes", "change_id"],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "depth": { "type": "integer" },
+        "note": { "type": "string" },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "AnnotationChangedDetails": {
+      "description": "A single-value annotation swap (Component 09). `before`/`after` are AnnotationValue objects.",
+      "type": "object",
+      "required": [
+        "entity_iri",
+        "predicate_iri",
+        "predicate_short",
+        "language",
+        "before",
+        "after",
+        "subsumes",
+        "change_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "predicate_iri": { "type": "string" },
+        "predicate_short": { "type": "string" },
+        "language": { "type": ["string", "null"] },
+        "before": { "$ref": "#/$defs/AnnotationValue" },
+        "after": { "$ref": "#/$defs/AnnotationValue" },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "AnnotationSingleDetails": {
+      "description": "An annotation value added or removed (Component 09). Flat `value`/`is_iri_value`.",
+      "type": "object",
+      "required": [
+        "entity_iri",
+        "predicate_iri",
+        "predicate_short",
+        "language",
+        "value",
+        "is_iri_value",
+        "subsumes",
+        "change_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "predicate_iri": { "type": "string" },
+        "predicate_short": { "type": "string" },
+        "language": { "type": ["string", "null"] },
+        "value": { "type": "string" },
+        "is_iri_value": { "type": "boolean" },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "DeprecationDetails": {
+      "description": "An owl:deprecated true flip (Component 09).",
+      "type": "object",
+      "required": ["entity_iri", "subsumes", "change_id"],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "OntologyMetadataDetails": {
+      "description": "An annotation edit on the owl:Ontology subject (Component 09). `before`/`after` are AnnotationValue objects or null.",
+      "type": "object",
+      "required": [
+        "ontology_iri",
+        "predicate_iri",
+        "predicate_short",
+        "language",
+        "before",
+        "after",
+        "subsumes",
+        "change_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ontology_iri": { "type": "string" },
+        "predicate_iri": { "type": "string" },
+        "predicate_short": { "type": "string" },
+        "language": { "type": ["string", "null"] },
+        "before": {
+          "oneOf": [{ "$ref": "#/$defs/AnnotationValue" }, { "type": "null" }]
+        },
+        "after": {
+          "oneOf": [{ "$ref": "#/$defs/AnnotationValue" }, { "type": "null" }]
+        },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "RenameDetails": {
+      "description": "A consolidated rename (Components 11/12). `subsumes` holds the paired add/remove ids; `cascade_subsumes` holds the cascade-consequence ids.",
+      "type": "object",
+      "required": [
+        "before_iri",
+        "after_iri",
+        "entity_kind",
+        "confidence",
+        "score",
+        "evidence",
+        "cascade_subsumes",
+        "subsumes",
+        "change_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "before_iri": { "type": "string" },
+        "after_iri": { "type": "string" },
+        "entity_kind": { "$ref": "#/$defs/RenameableKind" },
+        "confidence": { "$ref": "#/$defs/RenameConfidence" },
+        "score": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "evidence": { "type": "array", "items": { "type": "string" } },
+        "cascade_subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    }
+  }
+}

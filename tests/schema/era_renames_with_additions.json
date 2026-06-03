@@ -1,0 +1,484 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "added": 10,
+    "removed": 7,
+    "total": 21,
+    "breaking": 1
+  },
+  "changes": [
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Signal",
+      "summary": "Removed: era:Signal <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Class",
+      "details": {
+        "subject": "era:Signal",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Class",
+        "subject_iri": "http://data.europa.eu/949/Signal",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_removed:c9a384dc623baadfc2391721b839f80596305e99"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Signal",
+      "summary": "Removed: era:Signal rdfs:label \"Signal\"@en",
+      "details": {
+        "subject": "era:Signal",
+        "predicate": "rdfs:label",
+        "object": "\"Signal\"@en",
+        "subject_iri": "http://data.europa.eu/949/Signal",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_removed:c144f398e745c1fd29a6bec000c8c0f1405718a8"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Signal",
+      "summary": "Removed: era:Signal rdfs:label \"Signalisation\"@fr",
+      "details": {
+        "subject": "era:Signal",
+        "predicate": "rdfs:label",
+        "object": "\"Signalisation\"@fr",
+        "subject_iri": "http://data.europa.eu/949/Signal",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_removed:31d6e0f66c6139c8c02c2e2acb0bec3d6f1195e7"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Signal",
+      "summary": "Removed: era:Signal rdfs:subClassOf era:Asset",
+      "details": {
+        "subject": "era:Signal",
+        "predicate": "rdfs:subClassOf",
+        "object": "era:Asset",
+        "subject_iri": "http://data.europa.eu/949/Signal",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_removed:c1cb45a76e9610b0cdae351c2d2d2dad767a7f7c"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Removed: era:Track <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Class",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Class",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_removed:80ed2006fce90887bc1be818ae82716c17cab05e"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Removed: era:Track rdfs:label \"Track\"@en",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:label",
+        "object": "\"Track\"@en",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_removed:42e5290a974bd192cdeef50c3c6a517cf660e1c7"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Removed: era:Track rdfs:subClassOf era:Asset",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:subClassOf",
+        "object": "era:Asset",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_removed:0163d27a57e6806a4d1a7eaa3699f1ef321ed295"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/RailwaySignal",
+      "summary": "Added: era:RailwaySignal <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Class",
+      "details": {
+        "subject": "era:RailwaySignal",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Class",
+        "subject_iri": "http://data.europa.eu/949/RailwaySignal",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_added:203365eb9de66c44098d262b99b9a89d45e04750"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/RailwaySignal",
+      "summary": "Added: era:RailwaySignal rdfs:label \"Signal\"@en",
+      "details": {
+        "subject": "era:RailwaySignal",
+        "predicate": "rdfs:label",
+        "object": "\"Signal\"@en",
+        "subject_iri": "http://data.europa.eu/949/RailwaySignal",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_added:89bf6fed02a5af5f92fc348f5dd49826e816a755"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/RailwaySignal",
+      "summary": "Added: era:RailwaySignal rdfs:subClassOf era:Asset",
+      "details": {
+        "subject": "era:RailwaySignal",
+        "predicate": "rdfs:subClassOf",
+        "object": "era:Asset",
+        "subject_iri": "http://data.europa.eu/949/RailwaySignal",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_added:be94844ddd019754a172fcd9360fa7eefa923459"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/RailwayTrack",
+      "summary": "Added: era:RailwayTrack <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Class",
+      "details": {
+        "subject": "era:RailwayTrack",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Class",
+        "subject_iri": "http://data.europa.eu/949/RailwayTrack",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_added:b33d796168ffcd7e3f0ac8b7aebf18fc8006f4a3"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/RailwayTrack",
+      "summary": "Added: era:RailwayTrack rdfs:label \"Track\"@en",
+      "details": {
+        "subject": "era:RailwayTrack",
+        "predicate": "rdfs:label",
+        "object": "\"Track\"@en",
+        "subject_iri": "http://data.europa.eu/949/RailwayTrack",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_added:93783c5f96dc51e0eab3154f13a4c91f91ba4c20"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/RailwayTrack",
+      "summary": "Added: era:RailwayTrack rdfs:subClassOf _restriction:c44e91c9",
+      "details": {
+        "subject": "era:RailwayTrack",
+        "predicate": "rdfs:subClassOf",
+        "object": "<urn:owlcompare:restriction:c44e91c9b1d56cf779bed1cb02dfc1414d45c1eea1dd20406ab8c574000af59d>",
+        "subject_iri": "http://data.europa.eu/949/RailwayTrack",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_added:88c4544ebc8f958e4847d805399e9120f6f9212b"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/RailwayTrack",
+      "summary": "Added: era:RailwayTrack rdfs:subClassOf era:Asset",
+      "details": {
+        "subject": "era:RailwayTrack",
+        "predicate": "rdfs:subClassOf",
+        "object": "era:Asset",
+        "subject_iri": "http://data.europa.eu/949/RailwayTrack",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_added:8c82b294ef0709f25fe288620cf4daedb0eb632d"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:c44e91c9b1d56cf779bed1cb02dfc1414d45c1eea1dd20406ab8c574000af59d",
+      "summary": "Added: _restriction:c44e91c9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Restriction",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:c44e91c9b1d56cf779bed1cb02dfc1414d45c1eea1dd20406ab8c574000af59d>",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Restriction",
+        "subject_iri": "urn:owlcompare:restriction:c44e91c9b1d56cf779bed1cb02dfc1414d45c1eea1dd20406ab8c574000af59d",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_added:bb7ff7e57aaf21b99d4eb20f542dad1d810bc1eb"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:c44e91c9b1d56cf779bed1cb02dfc1414d45c1eea1dd20406ab8c574000af59d",
+      "summary": "Added: _restriction:c44e91c9 owl:maxCardinality \"1\"^^<http://www.w3.org/2001/XMLSchema#integer>",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:c44e91c9b1d56cf779bed1cb02dfc1414d45c1eea1dd20406ab8c574000af59d>",
+        "predicate": "owl:maxCardinality",
+        "object": "\"1\"^^<http://www.w3.org/2001/XMLSchema#integer>",
+        "subject_iri": "urn:owlcompare:restriction:c44e91c9b1d56cf779bed1cb02dfc1414d45c1eea1dd20406ab8c574000af59d",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#maxCardinality",
+        "change_id": "syntactic:triple_added:fbd159641f0bc487186389334daca665caede537"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:c44e91c9b1d56cf779bed1cb02dfc1414d45c1eea1dd20406ab8c574000af59d",
+      "summary": "Added: _restriction:c44e91c9 owl:onProperty era:hasGauge",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:c44e91c9b1d56cf779bed1cb02dfc1414d45c1eea1dd20406ab8c574000af59d>",
+        "predicate": "owl:onProperty",
+        "object": "era:hasGauge",
+        "subject_iri": "urn:owlcompare:restriction:c44e91c9b1d56cf779bed1cb02dfc1414d45c1eea1dd20406ab8c574000af59d",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#onProperty",
+        "change_id": "syntactic:triple_added:414b5582cd3eb8e9d79324822eae0987e4c35e62"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "class_renamed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/RailwaySignal",
+      "summary": "Class renamed: era:Signal → era:RailwaySignal (high confidence; matching label \"Signal\"@en)",
+      "details": {
+        "before_iri": "http://data.europa.eu/949/Signal",
+        "after_iri": "http://data.europa.eu/949/RailwaySignal",
+        "entity_kind": "class",
+        "confidence": "high",
+        "score": 1.0,
+        "evidence": [
+          "matching label \"Signal\"@en"
+        ],
+        "cascade_subsumes": [
+          "structural:annotation_removed:d40744295bd33763dcc188830e65f24d76a62dae"
+        ],
+        "subsumes": [
+          "structural:class_removed:fdb8d270a8d70770a5970a077854c63b59687f07",
+          "structural:class_added:4dda74895a224947eb79480255537dffd978c7ae"
+        ],
+        "change_id": "structural:class_renamed:8b6cbf78c6e659d5debe3953ffff5884405c76bc"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "class_renamed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/RailwayTrack",
+      "summary": "Class renamed: era:Track → era:RailwayTrack (high confidence; matching label \"Track\"@en)",
+      "details": {
+        "before_iri": "http://data.europa.eu/949/Track",
+        "after_iri": "http://data.europa.eu/949/RailwayTrack",
+        "entity_kind": "class",
+        "confidence": "high",
+        "score": 1.0,
+        "evidence": [
+          "matching label \"Track\"@en"
+        ],
+        "cascade_subsumes": [
+          "structural:restriction_added:3a9a92011df0fa936a8751bdfa97af045f7338d5"
+        ],
+        "subsumes": [
+          "structural:class_removed:a9e45157e9ed133898e69df26e5b7e9daca2cb81",
+          "structural:class_added:4c3d59fa81789886a8a558b29c86529ac3b34a02"
+        ],
+        "change_id": "structural:class_renamed:6dbfc42a79b659b93d639aac04461233d2d8ed3c"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "annotation_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/RailwaySignal",
+      "summary": "Label removed from era:RailwaySignal (fr): 'Signalisation'",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/RailwaySignal",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "predicate_short": "label",
+        "language": "fr",
+        "value": "Signalisation",
+        "is_iri_value": false,
+        "subsumes": [],
+        "change_id": "structural:annotation_removed:d40744295bd33763dcc188830e65f24d76a62dae"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "restriction_added",
+      "severity": "breaking",
+      "subject": "http://data.europa.eu/949/RailwayTrack",
+      "summary": "Restriction added on era:RailwayTrack: max 1 era:hasGauge",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/RailwayTrack",
+        "via_predicate": "rdfs:subClassOf",
+        "on_property": "http://data.europa.eu/949/hasGauge",
+        "before": null,
+        "after": {
+          "kind": "max_cardinality",
+          "cardinality": 1,
+          "filler": null,
+          "urn": "urn:owlcompare:restriction:c44e91c9b1d56cf779bed1cb02dfc1414d45c1eea1dd20406ab8c574000af59d"
+        },
+        "subsumes": [],
+        "change_id": "structural:restriction_added:3a9a92011df0fa936a8751bdfa97af045f7338d5"
+      },
+      "before": null,
+      "after": null
+    }
+  ],
+  "metadata": {
+    "severity_refinements": [
+      {
+        "change_id": "syntactic:triple_removed:c9a384dc623baadfc2391721b839f80596305e99",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:c1cb45a76e9610b0cdae351c2d2d2dad767a7f7c",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:80ed2006fce90887bc1be818ae82716c17cab05e",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:0163d27a57e6806a4d1a7eaa3699f1ef321ed295",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:203365eb9de66c44098d262b99b9a89d45e04750",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:be94844ddd019754a172fcd9360fa7eefa923459",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:b33d796168ffcd7e3f0ac8b7aebf18fc8006f4a3",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:88c4544ebc8f958e4847d805399e9120f6f9212b",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:8c82b294ef0709f25fe288620cf4daedb0eb632d",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:bb7ff7e57aaf21b99d4eb20f542dad1d810bc1eb",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:fbd159641f0bc487186389334daca665caede537",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:414b5582cd3eb8e9d79324822eae0987e4c35e62",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      }
+    ]
+  }
+}

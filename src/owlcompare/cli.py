@@ -49,6 +49,7 @@ from owlcompare.model import LoadOptions
 from owlcompare.rename_mapping import RenameMapping
 from owlcompare.rename_mapping import dump as _dump_rename_mapping
 from owlcompare.rename_mapping import load as _load_rename_mapping
+from owlcompare.schema import validate_diff_json as _validate_diff_json
 from owlcompare.severity_config import SeverityConfig
 from owlcompare.severity_config import load as _load_severity_config
 from owlcompare.sources import resolve as _resolve_source
@@ -237,6 +238,15 @@ def diff(
             "Additive: does not affect stdout/stderr output. Overwrites any existing file.",
         ),
     ] = None,
+    validate_schema: Annotated[
+        bool,
+        typer.Option(
+            "--validate-schema",
+            help="Validate the JSON output against the bundled schema before emitting "
+            "(Component 14). On failure, raise SchemaValidationError (exit 5) rather than "
+            "emit non-conforming JSON. Default off; no effect when --format is not json.",
+        ),
+    ] = False,
 ) -> None:
     """Compare two ontologies at the syntactic (Layer 0) and structural (Layer 1) layers.
 
@@ -305,33 +315,42 @@ def diff(
 
     if output_format is DiffFormat.json:
         rendered = diff_json(changes, refinements)
+        if validate_schema:
+            # Opt-in (default off): validate before emission so a non-conforming
+            # payload raises SchemaValidationError (exit 5) instead of shipping.
+            import json as _json
+
+            _validate_diff_json(_json.loads(rendered))
         if out is not None:
             out.write_text(rendered + "\n", encoding="utf-8")
         else:
             typer.echo(rendered)
-    elif out is not None:
-        text = diff_text_plain(
-            changes,
-            registry,
-            result.a,
-            result.b,
-            layer1_enabled=layer1_enabled,
-            show_syntactic=show_syntactic,
-        )
-        if explain_severity:
-            text += "\n\n" + severity_explanations_plain(refinements)
-        out.write_text(text + "\n", encoding="utf-8")
     else:
-        render_diff_text(
-            changes,
-            registry,
-            result.a,
-            result.b,
-            layer1_enabled=layer1_enabled,
-            show_syntactic=show_syntactic,
-        )
-        if explain_severity:
-            render_severity_explanations(refinements)
+        if validate_schema:
+            logger.debug("--validate-schema has no effect when --format is not json")
+        if out is not None:
+            text = diff_text_plain(
+                changes,
+                registry,
+                result.a,
+                result.b,
+                layer1_enabled=layer1_enabled,
+                show_syntactic=show_syntactic,
+            )
+            if explain_severity:
+                text += "\n\n" + severity_explanations_plain(refinements)
+            out.write_text(text + "\n", encoding="utf-8")
+        else:
+            render_diff_text(
+                changes,
+                registry,
+                result.a,
+                result.b,
+                layer1_enabled=layer1_enabled,
+                show_syntactic=show_syntactic,
+            )
+            if explain_severity:
+                render_severity_explanations(refinements)
 
     if any(change.severity == "breaking" for change in changes):
         raise typer.Exit(_BREAKING_EXIT_CODE)

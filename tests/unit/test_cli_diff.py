@@ -561,3 +561,65 @@ def test_cli_diff_export_does_not_suppress_normal_output(capsys, tmp_path: Path)
     payload = json.loads(capsys.readouterr().out)
     assert any(c["kind"] == "class_renamed" for c in payload["changes"])
     assert out_toml.exists()
+
+
+# --------------------------------------------------------------------------- #
+# Component 14 — --validate-schema flag
+# --------------------------------------------------------------------------- #
+
+
+def test_cli_diff_validate_schema_flag_passes_for_valid_output(capsys):
+    # era_evolution emits a breaking change -> exit 10; the point is that
+    # validation of real output succeeds (no SchemaValidationError, exit 5).
+    rc = main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--format",
+            "json",
+            "--validate-schema",
+        ]
+    )
+    assert rc == 10
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["schema_version"] == 1
+
+
+def test_cli_diff_validate_schema_flag_raises_for_synthetic_malformed(monkeypatch):
+    # Force the renderer to emit a payload that violates the schema (summary is
+    # missing its required keys). --validate-schema must catch it before emission
+    # and surface SchemaValidationError -> exit 5. This test's monkeypatch
+    # replaces the autouse validating wrapper (tests/conftest.py) for this call.
+    import owlcompare.cli as cli_module
+
+    def _malformed(*_args, **_kwargs) -> str:
+        return json.dumps({"schema_version": 1, "summary": {}, "changes": []})
+
+    monkeypatch.setattr(cli_module, "diff_json", _malformed)
+    rc = main(
+        [
+            "diff",
+            _fx("identical_a.ttl"),
+            _fx("identical_b.ttl"),
+            "--format",
+            "json",
+            "--validate-schema",
+        ]
+    )
+    assert rc == 5
+
+
+def test_cli_diff_validate_schema_flag_no_effect_on_text_output(capsys):
+    # With text output the flag is a no-op (logged at DEBUG); the diff runs
+    # normally and exits 0 for an identical pair.
+    rc = main(
+        [
+            "diff",
+            _fx("identical_a.ttl"),
+            _fx("identical_b.ttl"),
+            "--validate-schema",
+        ]
+    )
+    assert rc == 0
+    assert "identical" in capsys.readouterr().out

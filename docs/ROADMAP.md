@@ -2,7 +2,7 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 3 COMPLETE (Components 11–12 delivered). Next up: Phase 4 — Report renderers.
+**Current phase:** Phase 4 IN PROGRESS — Report renderers. Component 14 (JSON Schema Lockdown) delivered; next up: Component 15 (Markdown report).
 
 ---
 
@@ -86,9 +86,14 @@ restriction_added + 1 annotation_removed = 4 visible changes).
 
 ---
 
-## Phase 4 — Report renderers
+## Phase 4 — Report renderers (IN PROGRESS)
 
-- [ ] Component 14: JSON report (canonical schema) — `specs/14-json-report.md`
+- [x] Component 14: JSON schema lockdown (canonical, versioned schema) — `specs/14-json-schema.md`
+      (The JSON output is now a published JSON Schema 2020-12 contract at
+      `docs/schema/diff-result.schema.json`, with `owlcompare.schema` load/validate
+      helpers, a `--validate-schema` CLI flag, and an autouse test wrapper that
+      schema-validates every CLI JSON payload so drift fails CI. See [[DD-019]]
+      (compatibility policy) and [[DD-020]] (`jsonschema` as a test-only dep).)
 - [ ] Component 15: Markdown report (PR-comment style) — `specs/15-markdown-report.md`
 - [ ] Component 16: HTML report — design & wireframe — `specs/16-html-design.md`
 - [ ] Component 17: HTML report — implementation — `specs/17-html-impl.md`

@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "added": 1,
+    "removed": 0,
+    "total": 4,
+    "breaking": 3
+  },
+  "changes": [
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://example.org/C",
+      "summary": "Added: ex:C rdfs:subClassOf ex:A",
+      "details": {
+        "subject": "ex:C",
+        "predicate": "rdfs:subClassOf",
+        "object": "ex:A",
+        "subject_iri": "http://example.org/C",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_added:c56404608b4185477483207aad90ea1663bd99c4"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "class_hierarchy_cycle_introduced",
+      "severity": "breaking",
+      "subject": "http://example.org/A",
+      "summary": "Cycle introduced: ex:C → ex:A → ex:B → ex:C",
+      "details": {
+        "entity_iri": "http://example.org/A",
+        "path": [
+          "http://example.org/C",
+          "http://example.org/A",
+          "http://example.org/B",
+          "http://example.org/C"
+        ],
+        "subsumes": [
+          "syntactic:triple_added:c56404608b4185477483207aad90ea1663bd99c4"
+        ],
+        "change_id": "structural:class_hierarchy_cycle_introduced:e9c9fb46e9f04de84afd29345b487153667a5d56"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "class_hierarchy_cycle_introduced",
+      "severity": "breaking",
+      "subject": "http://example.org/B",
+      "summary": "Cycle introduced: ex:C → ex:A → ex:B → ex:C",
+      "details": {
+        "entity_iri": "http://example.org/B",
+        "path": [
+          "http://example.org/C",
+          "http://example.org/A",
+          "http://example.org/B",
+          "http://example.org/C"
+        ],
+        "subsumes": [
+          "syntactic:triple_added:c56404608b4185477483207aad90ea1663bd99c4"
+        ],
+        "change_id": "structural:class_hierarchy_cycle_introduced:f6d3257fdb915218b43a20995f6f8d43f8d6bab7"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "class_hierarchy_cycle_introduced",
+      "severity": "breaking",
+      "subject": "http://example.org/C",
+      "summary": "Cycle introduced: ex:C → ex:A → ex:B → ex:C",
+      "details": {
+        "entity_iri": "http://example.org/C",
+        "path": [
+          "http://example.org/C",
+          "http://example.org/A",
+          "http://example.org/B",
+          "http://example.org/C"
+        ],
+        "subsumes": [
+          "syntactic:triple_added:c56404608b4185477483207aad90ea1663bd99c4"
+        ],
+        "change_id": "structural:class_hierarchy_cycle_introduced:c0cdf533975a90d564ec4dd244d50eb35340dd6c"
+      },
+      "before": null,
+      "after": null
+    }
+  ],
+  "metadata": {
+    "severity_refinements": [
+      {
+        "change_id": "syntactic:triple_added:c56404608b4185477483207aad90ea1663bd99c4",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      }
+    ]
+  }
+}

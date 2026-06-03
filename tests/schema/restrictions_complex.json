@@ -1,0 +1,554 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "added": 9,
+    "removed": 9,
+    "total": 22,
+    "breaking": 2
+  },
+  "changes": [
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Removed: era:Track rdfs:subClassOf _restriction:7d3b27d0",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:subClassOf",
+        "object": "<urn:owlcompare:restriction:7d3b27d0be2f5c0d87ffc3d45d6f8c3827d088ce5f371fa646a30922b25ed5c6>",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_removed:0810a6d4052700a06811afc9ad1e73b31d1c9d7b"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Removed: era:Track rdfs:subClassOf _restriction:d38a657a",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:subClassOf",
+        "object": "<urn:owlcompare:restriction:d38a657aa1bc50d654d4d4f9f0d0cb9eb9ec8a441d0f42c1c8c8f5a46d4feead>",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_removed:8cedfffa9fdec8352c8671302f76e6f79795fb94"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/restrictions",
+      "summary": "Removed: era:restrictions owl:versionInfo \"1.0.0\"",
+      "details": {
+        "subject": "era:restrictions",
+        "predicate": "owl:versionInfo",
+        "object": "\"1.0.0\"",
+        "subject_iri": "http://data.europa.eu/949/restrictions",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#versionInfo",
+        "change_id": "syntactic:triple_removed:8f5b429cf1b45850991679aa38e392652e204be7"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:7d3b27d0be2f5c0d87ffc3d45d6f8c3827d088ce5f371fa646a30922b25ed5c6",
+      "summary": "Removed: _restriction:7d3b27d0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Restriction",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:7d3b27d0be2f5c0d87ffc3d45d6f8c3827d088ce5f371fa646a30922b25ed5c6>",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Restriction",
+        "subject_iri": "urn:owlcompare:restriction:7d3b27d0be2f5c0d87ffc3d45d6f8c3827d088ce5f371fa646a30922b25ed5c6",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_removed:7ac4c95ce1107eaac3be5dc38e8e201670f34b5e"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:7d3b27d0be2f5c0d87ffc3d45d6f8c3827d088ce5f371fa646a30922b25ed5c6",
+      "summary": "Removed: _restriction:7d3b27d0 owl:maxCardinality \"5\"^^xsd:nonNegativeInteger",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:7d3b27d0be2f5c0d87ffc3d45d6f8c3827d088ce5f371fa646a30922b25ed5c6>",
+        "predicate": "owl:maxCardinality",
+        "object": "\"5\"^^xsd:nonNegativeInteger",
+        "subject_iri": "urn:owlcompare:restriction:7d3b27d0be2f5c0d87ffc3d45d6f8c3827d088ce5f371fa646a30922b25ed5c6",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#maxCardinality",
+        "change_id": "syntactic:triple_removed:1d3eafa2c790e853dd330ece1299a663cf216198"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:7d3b27d0be2f5c0d87ffc3d45d6f8c3827d088ce5f371fa646a30922b25ed5c6",
+      "summary": "Removed: _restriction:7d3b27d0 owl:onProperty era:hasMaxSpeed",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:7d3b27d0be2f5c0d87ffc3d45d6f8c3827d088ce5f371fa646a30922b25ed5c6>",
+        "predicate": "owl:onProperty",
+        "object": "era:hasMaxSpeed",
+        "subject_iri": "urn:owlcompare:restriction:7d3b27d0be2f5c0d87ffc3d45d6f8c3827d088ce5f371fa646a30922b25ed5c6",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#onProperty",
+        "change_id": "syntactic:triple_removed:4ed4f1c6b9ec4350b1744eaeb3576e6c409c44e1"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:d38a657aa1bc50d654d4d4f9f0d0cb9eb9ec8a441d0f42c1c8c8f5a46d4feead",
+      "summary": "Removed: _restriction:d38a657a <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Restriction",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:d38a657aa1bc50d654d4d4f9f0d0cb9eb9ec8a441d0f42c1c8c8f5a46d4feead>",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Restriction",
+        "subject_iri": "urn:owlcompare:restriction:d38a657aa1bc50d654d4d4f9f0d0cb9eb9ec8a441d0f42c1c8c8f5a46d4feead",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_removed:6d997a019473296e71ac39a7a40079ac21773cf0"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:d38a657aa1bc50d654d4d4f9f0d0cb9eb9ec8a441d0f42c1c8c8f5a46d4feead",
+      "summary": "Removed: _restriction:d38a657a owl:onProperty era:hasGauge",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:d38a657aa1bc50d654d4d4f9f0d0cb9eb9ec8a441d0f42c1c8c8f5a46d4feead>",
+        "predicate": "owl:onProperty",
+        "object": "era:hasGauge",
+        "subject_iri": "urn:owlcompare:restriction:d38a657aa1bc50d654d4d4f9f0d0cb9eb9ec8a441d0f42c1c8c8f5a46d4feead",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#onProperty",
+        "change_id": "syntactic:triple_removed:631fa675480e0d13da212474b822d41bd32b1de3"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:d38a657aa1bc50d654d4d4f9f0d0cb9eb9ec8a441d0f42c1c8c8f5a46d4feead",
+      "summary": "Removed: _restriction:d38a657a owl:someValuesFrom era:Gauge",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:d38a657aa1bc50d654d4d4f9f0d0cb9eb9ec8a441d0f42c1c8c8f5a46d4feead>",
+        "predicate": "owl:someValuesFrom",
+        "object": "era:Gauge",
+        "subject_iri": "urn:owlcompare:restriction:d38a657aa1bc50d654d4d4f9f0d0cb9eb9ec8a441d0f42c1c8c8f5a46d4feead",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#someValuesFrom",
+        "change_id": "syntactic:triple_removed:86e008017697d557a4a69e39d7a9dc9169b872f6"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Added: era:Track rdfs:subClassOf _restriction:1f72182d",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:subClassOf",
+        "object": "<urn:owlcompare:restriction:1f72182d2817272b2f4a25a3ce779809574d1e054415cd316896e0cfe66ed1ec>",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_added:a4ef0b513d1fc3d7410191c4a69d8c09cf6fbd49"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Added: era:Track rdfs:subClassOf _restriction:38ec673e",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:subClassOf",
+        "object": "<urn:owlcompare:restriction:38ec673ecd1068969d5486a91b1164aaf7a918b66701b34c5e56cf0c75c53c66>",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_added:a383177a142988aabc032114bd84289c2434fb5c"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/restrictions",
+      "summary": "Added: era:restrictions owl:versionInfo \"2.0.0\"",
+      "details": {
+        "subject": "era:restrictions",
+        "predicate": "owl:versionInfo",
+        "object": "\"2.0.0\"",
+        "subject_iri": "http://data.europa.eu/949/restrictions",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#versionInfo",
+        "change_id": "syntactic:triple_added:fbb5cf358e2b990372c427d6d8d238f19816dd48"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:1f72182d2817272b2f4a25a3ce779809574d1e054415cd316896e0cfe66ed1ec",
+      "summary": "Added: _restriction:1f72182d <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Restriction",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:1f72182d2817272b2f4a25a3ce779809574d1e054415cd316896e0cfe66ed1ec>",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Restriction",
+        "subject_iri": "urn:owlcompare:restriction:1f72182d2817272b2f4a25a3ce779809574d1e054415cd316896e0cfe66ed1ec",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_added:da7cc3369cb75202b49b7d78a1010bae4f881a55"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:1f72182d2817272b2f4a25a3ce779809574d1e054415cd316896e0cfe66ed1ec",
+      "summary": "Added: _restriction:1f72182d owl:maxCardinality \"3\"^^xsd:nonNegativeInteger",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:1f72182d2817272b2f4a25a3ce779809574d1e054415cd316896e0cfe66ed1ec>",
+        "predicate": "owl:maxCardinality",
+        "object": "\"3\"^^xsd:nonNegativeInteger",
+        "subject_iri": "urn:owlcompare:restriction:1f72182d2817272b2f4a25a3ce779809574d1e054415cd316896e0cfe66ed1ec",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#maxCardinality",
+        "change_id": "syntactic:triple_added:78ab6581d5004d5a9dc3c5bb22939f8a40a54ca9"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:1f72182d2817272b2f4a25a3ce779809574d1e054415cd316896e0cfe66ed1ec",
+      "summary": "Added: _restriction:1f72182d owl:onProperty era:hasMaxSpeed",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:1f72182d2817272b2f4a25a3ce779809574d1e054415cd316896e0cfe66ed1ec>",
+        "predicate": "owl:onProperty",
+        "object": "era:hasMaxSpeed",
+        "subject_iri": "urn:owlcompare:restriction:1f72182d2817272b2f4a25a3ce779809574d1e054415cd316896e0cfe66ed1ec",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#onProperty",
+        "change_id": "syntactic:triple_added:7523b10389bc06b62f251d8004c91c0aba6e5196"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:38ec673ecd1068969d5486a91b1164aaf7a918b66701b34c5e56cf0c75c53c66",
+      "summary": "Added: _restriction:38ec673e <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Restriction",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:38ec673ecd1068969d5486a91b1164aaf7a918b66701b34c5e56cf0c75c53c66>",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Restriction",
+        "subject_iri": "urn:owlcompare:restriction:38ec673ecd1068969d5486a91b1164aaf7a918b66701b34c5e56cf0c75c53c66",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_added:5f8b4a9c705b2d8297c179d76698bc45755a69e3"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:38ec673ecd1068969d5486a91b1164aaf7a918b66701b34c5e56cf0c75c53c66",
+      "summary": "Added: _restriction:38ec673e owl:onProperty era:servesPlatform",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:38ec673ecd1068969d5486a91b1164aaf7a918b66701b34c5e56cf0c75c53c66>",
+        "predicate": "owl:onProperty",
+        "object": "era:servesPlatform",
+        "subject_iri": "urn:owlcompare:restriction:38ec673ecd1068969d5486a91b1164aaf7a918b66701b34c5e56cf0c75c53c66",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#onProperty",
+        "change_id": "syntactic:triple_added:b72d9656f57d5ab28398e099a9ab384e3d88704c"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:38ec673ecd1068969d5486a91b1164aaf7a918b66701b34c5e56cf0c75c53c66",
+      "summary": "Added: _restriction:38ec673e owl:someValuesFrom era:Platform",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:38ec673ecd1068969d5486a91b1164aaf7a918b66701b34c5e56cf0c75c53c66>",
+        "predicate": "owl:someValuesFrom",
+        "object": "era:Platform",
+        "subject_iri": "urn:owlcompare:restriction:38ec673ecd1068969d5486a91b1164aaf7a918b66701b34c5e56cf0c75c53c66",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#someValuesFrom",
+        "change_id": "syntactic:triple_added:ec7cd641d10c89dc72a5b6e2ed19df56bd7ce52b"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "restriction_changed",
+      "severity": "breaking",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Restriction changed on era:Track: era:hasMaxSpeed max 5 → max 3",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/Track",
+        "via_predicate": "rdfs:subClassOf",
+        "on_property": "http://data.europa.eu/949/hasMaxSpeed",
+        "before": {
+          "kind": "max_cardinality",
+          "cardinality": 5,
+          "filler": null,
+          "urn": "urn:owlcompare:restriction:7d3b27d0be2f5c0d87ffc3d45d6f8c3827d088ce5f371fa646a30922b25ed5c6"
+        },
+        "after": {
+          "kind": "max_cardinality",
+          "cardinality": 3,
+          "filler": null,
+          "urn": "urn:owlcompare:restriction:1f72182d2817272b2f4a25a3ce779809574d1e054415cd316896e0cfe66ed1ec"
+        },
+        "subsumes": [
+          "syntactic:triple_removed:7ac4c95ce1107eaac3be5dc38e8e201670f34b5e",
+          "syntactic:triple_removed:1d3eafa2c790e853dd330ece1299a663cf216198",
+          "syntactic:triple_removed:4ed4f1c6b9ec4350b1744eaeb3576e6c409c44e1",
+          "syntactic:triple_removed:0810a6d4052700a06811afc9ad1e73b31d1c9d7b",
+          "syntactic:triple_added:da7cc3369cb75202b49b7d78a1010bae4f881a55",
+          "syntactic:triple_added:78ab6581d5004d5a9dc3c5bb22939f8a40a54ca9",
+          "syntactic:triple_added:7523b10389bc06b62f251d8004c91c0aba6e5196",
+          "syntactic:triple_added:a4ef0b513d1fc3d7410191c4a69d8c09cf6fbd49"
+        ],
+        "change_id": "structural:restriction_changed:4698e439ce446c1560cf404ada4bfeb2a9f7cefd"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "restriction_added",
+      "severity": "breaking",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Restriction added on era:Track: era:servesPlatform some era:Platform",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/Track",
+        "via_predicate": "rdfs:subClassOf",
+        "on_property": "http://data.europa.eu/949/servesPlatform",
+        "before": null,
+        "after": {
+          "kind": "some_values_from",
+          "cardinality": null,
+          "filler": "http://data.europa.eu/949/Platform",
+          "urn": "urn:owlcompare:restriction:38ec673ecd1068969d5486a91b1164aaf7a918b66701b34c5e56cf0c75c53c66"
+        },
+        "subsumes": [
+          "syntactic:triple_added:5f8b4a9c705b2d8297c179d76698bc45755a69e3",
+          "syntactic:triple_added:b72d9656f57d5ab28398e099a9ab384e3d88704c",
+          "syntactic:triple_added:ec7cd641d10c89dc72a5b6e2ed19df56bd7ce52b",
+          "syntactic:triple_added:a383177a142988aabc032114bd84289c2434fb5c"
+        ],
+        "change_id": "structural:restriction_added:c877c407018c89b0a881994459e2f5dc759ee606"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "restriction_removed",
+      "severity": "non_breaking",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Restriction removed from era:Track: era:hasGauge some era:Gauge",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/Track",
+        "via_predicate": "rdfs:subClassOf",
+        "on_property": "http://data.europa.eu/949/hasGauge",
+        "before": {
+          "kind": "some_values_from",
+          "cardinality": null,
+          "filler": "http://data.europa.eu/949/Gauge",
+          "urn": "urn:owlcompare:restriction:d38a657aa1bc50d654d4d4f9f0d0cb9eb9ec8a441d0f42c1c8c8f5a46d4feead"
+        },
+        "after": null,
+        "subsumes": [
+          "syntactic:triple_removed:6d997a019473296e71ac39a7a40079ac21773cf0",
+          "syntactic:triple_removed:631fa675480e0d13da212474b822d41bd32b1de3",
+          "syntactic:triple_removed:86e008017697d557a4a69e39d7a9dc9169b872f6",
+          "syntactic:triple_removed:8cedfffa9fdec8352c8671302f76e6f79795fb94"
+        ],
+        "change_id": "structural:restriction_removed:bcc115caa1bb1d2f52a8143e6453ac10bc47522c"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "ontology_metadata_changed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/restrictions",
+      "summary": "Ontology metadata: owl:versionInfo '1.0.0' → '2.0.0'",
+      "details": {
+        "ontology_iri": "http://data.europa.eu/949/restrictions",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#versionInfo",
+        "predicate_short": "versionInfo",
+        "language": null,
+        "before": {
+          "value": "1.0.0",
+          "is_iri_value": false
+        },
+        "after": {
+          "value": "2.0.0",
+          "is_iri_value": false
+        },
+        "subsumes": [
+          "syntactic:triple_removed:8f5b429cf1b45850991679aa38e392652e204be7",
+          "syntactic:triple_added:fbb5cf358e2b990372c427d6d8d238f19816dd48"
+        ],
+        "change_id": "structural:ontology_metadata_changed:c516961978899b1236c110197b2ea4e5a4f551d4"
+      },
+      "before": null,
+      "after": null
+    }
+  ],
+  "metadata": {
+    "severity_refinements": [
+      {
+        "change_id": "syntactic:triple_removed:0810a6d4052700a06811afc9ad1e73b31d1c9d7b",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:8cedfffa9fdec8352c8671302f76e6f79795fb94",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:7ac4c95ce1107eaac3be5dc38e8e201670f34b5e",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:1d3eafa2c790e853dd330ece1299a663cf216198",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:4ed4f1c6b9ec4350b1744eaeb3576e6c409c44e1",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:6d997a019473296e71ac39a7a40079ac21773cf0",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:631fa675480e0d13da212474b822d41bd32b1de3",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:86e008017697d557a4a69e39d7a9dc9169b872f6",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:a4ef0b513d1fc3d7410191c4a69d8c09cf6fbd49",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:a383177a142988aabc032114bd84289c2434fb5c",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:da7cc3369cb75202b49b7d78a1010bae4f881a55",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:78ab6581d5004d5a9dc3c5bb22939f8a40a54ca9",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:7523b10389bc06b62f251d8004c91c0aba6e5196",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:5f8b4a9c705b2d8297c179d76698bc45755a69e3",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:b72d9656f57d5ab28398e099a9ab384e3d88704c",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:ec7cd641d10c89dc72a5b6e2ed19df56bd7ce52b",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      }
+    ]
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "added": 2,
+    "removed": 0,
+    "total": 3,
+    "breaking": 0
+  },
+  "changes": [
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://example.org/Dog",
+      "summary": "Added: ex:Dog <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Class",
+      "details": {
+        "subject": "ex:Dog",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Class",
+        "subject_iri": "http://example.org/Dog",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_added:3fffbe06b99d53c147bc0bc1853fc446dfe26c0d"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://example.org/Dog",
+      "summary": "Added: ex:Dog rdfs:label \"Dog\"@en",
+      "details": {
+        "subject": "ex:Dog",
+        "predicate": "rdfs:label",
+        "object": "\"Dog\"@en",
+        "subject_iri": "http://example.org/Dog",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_added:0608efae75e00b1cfb01c28f65680ed1a12feedc"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "class_added",
+      "severity": "additive",
+      "subject": "http://example.org/Dog",
+      "summary": "Class added: ex:Dog \"Dog\"@en",
+      "details": {
+        "entity_iri": "http://example.org/Dog",
+        "entity_kind": "class",
+        "label": "Dog",
+        "language": "en",
+        "subsumes": [
+          "syntactic:triple_added:3fffbe06b99d53c147bc0bc1853fc446dfe26c0d",
+          "syntactic:triple_added:0608efae75e00b1cfb01c28f65680ed1a12feedc"
+        ],
+        "change_id": "structural:class_added:12be70c0eb11101887d061e7c901b279cb3d0826"
+      },
+      "before": null,
+      "after": null
+    }
+  ],
+  "metadata": {
+    "severity_refinements": [
+      {
+        "change_id": "syntactic:triple_added:3fffbe06b99d53c147bc0bc1853fc446dfe26c0d",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      }
+    ]
+  }
+}

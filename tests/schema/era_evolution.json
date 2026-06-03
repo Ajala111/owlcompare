@@ -1,0 +1,538 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "added": 8,
+    "removed": 10,
+    "total": 23,
+    "breaking": 1
+  },
+  "changes": [
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Removed: era:Track rdfs:label \"Voie\"@fr",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:label",
+        "object": "\"Voie\"@fr",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_removed:63bfb5916047b03a2b77469c840ee493b2df9379"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Removed: era:Track rdfs:subClassOf _restriction:ca0d5fa4",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:subClassOf",
+        "object": "<urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3>",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_removed:ff0df21f4ed90dfbf559772c3e86c067d569cfdd"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/locatedOn",
+      "summary": "Removed: era:locatedOn <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:ObjectProperty",
+      "details": {
+        "subject": "era:locatedOn",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:ObjectProperty",
+        "subject_iri": "http://data.europa.eu/949/locatedOn",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_removed:fe3cb699fc2ddf15c132d99b4ea0d148714ca9c3"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/locatedOn",
+      "summary": "Removed: era:locatedOn rdfs:domain era:Signal",
+      "details": {
+        "subject": "era:locatedOn",
+        "predicate": "rdfs:domain",
+        "object": "era:Signal",
+        "subject_iri": "http://data.europa.eu/949/locatedOn",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#domain",
+        "change_id": "syntactic:triple_removed:a348ede54189390b3cd2a008595353ccb7497df1"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/locatedOn",
+      "summary": "Removed: era:locatedOn rdfs:label \"located on\"@en",
+      "details": {
+        "subject": "era:locatedOn",
+        "predicate": "rdfs:label",
+        "object": "\"located on\"@en",
+        "subject_iri": "http://data.europa.eu/949/locatedOn",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_removed:d08228701c8db3b207aacc9e420c12c2a6d206a7"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/locatedOn",
+      "summary": "Removed: era:locatedOn rdfs:range era:Track",
+      "details": {
+        "subject": "era:locatedOn",
+        "predicate": "rdfs:range",
+        "object": "era:Track",
+        "subject_iri": "http://data.europa.eu/949/locatedOn",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#range",
+        "change_id": "syntactic:triple_removed:4e9342cd3fb7f77a5aae852ddfbc94312743f44e"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/ontology",
+      "summary": "Removed: era:ontology owl:versionInfo \"1.0.0\"",
+      "details": {
+        "subject": "era:ontology",
+        "predicate": "owl:versionInfo",
+        "object": "\"1.0.0\"",
+        "subject_iri": "http://data.europa.eu/949/ontology",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#versionInfo",
+        "change_id": "syntactic:triple_removed:34249b415b744b8ee3d8b3bb1aac9a9b8ca8b64e"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+      "summary": "Removed: _restriction:ca0d5fa4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Restriction",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3>",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Restriction",
+        "subject_iri": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_removed:c029896b888f0e3cf135145a27be188a0ff82836"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+      "summary": "Removed: _restriction:ca0d5fa4 owl:maxCardinality \"1\"^^xsd:nonNegativeInteger",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3>",
+        "predicate": "owl:maxCardinality",
+        "object": "\"1\"^^xsd:nonNegativeInteger",
+        "subject_iri": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#maxCardinality",
+        "change_id": "syntactic:triple_removed:fb09200b39cc271f44bf8fe4512c40b69aa6500f"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+      "summary": "Removed: _restriction:ca0d5fa4 owl:onProperty era:hasMaxSpeed",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3>",
+        "predicate": "owl:onProperty",
+        "object": "era:hasMaxSpeed",
+        "subject_iri": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#onProperty",
+        "change_id": "syntactic:triple_removed:0a59a79bd9222b4f2843e71f3e1d753966ba512c"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Platform",
+      "summary": "Added: era:Platform <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Class",
+      "details": {
+        "subject": "era:Platform",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Class",
+        "subject_iri": "http://data.europa.eu/949/Platform",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_added:43b960fb27f392167f0dc996bd527554e55ba7fd"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Platform",
+      "summary": "Added: era:Platform rdfs:label \"Platform\"@en",
+      "details": {
+        "subject": "era:Platform",
+        "predicate": "rdfs:label",
+        "object": "\"Platform\"@en",
+        "subject_iri": "http://data.europa.eu/949/Platform",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_added:f74537e247a679e4504bd9827ab664f0418dfa75"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Added: era:Track rdfs:label \"Voie ferrée\"@fr",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:label",
+        "object": "\"Voie ferrée\"@fr",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_added:dd739ea7072c02b9b36c66bbdfce41b6a18540dd"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Added: era:Track rdfs:subClassOf _restriction:e5a6c74d",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:subClassOf",
+        "object": "<urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710>",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_added:6b1cecd2691fa79bfababe0a368837e762d1b172"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/ontology",
+      "summary": "Added: era:ontology owl:versionInfo \"2.0.0\"",
+      "details": {
+        "subject": "era:ontology",
+        "predicate": "owl:versionInfo",
+        "object": "\"2.0.0\"",
+        "subject_iri": "http://data.europa.eu/949/ontology",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#versionInfo",
+        "change_id": "syntactic:triple_added:b5566eb2a37e1eea9fd227e729380f6d0744cfc7"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+      "summary": "Added: _restriction:e5a6c74d <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Restriction",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710>",
+        "predicate": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Restriction",
+        "subject_iri": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_added:59ecc5ba16212afd11bf3ab8b3e37d87a2fe2496"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+      "summary": "Added: _restriction:e5a6c74d owl:maxCardinality \"2\"^^xsd:nonNegativeInteger",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710>",
+        "predicate": "owl:maxCardinality",
+        "object": "\"2\"^^xsd:nonNegativeInteger",
+        "subject_iri": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#maxCardinality",
+        "change_id": "syntactic:triple_added:a7221fe7c4a598aae5b2a9ffb3092829b9aa233a"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+      "summary": "Added: _restriction:e5a6c74d owl:onProperty era:hasMaxSpeed",
+      "details": {
+        "subject": "<urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710>",
+        "predicate": "owl:onProperty",
+        "object": "era:hasMaxSpeed",
+        "subject_iri": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#onProperty",
+        "change_id": "syntactic:triple_added:20b6a83df6a5fc97d8f982810af205679fec0f25"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "class_added",
+      "severity": "additive",
+      "subject": "http://data.europa.eu/949/Platform",
+      "summary": "Class added: era:Platform \"Platform\"@en",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/Platform",
+        "entity_kind": "class",
+        "label": "Platform",
+        "language": "en",
+        "subsumes": [
+          "syntactic:triple_added:43b960fb27f392167f0dc996bd527554e55ba7fd",
+          "syntactic:triple_added:f74537e247a679e4504bd9827ab664f0418dfa75"
+        ],
+        "change_id": "structural:class_added:0e77bd9eff6c6e127936060df0e498e8270eadaa"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "object_property_removed",
+      "severity": "breaking",
+      "subject": "http://data.europa.eu/949/locatedOn",
+      "summary": "Object property removed: era:locatedOn \"located on\"@en",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/locatedOn",
+        "entity_kind": "object_property",
+        "label": "located on",
+        "language": "en",
+        "subsumes": [
+          "syntactic:triple_removed:fe3cb699fc2ddf15c132d99b4ea0d148714ca9c3",
+          "syntactic:triple_removed:d08228701c8db3b207aacc9e420c12c2a6d206a7"
+        ],
+        "change_id": "structural:object_property_removed:98b75c19b466e7127aa82f78912a1ce7cd17ea7d"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "restriction_changed",
+      "severity": "non_breaking",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Restriction changed on era:Track: era:hasMaxSpeed max 1 → max 2",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/Track",
+        "via_predicate": "rdfs:subClassOf",
+        "on_property": "http://data.europa.eu/949/hasMaxSpeed",
+        "before": {
+          "kind": "max_cardinality",
+          "cardinality": 1,
+          "filler": null,
+          "urn": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3"
+        },
+        "after": {
+          "kind": "max_cardinality",
+          "cardinality": 2,
+          "filler": null,
+          "urn": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710"
+        },
+        "subsumes": [
+          "syntactic:triple_removed:c029896b888f0e3cf135145a27be188a0ff82836",
+          "syntactic:triple_removed:fb09200b39cc271f44bf8fe4512c40b69aa6500f",
+          "syntactic:triple_removed:0a59a79bd9222b4f2843e71f3e1d753966ba512c",
+          "syntactic:triple_removed:ff0df21f4ed90dfbf559772c3e86c067d569cfdd",
+          "syntactic:triple_added:59ecc5ba16212afd11bf3ab8b3e37d87a2fe2496",
+          "syntactic:triple_added:a7221fe7c4a598aae5b2a9ffb3092829b9aa233a",
+          "syntactic:triple_added:20b6a83df6a5fc97d8f982810af205679fec0f25",
+          "syntactic:triple_added:6b1cecd2691fa79bfababe0a368837e762d1b172"
+        ],
+        "change_id": "structural:restriction_changed:1774c8de412d4ffca8ab964c73ad671ad4f861e3"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "annotation_changed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Label changed on era:Track (fr): 'Voie' → 'Voie ferrée'",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "predicate_short": "label",
+        "language": "fr",
+        "before": {
+          "value": "Voie",
+          "is_iri_value": false
+        },
+        "after": {
+          "value": "Voie ferrée",
+          "is_iri_value": false
+        },
+        "subsumes": [
+          "syntactic:triple_removed:63bfb5916047b03a2b77469c840ee493b2df9379",
+          "syntactic:triple_added:dd739ea7072c02b9b36c66bbdfce41b6a18540dd"
+        ],
+        "change_id": "structural:annotation_changed:4de3d3cdba4eb385b17fdab7a8705fa04b2acb58"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "ontology_metadata_changed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/ontology",
+      "summary": "Ontology metadata: owl:versionInfo '1.0.0' → '2.0.0'",
+      "details": {
+        "ontology_iri": "http://data.europa.eu/949/ontology",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#versionInfo",
+        "predicate_short": "versionInfo",
+        "language": null,
+        "before": {
+          "value": "1.0.0",
+          "is_iri_value": false
+        },
+        "after": {
+          "value": "2.0.0",
+          "is_iri_value": false
+        },
+        "subsumes": [
+          "syntactic:triple_removed:34249b415b744b8ee3d8b3bb1aac9a9b8ca8b64e",
+          "syntactic:triple_added:b5566eb2a37e1eea9fd227e729380f6d0744cfc7"
+        ],
+        "change_id": "structural:ontology_metadata_changed:773d4bc469dc82b01e745d24aa90da564344014a"
+      },
+      "before": null,
+      "after": null
+    }
+  ],
+  "metadata": {
+    "severity_refinements": [
+      {
+        "change_id": "syntactic:triple_removed:ff0df21f4ed90dfbf559772c3e86c067d569cfdd",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:fe3cb699fc2ddf15c132d99b4ea0d148714ca9c3",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:a348ede54189390b3cd2a008595353ccb7497df1",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:4e9342cd3fb7f77a5aae852ddfbc94312743f44e",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:c029896b888f0e3cf135145a27be188a0ff82836",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:fb09200b39cc271f44bf8fe4512c40b69aa6500f",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:0a59a79bd9222b4f2843e71f3e1d753966ba512c",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:43b960fb27f392167f0dc996bd527554e55ba7fd",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:6b1cecd2691fa79bfababe0a368837e762d1b172",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:59ecc5ba16212afd11bf3ab8b3e37d87a2fe2496",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:a7221fe7c4a598aae5b2a9ffb3092829b9aa233a",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:20b6a83df6a5fc97d8f982810af205679fec0f25",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      }
+    ]
+  }
+}

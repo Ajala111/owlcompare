@@ -34,6 +34,7 @@ dev = [
     "ruff>=0.14,<0.16",  # DD-017: cap the major line; 0.15.x has an f-string format panic we route around
     "mypy>=1.11",
     "respx>=0.23.1",
+    "jsonschema>=4.26.0",  # DD-020: test-only schema validation; not a runtime dependency
 ]
 
 [build-system]
@@ -45,6 +46,13 @@ path = "src/owlcompare/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/owlcompare"]
+
+# Ship the canonical JSON Schema (Component 14) as package data so a `pip install
+# owlcompare` carries the contract and `owlcompare.schema.load_schema()` can read
+# it via importlib.resources. The single source file lives in docs/schema/; this
+# maps it under the package in the wheel. See DD-019 / DD-020.
+[tool.hatch.build.targets.wheel.force-include]
+"docs/schema/diff-result.schema.json" = "owlcompare/schema/diff-result.schema.json"
 
 [tool.ruff]
 line-length = 100
@@ -71,6 +79,13 @@ disallow_untyped_defs = true
 [[tool.mypy.overrides]]
 module = "tests.*"
 disallow_untyped_defs = false
+
+# jsonschema is a dev-only dependency (DD-020) and ships no type stubs. The
+# import is deferred inside owlcompare.schema.validate_diff_json; silence the
+# missing-stub error rather than pull in a stubs package for one call site.
+[[tool.mypy.overrides]]
+module = "jsonschema.*"
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

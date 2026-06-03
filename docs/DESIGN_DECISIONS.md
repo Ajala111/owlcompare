@@ -371,3 +371,54 @@ A single-line f-string with the same lambda formats fine; the bug needs the mult
 - *Stop Components 08/09 from deferring axioms into `*_added` for entities that turn out to be renamed:* impossible at deferral time — rename detection runs *after* those slices, so they cannot know an entity is about to be paired as a rename.
 
 **Resolution (2026-06-03, Component 12 Part A):** addressed by Component 12 Part A; structural additions on renamed entities now surface as independent Layer 1 changes via post-rename axiom re-diffing. `rename.re_diff_renamed_entities` runs inside `detect()` (after the cascade pass, before severity refinement): for each accepted rename it builds a minimal one-entity sub-snapshot of the renamed entity's own axioms (subject-position triples plus their synthetic restriction/list URN closure) with the old IRI substituted for the new, then re-runs the hierarchy / restriction / annotation slices over the A/B sub-snapshots. Anything that is *not* explained by pure IRI substitution surfaces as its own `restriction_added` / `annotation_removed` / `class_parent_added` / `restriction_changed` etc., classified and severity-rated by the same Layer 1 slices as the rest of the pipeline, with a fresh `change_id` recorded in the rename's `details.cascade_subsumes`. The chosen Q1 resolution — restrict the re-diff to the entity's *own* (subject-side) axioms — structurally excludes the cascade triples (references to the entity from *other* entities, which live in object position and are already handled by `_cascade`), so there is no double-counting and pure renames emit zero new changes. The chosen alternative (re-running the real slices on sub-snapshots rather than re-implementing classification) keeps the re-diff consistent with Components 07–09. The flagship `tests/fixtures/rename/redidiff/era_rename_with_additions_*.ttl` (2 renames + 1 restriction_added + 1 annotation_removed) and the `rename_pure_no_structural_change_*` canary pin the behaviour.
+
+---
+
+## DD-019: JSON schema compatibility policy
+
+**Status:** accepted
+**Date:** 2026-06-03
+
+**Decision:** The JSON output of `owlcompare diff --format json` is a versioned contract, identified by the top-level `schema_version` integer and formalized by `docs/schema/diff-result.schema.json` (JSON Schema 2020-12). v1 is the current shape after Component 14. Future changes follow these rules:
+
+- **Forward-compatible (no version bump):** adding a new optional field; adding a new value to a non-enum string field (notably a new `kind`); adding a new optional object to `details`. Existing consumers either handle the addition or ignore it.
+- **Breaking (bump to v2):** removing a field; changing a field's type; making a previously-optional field required; renaming a field; changing the semantic meaning of an existing field; tightening a previously-permissive value range.
+- **Schema evolution requires:** updating `diff-result.schema.json`, updating the companion `docs/schema/diff-result.md`, adding migration notes to a "Schema versions" section in this file, and providing test fixtures for both the old and new schema in `tests/schema/`.
+
+**Reasoning:**
+- A formal contract is the difference between "an output format" and "a stable integration surface." Most downstream consumers (CI scripts, language servers, dashboards) are machine-readable; silent breaks are expensive for them.
+- Versioning forces deliberate evolution: removing a field becomes a conscious, reviewed act rather than an accident.
+
+**Mechanics (the "lockdown"):**
+- `kind` is deliberately **not** an enum in the schema, so new change kinds are forward-compatible. The per-kind `details` shapes are applied with `allOf` + `if`/`then` (Q2): a matching `kind` pins the strict `details` `$ref`, an unknown `kind` matches no branch and falls through to the permissive base (`details` is any object). `oneOf` was rejected — it would force exactly one variant to match and so reject unknown kinds.
+- Strictness is asymmetric (Q1): `additionalProperties: false` on `Change`, every `details` variant, `summary`, `SeverityRefinement` and `RenameCandidate` (the public contract); `metadata` stays permissive (`additionalProperties: true`) because it is project-internal and tooling-extensible.
+- `subsumes` / `cascade_subsumes` arrays are *not* constrained to be unique (Q3): the change ids are unique by construction, and a producer bug is not the schema's job to catch. Expected uniqueness is documented in the companion `.md`.
+- Enforcement: every CLI JSON test is schema-validated via the autouse wrapper in `tests/conftest.py`, so any commit that emits non-conforming JSON fails CI. `owlcompare diff --validate-schema` opts production callers into the same check (default off — see the spec's note on validation cost).
+
+**Implication:** the schema becomes a first-class artifact, versioned with the code. Every PR that touches JSON output must consider whether it is forward-compatible or version-bumping. External consumers can pin `https://raw.githubusercontent.com/Phelz/owlcompare/main/docs/schema/diff-result.schema.json`.
+
+**Deviations recorded during Component 14** (the schema mirrors the *actual* emitted output; the spec sketch was idealized):
+- The JSON emitter is `_render_diff.diff_json`, not the `report/json_report.py` the spec names (the `report/` package arrives later in Phase 4). The schema/validation hook attaches to the real emitter.
+- `domain_added` / `domain_removed` / `range_added` / `range_removed` carry a single `value` field, not `before`/`after` (those are reserved for the single-swap `*_changed` variants).
+- `annotation_added` / `annotation_removed` carry flat `value` + `is_iri_value`, whereas `annotation_changed` (and `ontology_metadata_changed`) nest `{value, is_iri_value}` objects under `before`/`after`.
+- Layer 0 (`triple_*`) details have **no** `subsumes` key; only structural changes do. The top-level `before`/`after` on every Change are currently always `null` (the layers carry their payloads inside `details`), but they remain part of the contract as unconstrained nullable fields.
+
+---
+
+## DD-020: `jsonschema` as a test-only dependency
+
+**Status:** accepted
+**Date:** 2026-06-03
+
+**Decision:** Add `jsonschema` (PyPI, MIT) to `[dependency-groups].dev` only — **not** to the runtime `dependencies`. It backs `owlcompare.schema.validate_diff_json`, which is exercised by the test suite and by the opt-in `owlcompare diff --validate-schema` flag.
+
+**Reasoning:**
+- The schema's job is to be validated *in CI* on every PR (DD-019); production diffs do not need to pay validation cost on every run (jsonschema validation of a very large diff can take seconds — hence the flag defaults off).
+- Keeping it out of the runtime dependency set means a plain `pip install owlcompare` stays lean and carries one fewer transitive tree (`attrs`, `referencing`, `rpds-py`, `jsonschema-specifications`).
+- The `import jsonschema` is therefore deferred *inside* `validate_diff_json`, so importing `owlcompare.schema` (e.g. for `load_schema`) never requires the dev dependency; only calling the validator does. `load_schema` / `schema_version` work with the stdlib alone.
+
+**Alternatives considered:**
+- *Make it a runtime dependency:* simplest import story, but pushes a validation-only tree onto every installed user for a feature almost no production path uses. Rejected.
+- *Vendor a minimal validator:* re-implementing 2020-12 `allOf`/`if`/`then`/`$ref` is a maintenance liability with no upside over the de-facto standard library. Rejected.
+
+**Implication:** the schema file ships in the wheel as package data (`[tool.hatch.build.targets.wheel.force-include]`, mapping `docs/schema/diff-result.schema.json` under the package), so `load_schema()` works for installed users via `importlib.resources` even though the *validator* is dev-only. In a source/editable checkout the bundled resource is absent, so `load_schema()` falls back to the canonical `docs/schema/` copy.

@@ -51,6 +51,18 @@ class ReportError(OwlCompareError):
     exit_code: int = 5
 
 
+class SchemaValidationError(OwlCompareError):
+    """A DiffResult JSON payload failed validation against the bundled schema.
+
+    Shares exit code 5 ("report generation error") with :class:`ReportError`:
+    emitting JSON that does not conform to the published contract is a failure of
+    the report layer. Raised by ``schema.validate_diff_json`` and surfaced to the
+    CLI only when ``owlcompare diff --validate-schema`` is set (Component 14).
+    """
+
+    exit_code: int = 5
+
+
 class SeverityConfigError(OwlCompareError):
     """Invalid severity config file (Component 10).
 
