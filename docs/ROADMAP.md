@@ -2,7 +2,7 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 4 IN PROGRESS — Report renderers. Components 14 (JSON Schema Lockdown) and 15 (Markdown report) delivered; next up: Component 16 (HTML report — design & wireframe).
+**Current phase:** Phase 4 IN PROGRESS — Report renderers. Components 14 (JSON Schema Lockdown), 15 (Markdown report), and 16 (HTML report — design & wireframe) delivered; next up: Component 17 (HTML report — implementation), now unblocked.
 
 ---
 
@@ -102,8 +102,15 @@ restriction_added + 1 annotation_removed = 4 visible changes).
       `--format markdown`, `--markdown-heading-level`, `--no-markdown-emoji`.
       Eight golden fixtures in `tests/fixtures/markdown/` lock the output
       byte-for-byte. Open questions Q1-Q3 resolved as proposed.)
-- [ ] Component 16: HTML report — design & wireframe — `specs/16-html-design.md`
-- [ ] Component 17: HTML report — implementation — `specs/17-html-impl.md`
+- [x] Component 16: HTML report — design & wireframe — `specs/16-html-design.md`
+      (Design-only component, no code: the full brief lives in `docs/design/`
+      — 8 `.md` files plus `WIREFRAMES/` with three competing approaches
+      (card / table / narrative). Wireframe **A (card-based)** chosen. Open
+      questions Q1-Q3 resolved as proposed: both themes from the start, filter
+      sidebar deferred to v1.1, no presentation mode. One token deviation: the
+      non-breaking severity colour is `#9a6700`, not the spec's `#bf8700`, which
+      fails WCAG AA on white. Component 17 consumes every artifact.)
+- [ ] Component 17: HTML report — implementation — `specs/17-html-impl.md` **(next, unblocked)**
 - [ ] Component 18: JUnit XML / CI output — `specs/18-junit.md`
 
 **Exit criteria:** `owlcompare diff a.ttl b.ttl --format html --out report.html` produces a beautiful, self-contained, offline-viewable HTML file.
