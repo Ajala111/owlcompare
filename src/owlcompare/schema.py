@@ -22,7 +22,7 @@ from typing import Any
 from owlcompare.exceptions import SchemaValidationError
 
 # The schema's top-level ``schema_version`` const. Kept in lockstep with the
-# ``schema_version`` field that ``_render_diff.diff_json`` emits; the test
+# ``schema_version`` field that ``report.json_report.diff_json`` emits; the test
 # ``test_schema_version_constant_matches_schema_file`` pins the two together.
 SCHEMA_VERSION = 1
 

@@ -7,16 +7,19 @@ same content as clean plain text. JSON is schema-versioned for downstream tools.
 Since Component 06 the text output is grouped by layer: Layer 1 (structural)
 changes are shown prominently, and the Layer 0 (syntactic) triples they explain
 are hidden by default — only *unexplained* triples remain, with a count and a
-``--show-syntactic`` hint. JSON always carries every layer (consumers filter).
-The richer Markdown/HTML/JUnit renderers arrive in Phase 4.
+``--show-syntactic`` hint.
+
+The JSON emitter moved to :mod:`owlcompare.report.json_report` in Component 15
+(the report package is Phase 4's home for every renderer); ``diff_json`` is
+re-exported here so existing ``from owlcompare._render_diff import diff_json``
+call sites keep working.
 """
 
 from __future__ import annotations
 
-import json
 import sys
 from collections.abc import Sequence
-from typing import Any, TextIO
+from typing import TextIO
 
 from rich.console import Console
 from rich.panel import Panel
@@ -26,12 +29,18 @@ from owlcompare.diff._common import Change, shorten_synthetic_iri
 from owlcompare.diff._subsumption import SubsumptionRegistry
 from owlcompare.diff.severity import SeverityRefinement
 from owlcompare.model import OntologySnapshot
+from owlcompare.report.json_report import diff_json
 
-# JSON output contract version (specs/05-syntactic-diff.md § CLI integration).
-SCHEMA_VERSION = 1
+__all__ = [
+    "diff_json",
+    "diff_text_plain",
+    "render_diff_text",
+    "render_severity_explanations",
+    "severity_explanations_plain",
+]
 
 # Each layer section truncates after this many changes; the full set lives in
-# --format json or (Phase 4) the HTML report. Q2 (resolved): not configurable.
+# --format json or the Markdown/HTML report. Q2 (resolved): not configurable.
 _TEXT_CHANGE_LIMIT = 20
 
 # Rich styling per severity, used in the TTY tables.
@@ -55,51 +64,6 @@ def _summary_line(counts: dict[str, int]) -> str:
     if counts["breaking"]:
         return f"{base} ({counts['breaking']} breaking)"
     return base
-
-
-def change_to_dict(change: Change) -> dict[str, Any]:
-    """Serialize one ``Change`` to a JSON-ready dict."""
-    return {
-        "layer": change.layer,
-        "kind": change.kind,
-        "severity": change.severity,
-        "subject": change.subject,
-        "summary": change.summary,
-        "details": change.details,
-        "before": change.before,
-        "after": change.after,
-    }
-
-
-def refinement_to_dict(refinement: SeverityRefinement) -> dict[str, Any]:
-    """Serialize one ``SeverityRefinement`` to a JSON-ready dict."""
-    return {
-        "change_id": refinement.change_id,
-        "original_severity": refinement.original_severity,
-        "refined_severity": refinement.refined_severity,
-        "rule_id": refinement.rule_id,
-        "rationale": refinement.rationale,
-    }
-
-
-def diff_json(
-    changes: list[Change],
-    refinements: Sequence[SeverityRefinement] = (),
-) -> str:
-    """Render the change list as schema-versioned JSON (all layers included).
-
-    The top-level ``metadata.severity_refinements`` array is part of the v1 JSON
-    schema (Component 10): always present, possibly empty.
-    """
-    payload = {
-        "schema_version": SCHEMA_VERSION,
-        "summary": _counts(changes),
-        "changes": [change_to_dict(c) for c in changes],
-        "metadata": {
-            "severity_refinements": [refinement_to_dict(r) for r in refinements],
-        },
-    }
-    return json.dumps(payload, indent=2, ensure_ascii=False)
 
 
 def _display_summary(change: Change) -> str:

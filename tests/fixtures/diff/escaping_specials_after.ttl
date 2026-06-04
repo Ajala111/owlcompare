@@ -1,0 +1,19 @@
+# fixture: escaping_specials_after.ttl
+# Purpose: exercises Markdown escaping and IRI prefixing in the report.
+#  - ex:Tricky carries a label packed with every Markdown special character
+#    (* _ ~ ` [ ] ( ) < > \ |), which must render literally, not as syntax.
+#  - <http://nopref.example/Weird> lives in a namespace with no declared prefix,
+#    so it must render as the full IRI, not a shortened form.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Base a owl:Class ;
+    rdfs:label "Base"@en .
+
+ex:Tricky a owl:Class ;
+    rdfs:label "Tricky *_~`[]()<>|\\name"@en .
+
+<http://nopref.example/Weird> a owl:Class ;
+    rdfs:label "Weird"@en .

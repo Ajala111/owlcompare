@@ -1,0 +1,19 @@
+# fixture: unexplained_layer0_after.ttl
+# Purpose: relative to unexplained_layer0_before.ttl, ex:w1's ex:weight value
+# changes 5 -> 7 (two unexplained Layer 0 triples — one removed, one added) and
+# a brand-new class ex:Gadget is added (one Layer 1 "class added" in the Other
+# changes section). The diff therefore renders both a normal section and the
+# collapsed <details> block of unexplained Layer 0 changes.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Widget a owl:Class ;
+    rdfs:label "Widget"@en .
+
+ex:Gadget a owl:Class ;
+    rdfs:label "Gadget"@en .
+
+ex:w1 a ex:Widget ;
+    ex:weight "7" .

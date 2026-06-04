@@ -1,0 +1,17 @@
+# fixture: unexplained_layer0_before.ttl
+# Purpose: baseline for the Markdown report's collapsed Layer 0 section
+# (specs/15-markdown-report.md). ex:w1 carries a value on ex:weight — a custom
+# (non-annotation) data property the Layer 1 slices do not interpret — so a
+# change to that value surfaces only as raw Layer 0 triples that remain
+# *unexplained* after rename detection and subsumption. ex:Widget persists so
+# the individual's assertion is never folded into an entity add/remove.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Widget a owl:Class ;
+    rdfs:label "Widget"@en .
+
+ex:w1 a ex:Widget ;
+    ex:weight "5" .

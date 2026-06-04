@@ -556,3 +556,38 @@ def test_reparent_with_new_restriction_fixture_upgrades_severity():
     assert len(refs) == 1
     assert refs[0].rule_id == "reparent-with-new-restriction"
     assert refs[0].original_severity == "non_breaking"
+
+
+# --------------------------------------------------------------------------- #
+# Markdown report end-to-end (Component 15)
+# --------------------------------------------------------------------------- #
+
+MARKDOWN_GOLDEN = FIXTURES / "markdown"
+RENAME = FIXTURES / "rename"
+
+
+def _markdown_result(name_a: str, name_b: str, base: Path):
+    # Override the snapshot source to the bare basename so the rendered
+    # "Compared A against B" line — and therefore the golden — is independent of
+    # the absolute fixture path on the running machine.
+    a = replace(load(str(base / name_a)), source=name_a)
+    b = replace(load(str(base / name_b)), source=name_b)
+    return orchestrator.run(a, b)
+
+
+def _golden(name: str) -> str:
+    return (MARKDOWN_GOLDEN / name).read_text(encoding="utf-8").rstrip("\n")
+
+
+def test_era_evolution_markdown_output_matches_golden():
+    from owlcompare.report.markdown_report import render
+
+    result = _markdown_result("era_evolution_v1.ttl", "era_evolution_v2.ttl", DIFF)
+    assert render(result) == _golden("era_evolution.md")
+
+
+def test_era_renames_markdown_output_matches_golden():
+    from owlcompare.report.markdown_report import render
+
+    result = _markdown_result("era_renames_v1.ttl", "era_renames_v2.ttl", RENAME)
+    assert render(result) == _golden("era_renames.md")

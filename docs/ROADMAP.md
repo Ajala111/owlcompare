@@ -2,7 +2,7 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 4 IN PROGRESS — Report renderers. Component 14 (JSON Schema Lockdown) delivered; next up: Component 15 (Markdown report).
+**Current phase:** Phase 4 IN PROGRESS — Report renderers. Components 14 (JSON Schema Lockdown) and 15 (Markdown report) delivered; next up: Component 16 (HTML report — design & wireframe).
 
 ---
 
@@ -94,7 +94,14 @@ restriction_added + 1 annotation_removed = 4 visible changes).
       helpers, a `--validate-schema` CLI flag, and an autouse test wrapper that
       schema-validates every CLI JSON payload so drift fails CI. See [[DD-019]]
       (compatibility policy) and [[DD-020]] (`jsonschema` as a test-only dep).)
-- [ ] Component 15: Markdown report (PR-comment style) — `specs/15-markdown-report.md`
+- [x] Component 15: Markdown report (PR-comment style) — `specs/15-markdown-report.md`
+      (The `report/` package is now real: the JSON emitter moved to
+      `report/json_report.py` (Component 14's Deviation 1, closed) and
+      `report/markdown_report.py` renders a severity-sectioned, PR-comment-ready
+      document via `render(result, MarkdownOptions(...))`. New CLI surface:
+      `--format markdown`, `--markdown-heading-level`, `--no-markdown-emoji`.
+      Eight golden fixtures in `tests/fixtures/markdown/` lock the output
+      byte-for-byte. Open questions Q1-Q3 resolved as proposed.)
 - [ ] Component 16: HTML report — design & wireframe — `specs/16-html-design.md`
 - [ ] Component 17: HTML report — implementation — `specs/17-html-impl.md`
 - [ ] Component 18: JUnit XML / CI output — `specs/18-junit.md`

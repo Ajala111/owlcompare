@@ -25,7 +25,6 @@ from typer._click.exceptions import ClickException
 
 from owlcompare._render import render_summary
 from owlcompare._render_diff import (
-    diff_json,
     diff_text_plain,
     render_diff_text,
     render_severity_explanations,
@@ -49,6 +48,9 @@ from owlcompare.model import LoadOptions
 from owlcompare.rename_mapping import RenameMapping
 from owlcompare.rename_mapping import dump as _dump_rename_mapping
 from owlcompare.rename_mapping import load as _load_rename_mapping
+from owlcompare.report.json_report import diff_json
+from owlcompare.report.markdown_report import MarkdownOptions
+from owlcompare.report.markdown_report import render as _render_markdown
 from owlcompare.schema import validate_diff_json as _validate_diff_json
 from owlcompare.severity_config import SeverityConfig
 from owlcompare.severity_config import load as _load_severity_config
@@ -65,13 +67,15 @@ app = typer.Typer(
 
 
 class DiffFormat(enum.StrEnum):
-    """Supported output formats for the ``diff`` command in v1.
+    """Supported output formats for the ``diff`` command.
 
-    Markdown, HTML and JUnit arrive in Phase 4 (report renderers).
+    ``markdown`` (Component 15) renders a PR-comment-ready report. HTML and
+    JUnit arrive later in Phase 4 (Components 16-18).
     """
 
     json = "json"
     text = "text"
+    markdown = "markdown"
 
 
 # Diff layers known to the CLI. "syntactic" and "structural" are implemented;
@@ -178,8 +182,24 @@ def diff(
     ] = "syntactic,structural",
     output_format: Annotated[
         DiffFormat,
-        typer.Option("--format", help="Output format (json or text)."),
+        typer.Option("--format", help="Output format (json, text or markdown)."),
     ] = DiffFormat.text,
+    markdown_heading_level: Annotated[
+        int,
+        typer.Option(
+            "--markdown-heading-level",
+            help="Top-level heading depth for --format markdown (default 2; 1-4 valid, "
+            "out-of-range values fall back to 2).",
+        ),
+    ] = 2,
+    no_markdown_emoji: Annotated[
+        bool,
+        typer.Option(
+            "--no-markdown-emoji",
+            help="Use plain-text severity tags ([BREAKING], [OK], ...) instead of emoji "
+            "in --format markdown output.",
+        ),
+    ] = False,
     show_syntactic: Annotated[
         bool,
         typer.Option(
@@ -325,6 +345,20 @@ def diff(
             out.write_text(rendered + "\n", encoding="utf-8")
         else:
             typer.echo(rendered)
+    elif output_format is DiffFormat.markdown:
+        if validate_schema:
+            logger.debug("--validate-schema has no effect when --format is not json")
+        markdown = _render_markdown(
+            result,
+            MarkdownOptions(
+                heading_level=markdown_heading_level,
+                emoji_style="plain" if no_markdown_emoji else "github",
+            ),
+        )
+        if out is not None:
+            out.write_text(markdown + "\n", encoding="utf-8")
+        else:
+            typer.echo(markdown)
     else:
         if validate_schema:
             logger.debug("--validate-schema has no effect when --format is not json")

@@ -1,0 +1,11 @@
+# fixture: escaping_specials_before.ttl
+# Purpose: baseline for the Markdown escaping golden
+# (specs/15-markdown-report.md § Special character escaping). Just a base class
+# so that v2's additions are the only changes.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Base a owl:Class ;
+    rdfs:label "Base"@en .
