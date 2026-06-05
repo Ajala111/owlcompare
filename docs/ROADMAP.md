@@ -66,15 +66,32 @@ orchestrator pipeline and records its audit trail in
       `rename.re_diff_renamed_entities`, run inside `detect()`. Part B:
       `--export-rename-mapping` / `rename_mapping.dump()` writes detected renames
       as a `--rename-mapping`-loadable TOML file.)
+- [x] Component 12.5: Anonymous structure decoding — `specs/12.5-anonymous-structures.md`
+      (Decodes the anonymous OWL structures the raw pipeline left as `_list:` /
+      `_restriction:` Layer 0 noise: `owl:unionOf` / `owl:intersectionOf` sets on
+      domain/range/subClassOf/equivalentClass → 12 `*_union_*` kinds (flattening
+      and unflattening included); `owl:onDatatype` + `owl:withRestrictions` facet
+      restrictions → 4 `datatype_facet_*` / `datatype_base_changed` kinds; and
+      `dcterms:isReplacedBy` → `replaced_by_set` / `replaced_by_unset`, promoted
+      from the generic `annotation_added` via the post-rename retraction pattern.
+      Components 07/08 consult the class-set index and step aside for the keys it
+      owns. Open questions Q1-Q3 resolved as proposed: single-member-union loss is
+      `union_removed` (+`shape_change`), intersection inverts add/remove severity,
+      and the `replaced_by` slice retracts the superseding annotation change. Runs
+      `restrictions → class_sets → annotations → renames → replaced_by → severity`.)
 - [x] Component 13: **considered, deferred from v1.** The originally-sketched
       Component 13 scope is captured in the backlog (see below); none of it is
       needed for the v1 rename system.
 
-**Phase 3 is COMPLETE.** Component 11 detects renames at three confidence tiers
-and consolidates each rename plus its cascade consequences into a single
-`*_renamed` change, running between the Layer 1 slices and the severity
-classifier. Component 12 closes the DD-018 gap (renames that *also* add structure
-now show both facts) and adds the rename-mapping export workflow.
+**Phase 3 is COMPLETE** (three components: 11, 12, 12.5). Component 11 detects
+renames at three confidence tiers and consolidates each rename plus its cascade
+consequences into a single `*_renamed` change, running between the Layer 1 slices
+and the severity classifier. Component 12 closes the DD-018 gap (renames that
+*also* add structure now show both facts) and adds the rename-mapping export
+workflow. Component 12.5 closes the anonymous-structure correctness gap, so
+real-world ontologies with union domains/ranges, datatype facets, and
+`isReplacedBy` assertions surface as structured changes with zero unexplained
+Layer 0 noise.
 
 **Exit criteria (met):** A pair of fixture ontologies where entities have been
 renamed produces one rename record each, not an add + remove pair — see

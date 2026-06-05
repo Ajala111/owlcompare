@@ -316,6 +316,65 @@ a `subClassOf` edge that merely re-pointed at the new IRI, a restriction whose
 filler was substituted, or (since Component 12) a genuinely new axiom on the
 renamed entity that was re-diffed out and surfaced as its own change.
 
+### Anonymous class sets (Component 12.5)
+
+`domain_union_added` / `_removed` / `_changed`, and the `range_union_*`,
+`subclass_union_*`, `equivalent_class_union_*` analogues — a member was added to
+or removed from an anonymous `owl:unionOf` / `owl:intersectionOf` set attached via
+`rdfs:domain` / `rdfs:range` / `rdfs:subClassOf` / `owl:equivalentClass`. One
+change per `(entity, predicate)`; `shape_change` records the union↔bare reshape
+(a single-member union normalizes to a bare class). `operator` distinguishes
+union from intersection — for an intersection the add/remove severities invert
+(adding narrows → breaking; removing broadens → non_breaking).
+
+```jsonc
+"details": {
+  "entity_iri": "http://…/axleSpacingDistance",
+  "via_predicate": "rdfs:domain",         // one of the four attachment predicates
+  "operator": "unionOf" | "intersectionOf",
+  "members_before": [ … ], "members_after": [ … ],
+  "added_members": [ … ], "removed_members": [ … ],
+  "shape_change": "stable" | "flattened" | "unflattened",
+  "subsumes": [ … ], "change_id": "…"
+}
+```
+
+### Datatype facets (Component 12.5)
+
+`datatype_facet_added` / `_removed` / `_changed`, and `datatype_base_changed` — a
+change to an `owl:onDatatype` + `owl:withRestrictions` facet restriction on a data
+property's range. `base_before` / `base_after` are the base datatype IRIs (one is
+`null` on a one-sided facet add/remove); `facets_*` map facet names
+(`min_inclusive`, `max_inclusive`, `pattern`, …) to numeric or string values.
+
+```jsonc
+"details": {
+  "property_iri": "http://…/dNvovtrp",
+  "base_before": "http://…/decimal", "base_after": "http://…/decimal",
+  "facets_before": { "min_inclusive": 0, "max_inclusive": 327670 },
+  "facets_after":  { "min_inclusive": 0, "max_inclusive": 100000 },
+  "changed_facets": [ "max_inclusive" ],
+  "subsumes": [ … ], "change_id": "…"
+}
+```
+
+### Soft deprecation (Component 12.5)
+
+`replaced_by_set` / `replaced_by_unset` — a curator's `dcterms:isReplacedBy`
+assertion was added (non_breaking) or withdrawn (info). `matches_detected_rename`
+flags consistency with an accepted rename; `target_existed_in_b` records whether
+the replacement IRI exists in the new snapshot.
+
+```jsonc
+"details": {
+  "entity_iri": "http://…/TSIMagneticFields",
+  "target_iri": "http://…/tsiMagneticFields",
+  "matches_detected_rename": true,
+  "target_existed_in_b": true,
+  "subsumes": [ … ], "change_id": "…"
+}
+```
+
 ---
 
 ## `severity_refinements`

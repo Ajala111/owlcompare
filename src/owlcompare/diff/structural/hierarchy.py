@@ -25,6 +25,7 @@ from owlcompare.model import OntologySnapshot, shorten_iri
 
 from .._common import Change, DiffOptions, Severity
 from .._subsumption import SubsumptionRegistry
+from ._class_set_index import owned_keys as class_set_owned_keys
 from ._hierarchy_index import HierarchyIndex, build
 
 logger = logging.getLogger(__name__)
@@ -68,6 +69,10 @@ class _Ctx:
     registry: SubsumptionRegistry
     nsm_a: NamespaceManager
     nsm_b: NamespaceManager
+    # (entity, "rdfs:subClassOf") keys owned by Component 12.5's class-set slice:
+    # a subClassOf union on either side, whose bare-named flattened form must not
+    # be re-reported here as a plain parent edit.
+    class_set_keys: set[tuple[str, str]]
 
 
 def diff(
@@ -112,6 +117,7 @@ def diff(
         registry=registry,
         nsm_a=a.graph.namespace_manager,
         nsm_b=b.graph.namespace_manager,
+        class_set_keys=class_set_owned_keys(a, b),
     )
 
     cycle_paths, cycle_edges = _detect_introduced_cycles(ctx.index_a, ctx.index_b)
@@ -136,6 +142,10 @@ def _diff_axis(ctx: _Ctx, *, is_class: bool, cycle_edges: set[tuple[str, str]]) 
 
     changes: list[Change] = []
     for iri in sorted(set(parents_a) | set(parents_b)):
+        # A subClassOf union (on either side) is Component 12.5's territory; its
+        # flattened bare-named form must not surface here as a parent edit.
+        if is_class and (iri, "rdfs:subClassOf") in ctx.class_set_keys:
+            continue
         pa = parents_a.get(iri, frozenset())
         pb = parents_b.get(iri, frozenset())
         removed = pa - pb

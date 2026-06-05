@@ -366,6 +366,58 @@
           "then": {
             "properties": { "details": { "$ref": "#/$defs/RenameDetails" } }
           }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "domain_union_added",
+                  "domain_union_removed",
+                  "domain_union_changed",
+                  "range_union_added",
+                  "range_union_removed",
+                  "range_union_changed",
+                  "subclass_union_added",
+                  "subclass_union_removed",
+                  "subclass_union_changed",
+                  "equivalent_class_union_added",
+                  "equivalent_class_union_removed",
+                  "equivalent_class_union_changed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/ClassSetDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "datatype_facet_added",
+                  "datatype_facet_removed",
+                  "datatype_facet_changed",
+                  "datatype_base_changed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/DatatypeFacetDetails" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": { "enum": ["replaced_by_set", "replaced_by_unset"] }
+            }
+          },
+          "then": {
+            "properties": { "details": { "$ref": "#/$defs/ReplacedByDetails" } }
+          }
         }
       ]
     },
@@ -677,6 +729,89 @@
         "score": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
         "evidence": { "type": "array", "items": { "type": "string" } },
         "cascade_subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "ClassSetDetails": {
+      "description": "An anonymous owl:unionOf / owl:intersectionOf set attached via domain/range/subClassOf/equivalentClass (Component 12.5). `shape_change` records the union↔bare reshape; `operator` distinguishes union from intersection (severity inverts for intersection).",
+      "type": "object",
+      "required": [
+        "entity_iri",
+        "via_predicate",
+        "operator",
+        "members_before",
+        "members_after",
+        "added_members",
+        "removed_members",
+        "shape_change",
+        "subsumes",
+        "change_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "via_predicate": {
+          "enum": ["rdfs:domain", "rdfs:range", "rdfs:subClassOf", "owl:equivalentClass"]
+        },
+        "operator": { "enum": ["unionOf", "intersectionOf"] },
+        "members_before": { "type": "array", "items": { "type": "string" } },
+        "members_after": { "type": "array", "items": { "type": "string" } },
+        "added_members": { "type": "array", "items": { "type": "string" } },
+        "removed_members": { "type": "array", "items": { "type": "string" } },
+        "shape_change": { "enum": ["stable", "flattened", "unflattened"] },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "DatatypeFacetDetails": {
+      "description": "An owl:onDatatype + owl:withRestrictions datatype facet change (Component 12.5). `base_before`/`base_after` are the base datatype IRIs (null on a one-sided facet add/remove); `facets_*` map facet names to numeric/string values.",
+      "type": "object",
+      "required": [
+        "property_iri",
+        "base_before",
+        "base_after",
+        "facets_before",
+        "facets_after",
+        "changed_facets",
+        "subsumes",
+        "change_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "property_iri": { "type": "string" },
+        "base_before": { "type": ["string", "null"] },
+        "base_after": { "type": ["string", "null"] },
+        "facets_before": {
+          "type": "object",
+          "additionalProperties": { "type": ["number", "string"] }
+        },
+        "facets_after": {
+          "type": "object",
+          "additionalProperties": { "type": ["number", "string"] }
+        },
+        "changed_facets": { "type": "array", "items": { "type": "string" } },
+        "subsumes": { "$ref": "#/$defs/ChangeIdList" },
+        "change_id": { "type": "string" }
+      }
+    },
+    "ReplacedByDetails": {
+      "description": "A dcterms:isReplacedBy soft-deprecation set or unset (Component 12.5). `matches_detected_rename` flags consistency with an accepted rename; `target_existed_in_b` records whether the replacement IRI exists in the new snapshot.",
+      "type": "object",
+      "required": [
+        "entity_iri",
+        "target_iri",
+        "matches_detected_rename",
+        "target_existed_in_b",
+        "subsumes",
+        "change_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entity_iri": { "type": "string" },
+        "target_iri": { "type": "string" },
+        "matches_detected_rename": { "type": "boolean" },
+        "target_existed_in_b": { "type": "boolean" },
         "subsumes": { "$ref": "#/$defs/ChangeIdList" },
         "change_id": { "type": "string" }
       }

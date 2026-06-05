@@ -591,3 +591,94 @@ def test_era_renames_markdown_output_matches_golden():
 
     result = _markdown_result("era_renames_v1.ttl", "era_renames_v2.ttl", RENAME)
     assert render(result) == _golden("era_renames.md")
+
+
+# --------------------------------------------------------------------------- #
+# Anonymous structure decoding end-to-end (Component 12.5)
+# --------------------------------------------------------------------------- #
+
+ANON = FIXTURES / "anonstruct"
+
+_NEW_12_5_KINDS = frozenset(
+    {
+        "domain_union_added",
+        "domain_union_removed",
+        "domain_union_changed",
+        "range_union_added",
+        "range_union_removed",
+        "range_union_changed",
+        "subclass_union_added",
+        "subclass_union_removed",
+        "subclass_union_changed",
+        "equivalent_class_union_added",
+        "equivalent_class_union_removed",
+        "equivalent_class_union_changed",
+        "datatype_facet_added",
+        "datatype_facet_removed",
+        "datatype_facet_changed",
+        "datatype_base_changed",
+        "replaced_by_set",
+        "replaced_by_unset",
+    }
+)
+
+
+def _run_anon(stem: str):
+    return orchestrator.run(load(str(ANON / f"{stem}_v1.ttl")), load(str(ANON / f"{stem}_v2.ttl")))
+
+
+def _unexplained(result):
+    registry = result.metadata["subsumption_registry"]
+    return [
+        c
+        for c in result.changes
+        if c.layer == "syntactic" and not registry.is_explained(c.details.get("change_id", ""))
+    ]
+
+
+def test_era_evolution_fixture_unchanged():
+    # era_evolution carries no anonymous structures, so Component 12.5 must be a
+    # complete no-op for it: none of the new kinds appear.
+    result = orchestrator.run(_canon("era_evolution_v1.ttl"), _canon("era_evolution_v2.ttl"))
+    assert not any(c.kind in _NEW_12_5_KINDS for c in result.changes)
+
+
+def test_era_axleSpacingDistance_domain_union_diff():
+    # Case 2(a): the union domain change is one structured change with zero
+    # unexplained Layer 0 noise.
+    result = _run_anon("domain_union_member_added")
+    structural = [c for c in result.changes if c.layer == "structural"]
+    union_changes = [c for c in structural if c.kind.startswith("domain_union")]
+    assert len(union_changes) == 1
+    assert _unexplained(result) == []
+
+
+def test_era_dNvovtrp_facet_diff():
+    # Case 2(d): the datatype facet shift is emitted as a structured change.
+    result = _run_anon("range_facet_tightened")
+    facet = [c for c in result.changes if c.kind == "datatype_facet_changed"]
+    assert len(facet) == 1
+    assert facet[0].severity == "breaking"
+    assert _unexplained(result) == []
+
+
+def test_era_TSIMagneticFields_replaced_by():
+    # Case 1: the dcterms:isReplacedBy assertion surfaces as replaced_by_set, not
+    # a generic annotation_added.
+    result = _run_anon("replaced_by_added")
+    kinds = {c.kind for c in result.changes}
+    assert "replaced_by_set" in kinds
+    is_replaced_by = "http://purl.org/dc/terms/isReplacedBy"
+    assert not any(
+        c.kind.startswith("annotation_") and c.details.get("predicate_iri") == is_replaced_by
+        for c in result.changes
+    )
+
+
+def test_era_evolution_with_anonstructs_flagship():
+    # Three patterns in one diff — a domain union expansion, a datatype facet
+    # tightening, and an isReplacedBy assertion — with zero unexplained Layer 0.
+    result = _run_anon("era_evolution_with_anonstructs")
+    structural_kinds = {c.kind for c in result.changes if c.layer == "structural"}
+    assert {"domain_union_added", "datatype_facet_changed", "replaced_by_set"} <= structural_kinds
+    assert _unexplained(result) == []

@@ -336,6 +336,22 @@ def _format_ontology_metadata_changed(change: Change, prefixes: dict[str, str]) 
     return f'**Ontology metadata:** {predicate} *"{before}"* → *"{after}"*'
 
 
+def _format_summary_lead(change: Change, prefixes: dict[str, str]) -> str:
+    """Bold the lead clause of the producer summary; keep the readable tail verbatim.
+
+    The Component 12.5 slices already render their summaries with the same prefix /
+    synthetic-URN shortening the renderer uses (``Domain expanded on era:X: + era:Y``,
+    ``Range facet changed on era:Z: max 327670 → 100000`` …), so the template only
+    re-bolds the lead before the first ``": "`` rather than re-deriving the phrase.
+    """
+    del prefixes  # the producer already shortened the IRIs in the summary
+    summary = " ".join(shorten_synthetic_iri(token) for token in change.summary.split(" "))
+    lead, sep, tail = summary.partition(": ")
+    if sep:
+        return f"**{lead}:** {tail}"
+    return f"**{summary}**"
+
+
 # Dispatch table for kinds whose template does not follow the entity-add/remove
 # or rename pattern. Kinds absent here (and not entity/rename) fall back to the
 # producer ``summary`` — the spec's forward-compatible default.
@@ -353,6 +369,27 @@ _KIND_FORMATTERS = {
     "entity_deprecated": _format_deprecated,
     "annotation_changed": _format_annotation_changed,
     "ontology_metadata_changed": _format_ontology_metadata_changed,
+    # Component 12.5 — anonymous class sets, datatype facets, isReplacedBy. Each
+    # producer summary already follows the spec's pattern; the template re-bolds
+    # the lead clause for the PR-comment layout.
+    "domain_union_added": _format_summary_lead,
+    "domain_union_removed": _format_summary_lead,
+    "domain_union_changed": _format_summary_lead,
+    "range_union_added": _format_summary_lead,
+    "range_union_removed": _format_summary_lead,
+    "range_union_changed": _format_summary_lead,
+    "subclass_union_added": _format_summary_lead,
+    "subclass_union_removed": _format_summary_lead,
+    "subclass_union_changed": _format_summary_lead,
+    "equivalent_class_union_added": _format_summary_lead,
+    "equivalent_class_union_removed": _format_summary_lead,
+    "equivalent_class_union_changed": _format_summary_lead,
+    "datatype_facet_added": _format_summary_lead,
+    "datatype_facet_removed": _format_summary_lead,
+    "datatype_facet_changed": _format_summary_lead,
+    "datatype_base_changed": _format_summary_lead,
+    "replaced_by_set": _format_summary_lead,
+    "replaced_by_unset": _format_summary_lead,
 }
 
 

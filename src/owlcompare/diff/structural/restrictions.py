@@ -29,6 +29,8 @@ from owlcompare.model import OntologySnapshot, shorten_iri
 from .._common import Change, DiffOptions, Severity, shorten_synthetic_iri
 from .._subsumption import SubsumptionRegistry
 from . import _class_expression as ce
+from ._class_set_index import class_set_node_ids
+from ._class_set_index import owned_keys as class_set_owned_keys
 from ._hierarchy_index import build as build_hierarchy
 from ._restriction_index import DecodedRestriction, RestrictionIndex, build
 
@@ -93,6 +95,11 @@ class _Ctx:
     by_edge: Layer0EdgeIndex
     iris_a: set[str]
     iris_b: set[str]
+    # Component 12.5 coordination: ``(attached_to, via)`` keys it owns (skip their
+    # domain/range/equivalent diff here) and the synthetic URN ids of anonymous
+    # union/intersection class expressions (skip them as opaque restrictions).
+    class_set_keys: set[tuple[str, str]]
+    class_set_nodes: set[str]
 
     def short(self, iri: str) -> str:
         """Prefixed display form, also collapsing synthetic restriction/list URNs."""
@@ -145,6 +152,8 @@ def diff(
         by_edge=_index_by_edge(layer0_changes),
         iris_a=a.entities.all_iris(),
         iris_b=b.entities.all_iris(),
+        class_set_keys=class_set_owned_keys(a, b),
+        class_set_nodes=class_set_node_ids(a.graph) | class_set_node_ids(b.graph),
     )
 
     changes: list[Change] = []
@@ -169,12 +178,23 @@ def _diff_restrictions(ctx: _Ctx) -> list[Change]:
     entities = sorted(set(ctx.index_a.by_attached_entity) | set(ctx.index_b.by_attached_entity))
     changes: list[Change] = []
     for entity in entities:
-        list_a = ctx.index_a.by_attached_entity.get(entity, [])
-        list_b = ctx.index_b.by_attached_entity.get(entity, [])
+        # Drop anonymous union/intersection class expressions (Component 12.5's
+        # territory) before they fall through to complex_class_expression_changed.
+        list_a = _without_class_sets(ctx, ctx.index_a.by_attached_entity.get(entity, []))
+        list_b = _without_class_sets(ctx, ctx.index_b.by_attached_entity.get(entity, []))
+        if not list_a and not list_b:
+            continue
         if _defer_restrictions(ctx, entity, list_a, list_b):
             continue
         changes.extend(_diff_restriction_groups(ctx, list_a, list_b))
     return changes
+
+
+def _without_class_sets(
+    ctx: _Ctx, restrictions: list[DecodedRestriction]
+) -> list[DecodedRestriction]:
+    """Drop reified union/intersection class expressions handled by Component 12.5."""
+    return [r for r in restrictions if r.urn not in ctx.class_set_nodes]
 
 
 def _diff_restriction_groups(
@@ -388,8 +408,11 @@ def _diff_domain_range(ctx: _Ctx, *, is_domain: bool) -> list[Change]:
     noun = "Domain" if is_domain else "Range"
     prefix = "domain" if is_domain else "range"
 
+    via = "rdfs:domain" if is_domain else "rdfs:range"
     changes: list[Change] = []
     for prop in sorted(set(maps_a) | set(maps_b)):
+        if (prop, via) in ctx.class_set_keys:
+            continue  # union/intersection domain/range → Component 12.5's territory
         values_a = maps_a.get(prop, frozenset())
         values_b = maps_b.get(prop, frozenset())
         removed = values_a - values_b
@@ -465,6 +488,8 @@ def _diff_equivalent(ctx: _Ctx) -> list[Change]:
     )
     changes: list[Change] = []
     for cls in classes:
+        if (cls, "owl:equivalentClass") in ctx.class_set_keys:
+            continue  # union/intersection equivalentClass → Component 12.5's territory
         set_a = ctx.index_a.equivalent_class_sets.get(cls, frozenset())
         set_b = ctx.index_b.equivalent_class_sets.get(cls, frozenset())
         removed = set_a - set_b

@@ -1,0 +1,13 @@
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix time: <http://www.w3.org/2006/time#> .
+
+era:Track a owl:Class .
+era:RailwaySegment a owl:Class .
+era:Segment a owl:Class .
+era:Corridor a owl:Class .
+
+era:Track owl:equivalentClass [ a owl:Class ; owl:unionOf ( era:RailwaySegment era:Segment ) ] .

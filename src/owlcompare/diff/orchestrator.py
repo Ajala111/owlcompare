@@ -27,7 +27,7 @@ from .rename import RenameConfidence
 # ``from __future__ import annotations`` binding above (a ``__future__._Feature``),
 # which both mypy and the import machinery resolve ahead of the submodule.
 from .structural import annotations as annotations_slice
-from .structural import entities, hierarchy, restrictions
+from .structural import class_sets, entities, hierarchy, replaced_by, restrictions
 
 logger = logging.getLogger(__name__)
 
@@ -99,6 +99,11 @@ def run(
         structural_changes = entities.diff(a, b, layer0, registry, opts)
         structural_changes += hierarchy.diff(a, b, layer0, registry, opts)
         structural_changes += restrictions.diff(a, b, layer0, registry, opts)
+        # Component 12.5 runs between restrictions and annotations: it decodes the
+        # union/intersection and datatype-facet structures that restrictions and
+        # hierarchy step aside for, so their reified Layer 0 triples are subsumed
+        # here rather than left as noise. See specs/12.5-anonymous-structures.md.
+        structural_changes += class_sets.diff(a, b, layer0, registry, opts)
         structural_changes += annotations_slice.diff(a, b, layer0, registry, opts)
         all_changes.extend(structural_changes)
         layer_counts["structural"] = len(structural_changes)
@@ -116,6 +121,13 @@ def run(
         # consolidated result, not the duplicated one. See specs/11-rename-detection.md.
         result = rename.detect(result, rename_mapping, rename_min_confidence)
 
+    if "structural" in layers:
+        # Component 12.5's replaced_by slice runs *after* renames so it can read
+        # ``renames_applied`` for the consistency cross-check, and retracts the
+        # annotation_* changes the annotation slice emitted for the same
+        # dcterms:isReplacedBy triple (the Q3 retraction pattern).
+        result = _apply_replaced_by(result, a, b, layer0, registry)
+
     if refine_severity:
         # Component 10 runs after every Layer 1 slice: it is the one place with
         # all changes (and the populated registry) in view. See specs/10-severity.md.
@@ -123,6 +135,28 @@ def run(
     new_metadata = dict(result.metadata)
     new_metadata["severity_refinements"] = ()
     return replace(result, metadata=new_metadata)
+
+
+def _apply_replaced_by(
+    result: DiffResult,
+    a: OntologySnapshot,
+    b: OntologySnapshot,
+    layer0: list[Change],
+    registry: SubsumptionRegistry,
+) -> DiffResult:
+    """Promote ``dcterms:isReplacedBy`` annotations to ``replaced_by_*`` changes.
+
+    Emits the dedicated changes (cross-referencing ``renames_applied``) and
+    retracts the now-superseded annotation changes for the same triple from the
+    result, keeping the subsumption registry consistent (the new change re-claims
+    the triple). The original ``DiffResult`` is not mutated.
+    """
+    renames_applied = result.metadata.get("renames_applied", ())
+    new_changes = replaced_by.diff(a, b, layer0, registry, renames_applied)
+    kept = [c for c in result.changes if not replaced_by.supersedes_annotation(c)]
+    if not new_changes and len(kept) == len(result.changes):
+        return result
+    return replace(result, changes=tuple(kept + new_changes))
 
 
 def _ensure_canonical(snapshot: OntologySnapshot) -> OntologySnapshot:

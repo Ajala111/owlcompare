@@ -1,0 +1,11 @@
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+era:VehicleType a owl:Class .
+era:VehicleTypeConfigParameterSet a owl:Class .
+era:VehicleTypeOriginal a owl:Class .
+
+era:axleSpacingDistance a owl:ObjectProperty ;
+    rdfs:domain [ a owl:Class ; owl:intersectionOf ( era:VehicleType era:VehicleTypeConfigParameterSet era:VehicleTypeOriginal ) ] .

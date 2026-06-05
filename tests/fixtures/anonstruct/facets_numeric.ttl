@@ -1,0 +1,9 @@
+@prefix era: <http://data.europa.eu/949/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+era:decProp a owl:DatatypeProperty ;
+    rdfs:range [ a rdfs:Datatype ; owl:onDatatype xsd:decimal ;
+        owl:withRestrictions ( [ xsd:minInclusive 0 ] [ xsd:maxInclusive 100 ]
+            [ xsd:minExclusive 1 ] [ xsd:maxExclusive 99 ] ) ] .
