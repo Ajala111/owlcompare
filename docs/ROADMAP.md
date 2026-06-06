@@ -2,7 +2,7 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 4 IN PROGRESS — Report renderers. Components 14 (JSON Schema Lockdown), 15 (Markdown report), and 16 (HTML report — design & wireframe) delivered; next up: Component 17 (HTML report — implementation), now unblocked.
+**Current phase:** Phase 4 IN PROGRESS — Report renderers, **4 of 5 components done**. Components 14 (JSON Schema Lockdown), 15 (Markdown report), 16 (HTML report — design & wireframe), and **17 (HTML report — implementation)** delivered. Component 17 is the project's **headline visual deliverable** — `owlcompare diff … --format html` now emits a beautiful, self-contained, offline-viewable report. Only Component 18 (JUnit XML / CI output) remains in this phase.
 
 ---
 
@@ -127,10 +127,28 @@ restriction_added + 1 annotation_removed = 4 visible changes).
       sidebar deferred to v1.1, no presentation mode. One token deviation: the
       non-breaking severity colour is `#9a6700`, not the spec's `#bf8700`, which
       fails WCAG AA on white. Component 17 consumes every artifact.)
-- [ ] Component 17: HTML report — implementation — `specs/17-html-impl.md` **(next, unblocked)**
-- [ ] Component 18: JUnit XML / CI output — `specs/18-junit.md`
+- [x] Component 17: HTML report — implementation — `specs/17-html-report.md`
+      (**The project's headline visual deliverable.** `report/html_report.py`
+      renders a self-contained single-file HTML5 report (DD-005): all CSS/JS
+      inlined from `report/_html_assets/` via `importlib.resources`, no external
+      resources, `file://`-openable. Wireframe A (card-based) per Component 16:
+      header status badge + sticky summary strip + Renames → Breaking → Other →
+      Unexplained-Layer-0 sections, each change a card with severity stripe, an
+      in-place "why breaking" severity-refinement note (story 4), and a
+      collapsible details `<dl>`. Per-kind summary renderers in
+      `_html_components.py` mirror Component 15's templates with HTML markup;
+      unknown kinds fall back to the escaped producer summary. First paint works
+      with **no JS** (sections expanded, native `<details>`); JS only enhances
+      (section collapse, theme cycle auto→light→dark, JSON download, copy-link).
+      New CLI surface: `--format html`, `--html-theme {light|dark|auto}`,
+      `--no-embed-json`. Output is byte-deterministic (`SOURCE_DATE_EPOCH`); seven
+      golden fixtures in `tests/fixtures/html/` lock it. Open questions Q1-Q3
+      resolved as proposed (embed JSON unconditionally; "View JSON" downloads;
+      details collapsed by default). Two Component 16 doc conflicts surfaced for
+      reconciliation — see the build summary / backlog below.)
+- [ ] Component 18: JUnit XML / CI output — `specs/18-junit.md` **(next)**
 
-**Exit criteria:** `owlcompare diff a.ttl b.ttl --format html --out report.html` produces a beautiful, self-contained, offline-viewable HTML file.
+**Exit criteria:** `owlcompare diff a.ttl b.ttl --format html --out report.html` produces a beautiful, self-contained, offline-viewable HTML file. **Met by Component 17.**
 
 ---
 
@@ -146,6 +164,40 @@ restriction_added + 1 annotation_removed = 4 visible changes).
 ---
 
 ## Backlog (post-v1)
+
+### Surfaced during Component 17 (HTML report)
+
+- **JSON `subsumes`/`cascade_subsumes` ordering is not cross-process deterministic.**
+  Every Layer 1 slice builds these arrays from graph iteration
+  (`[change_id(c) for c in subsumed]`, unsorted — entities/hierarchy/restrictions/
+  annotations/class_sets/replaced_by all share the pattern), so `--format json`
+  output for a change with multiple subsumed triples (e.g. a union domain) can
+  differ between processes (`PYTHONHASHSEED`). It is a *systemic, pre-existing*
+  trait, not introduced by Component 17. The HTML report sidesteps it by sorting
+  those bookkeeping arrays in the **embedded** JSON copy only (so the report is
+  byte-deterministic as the spec requires); the standalone JSON emitter is
+  untouched. Fix: sort the arrays at the producer (or in `diff_json`) so all
+  outputs are reproducible. Low priority; semantically the order is irrelevant.
+
+- **Reconcile Component 16 `BROWSER_SUPPORT.md` with the localStorage decision.**
+  `docs/design/BROWSER_SUPPORT.md` lists `localStorage`/`IndexedDB` as *banned*,
+  but both `specs/17-html-report.md` (§ JavaScript architecture) and the build
+  instructions mandate persisting the theme choice to `localStorage` with a
+  graceful fallback. Component 17 implemented the spec (theme persists via
+  `localStorage`, wrapped in try/catch so a blocked store degrades to
+  session-only — the doc's `file://` concern is thereby handled). The two
+  Component 16 documents disagree; `BROWSER_SUPPORT.md` should be updated to
+  carve out this one wrapped, fallback-guarded use rather than a blanket ban.
+
+- **Reconcile the "cap at 50 changes per section" design note with render-all.**
+  `docs/design/FIRST_PAINT.md` and `INFORMATION_ARCHITECTURE.md` say long
+  sections cap at 50 rendered changes with an "…and N more" affordance, but
+  `specs/17-html-report.md` § Edge cases mandates rendering *every* change (no
+  pagination) and its acceptance test renders 2000 in one document. Component 17
+  follows the spec (renders all; performance via native scrolling, verified
+  <5 MB for 2000 changes). If the 50-cap is still wanted, it belongs in a future
+  revision with the design docs and the spec brought into agreement.
+
 
 - ~~Surface structural additions on renamed entities.~~ **Done in Component 12 Part A** (the [[DD-018]] fix): after rename detection consolidates a pair, `rename.re_diff_renamed_entities` re-runs the Layer 1 slices over the renamed entity's IRI-substituted axioms and surfaces any genuine additions as independent changes.
 

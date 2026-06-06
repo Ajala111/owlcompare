@@ -22,7 +22,7 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/Phelz/owlcompare"
+Repository = "https://github.com/Ajala111/owlcompare"
 
 [project.scripts]
 owlcompare = "owlcompare.cli:main"

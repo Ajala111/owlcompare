@@ -48,6 +48,8 @@ from owlcompare.model import LoadOptions
 from owlcompare.rename_mapping import RenameMapping
 from owlcompare.rename_mapping import dump as _dump_rename_mapping
 from owlcompare.rename_mapping import load as _load_rename_mapping
+from owlcompare.report.html_report import HtmlOptions
+from owlcompare.report.html_report import render as _render_html
 from owlcompare.report.json_report import diff_json
 from owlcompare.report.markdown_report import MarkdownOptions
 from owlcompare.report.markdown_report import render as _render_markdown
@@ -69,13 +71,27 @@ app = typer.Typer(
 class DiffFormat(enum.StrEnum):
     """Supported output formats for the ``diff`` command.
 
-    ``markdown`` (Component 15) renders a PR-comment-ready report. HTML and
-    JUnit arrive later in Phase 4 (Components 16-18).
+    ``markdown`` (Component 15) renders a PR-comment-ready report; ``html``
+    (Component 17) renders the self-contained interactive report. JUnit arrives
+    next in Phase 4 (Component 18).
     """
 
     json = "json"
     text = "text"
     markdown = "markdown"
+    html = "html"
+
+
+class HtmlTheme(enum.StrEnum):
+    """Accepted ``--html-theme`` values for ``owlcompare diff --format html``.
+
+    ``auto`` (default) defers to the viewer's ``prefers-color-scheme``; ``light``
+    and ``dark`` pin the theme on first paint (a viewer can still toggle).
+    """
+
+    light = "light"
+    dark = "dark"
+    auto = "auto"
 
 
 # Diff layers known to the CLI. "syntactic" and "structural" are implemented;
@@ -198,6 +214,22 @@ def diff(
             "--no-markdown-emoji",
             help="Use plain-text severity tags ([BREAKING], [OK], ...) instead of emoji "
             "in --format markdown output.",
+        ),
+    ] = False,
+    html_theme: Annotated[
+        HtmlTheme,
+        typer.Option(
+            "--html-theme",
+            help="Default colour theme for --format html (light, dark, or auto). "
+            "'auto' respects the viewer's prefers-color-scheme.",
+        ),
+    ] = HtmlTheme.auto,
+    no_embed_json: Annotated[
+        bool,
+        typer.Option(
+            "--no-embed-json",
+            help="Don't embed the JSON payload in --format html output (disables the "
+            "in-report JSON download button).",
         ),
     ] = False,
     show_syntactic: Annotated[
@@ -359,6 +391,20 @@ def diff(
             out.write_text(markdown + "\n", encoding="utf-8")
         else:
             typer.echo(markdown)
+    elif output_format is DiffFormat.html:
+        if validate_schema:
+            logger.debug("--validate-schema has no effect when --format is not json")
+        html = _render_html(
+            result,
+            HtmlOptions(
+                default_theme=html_theme.value,
+                embed_json=not no_embed_json,
+            ),
+        )
+        if out is not None:
+            out.write_text(html, encoding="utf-8")
+        else:
+            typer.echo(html, nl=False)
     else:
         if validate_schema:
             logger.debug("--validate-schema has no effect when --format is not json")

@@ -682,3 +682,56 @@ def test_era_evolution_with_anonstructs_flagship():
     structural_kinds = {c.kind for c in result.changes if c.layer == "structural"}
     assert {"domain_union_added", "datatype_facet_changed", "replaced_by_set"} <= structural_kinds
     assert _unexplained(result) == []
+
+
+# --------------------------------------------------------------------------- #
+# Component 17 — HTML report (end-to-end)
+# --------------------------------------------------------------------------- #
+
+
+def _html_result(name_a: str, name_b: str, base: Path, src_a: str, src_b: str):
+    a = replace(load(str(base / name_a)), source=src_a)
+    b = replace(load(str(base / name_b)), source=src_b)
+    return orchestrator.run(a, b)
+
+
+def test_era_evolution_html_output_matches_golden(monkeypatch):
+    from owlcompare.report.html_report import render
+
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
+    golden = (FIXTURES / "html" / "era_evolution.html").read_text(encoding="utf-8")
+    result = _html_result(
+        "era_evolution_v1.ttl",
+        "era_evolution_v2.ttl",
+        DIFF,
+        "era_evolution_v1.ttl",
+        "era_evolution_v2.ttl",
+    )
+    assert render(result) == golden
+
+
+def test_era_axleSpacingDistance_html_renders_domain_union_cleanly(monkeypatch):
+    # The visible proof that Component 12.5's decoded owl:unionOf data renders as
+    # one tidy card with a member diff — and that the raw _list:/_restriction:
+    # Layer 0 triples it subsumes leave no "Unexplained Layer 0" noise behind.
+    from owlcompare.report.html_report import render
+
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
+    anon = FIXTURES / "anonstruct"
+    result = _html_result(
+        "domain_union_mixed_v1.ttl",
+        "domain_union_mixed_v2.ttl",
+        anon,
+        "era_axleSpacingDistance_v1.ttl",
+        "era_axleSpacingDistance_v2.ttl",
+    )
+    out = render(result)
+    assert out.count('data-kind="domain_union_changed"') == 1
+    assert 'class="member-add"' in out and 'class="member-del"' in out
+    assert "era:VehicleTypeOriginal" in out
+    assert 'id="section-layer0"' not in out  # no unexplained Layer 0 section
+    # The synthetic list/restriction URNs never surface as visible cards (they are
+    # subsumed); they may still appear in the embedded JSON payload, which we skip.
+    visible = out[out.index("<main") : out.index("</main>")]
+    assert "_list:" not in visible
+    assert "_restriction:" not in visible

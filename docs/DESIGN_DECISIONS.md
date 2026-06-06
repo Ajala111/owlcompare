@@ -395,7 +395,7 @@ A single-line f-string with the same lambda formats fine; the bug needs the mult
 - `subsumes` / `cascade_subsumes` arrays are *not* constrained to be unique (Q3): the change ids are unique by construction, and a producer bug is not the schema's job to catch. Expected uniqueness is documented in the companion `.md`.
 - Enforcement: every CLI JSON test is schema-validated via the autouse wrapper in `tests/conftest.py`, so any commit that emits non-conforming JSON fails CI. `owlcompare diff --validate-schema` opts production callers into the same check (default off — see the spec's note on validation cost).
 
-**Implication:** the schema becomes a first-class artifact, versioned with the code. Every PR that touches JSON output must consider whether it is forward-compatible or version-bumping. External consumers can pin `https://raw.githubusercontent.com/Phelz/owlcompare/main/docs/schema/diff-result.schema.json`.
+**Implication:** the schema becomes a first-class artifact, versioned with the code. Every PR that touches JSON output must consider whether it is forward-compatible or version-bumping. External consumers can pin `https://raw.githubusercontent.com/Ajala111/owlcompare/main/docs/schema/diff-result.schema.json`.
 
 **Deviations recorded during Component 14** (the schema mirrors the *actual* emitted output; the spec sketch was idealized):
 - The JSON emitter is `_render_diff.diff_json`, not the `report/json_report.py` the spec names (the `report/` package arrives later in Phase 4). The schema/validation hook attaches to the real emitter.

@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en" data-theme-default="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>owlcompare diff: 1 breaking change</title>
+<style>
+/*
+ * owlcompare HTML report — stylesheet (Component 17). Implements
+ * docs/design/DESIGN_TOKENS.md verbatim; design changes belong in Component 16's
+ * docs, not here. Inlined into the report's <style> block by html_report.render().
+ * Sections: 1 reset · 2 tokens · 3 layout · 4 components · 5 states · 6 print ·
+ * 7 reduced motion.
+ */
+
+/* ===== 1. Reset / normalize ============================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+}
+h1,
+h2,
+h3,
+p,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+code {
+  font-family: var(--font-code);
+}
+
+/* ===== 2. Design tokens ================================================== */
+
+:root {
+  /* Typography (DESIGN_TOKENS.md § Typography) */
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-code: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --size-caption: 12px;
+  --size-body: 14px;
+  --size-subheading: 18px;
+  --size-section: 24px;
+  --size-title: 32px;
+  --line-height: 1.5;
+  --weight-body: 400;
+  --weight-chip: 500;
+  --weight-strong: 600;
+
+  /* Spacing — 4px base unit (DESIGN_TOKENS.md § Spacing) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --section-padding: 24px;
+  --card-padding: 16px;
+  --inline-gap: 8px;
+  --max-width: 960px;
+
+  /* Borders, radius, shadow (DESIGN_TOKENS.md § Borders, radius, shadow) */
+  --radius: 6px;
+  --border-width: 1px;
+  --stripe-width: 4px;
+  --sticky-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+  /* Motion (DESIGN_TOKENS.md § Motion) */
+  --motion: 120ms ease;
+
+  /* Colour — light theme (DESIGN_TOKENS.md § Color — light theme) */
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --border: #d0d7de;
+  --text: #1f2328;
+  --text-muted: #656d76;
+
+  --sev-breaking: #cf222e;
+  --sev-non-breaking: #9a6700; /* WCAG-corrected from #bf8700 — see ACCESSIBILITY.md */
+  --sev-additive: #1a7f37;
+  --sev-info: #656d76;
+  --sev-rename: #0969da;
+
+  /* Badge tints — the severity hue at a light tint over --bg; badge text stays
+     --text (>=13.7:1, AAA). See DESIGN_TOKENS.md § Severity badge construction. */
+  --badge-breaking-bg: #ffebe9;
+  --badge-non-breaking-bg: #fff8c5;
+  --badge-additive-bg: #dafbe1;
+  --badge-info-bg: #eaeef2;
+  --badge-rename-bg: #ddf4ff;
+
+  --del-bg: #ffebe9;
+  --del-text: #82071e;
+  --ins-bg: #dafbe1;
+  --ins-text: #116329;
+
+  color-scheme: light;
+}
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+
+  --sev-breaking: #ff7b72;
+  --sev-non-breaking: #d29922;
+  --sev-additive: #3fb950;
+  --sev-info: #8b949e;
+  --sev-rename: #58a6ff;
+
+  --badge-breaking-bg: #3c1618;
+  --badge-non-breaking-bg: #2e2206;
+  --badge-additive-bg: #12261c;
+  --badge-info-bg: #21262d;
+  --badge-rename-bg: #121d2f;
+
+  --del-bg: #3c1618;
+  --del-text: #ffb1ab;
+  --ins-bg: #12261c;
+  --ins-text: #7ee787;
+
+  color-scheme: dark;
+}
+/* Auto mode: honour the OS preference when no explicit [data-theme] is set.
+   The same custom-property block as [data-theme=dark], gated on the media query
+   and on the html element not carrying an explicit override. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+
+    --sev-breaking: #ff7b72;
+    --sev-non-breaking: #d29922;
+    --sev-additive: #3fb950;
+    --sev-info: #8b949e;
+    --sev-rename: #58a6ff;
+
+    --badge-breaking-bg: #3c1618;
+    --badge-non-breaking-bg: #2e2206;
+    --badge-additive-bg: #12261c;
+    --badge-info-bg: #21262d;
+    --badge-rename-bg: #121d2f;
+
+    --del-bg: #3c1618;
+    --del-text: #ffb1ab;
+    --ins-bg: #12261c;
+    --ins-text: #7ee787;
+
+    color-scheme: dark;
+  }
+}
+/* Severity → colour resolution. Every element carrying a severity-* class reads
+   its hue and badge tint from one place, so the markup never repeats a colour. */
+.severity-breaking {
+  --sev: var(--sev-breaking);
+  --badge-bg: var(--badge-breaking-bg);
+}
+.severity-non-breaking {
+  --sev: var(--sev-non-breaking);
+  --badge-bg: var(--badge-non-breaking-bg);
+}
+.severity-additive {
+  --sev: var(--sev-additive);
+  --badge-bg: var(--badge-additive-bg);
+}
+.severity-info {
+  --sev: var(--sev-info);
+  --badge-bg: var(--badge-info-bg);
+}
+.severity-rename {
+  --sev: var(--sev-rename);
+  --badge-bg: var(--badge-rename-bg);
+}
+
+/* ===== 3. Layout ======================================================== */
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--size-body);
+  line-height: var(--line-height);
+  font-weight: var(--weight-body);
+  color: var(--text);
+  background: var(--bg);
+}
+.report-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-4);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--inline-gap);
+  font-weight: var(--weight-strong);
+}
+.header-center {
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--inline-gap);
+  flex-wrap: wrap;
+}
+.wordmark {
+  font-size: var(--size-subheading);
+  font-weight: var(--weight-strong);
+}
+.report-title {
+  font-size: var(--size-subheading);
+  font-weight: var(--weight-strong);
+}
+.summary-strip {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border-top: var(--border-width) solid var(--border);
+  border-bottom: var(--border-width) solid var(--border);
+  box-shadow: var(--sticky-shadow);
+  font-size: var(--size-caption);
+}
+.summary-strip .count {
+  color: var(--text-muted);
+}
+.summary-strip .count strong {
+  color: var(--text);
+  font-weight: var(--weight-strong);
+}
+.report-main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+.report-footer {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+  border-top: var(--border-width) solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--size-caption);
+}
+.report-footer a {
+  color: var(--sev-rename);
+}
+
+/* ===== 4. Components ==================================================== */
+
+/* Status badge (UI_PRIMITIVES.md § StatusBadge) */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--inline-gap);
+  align-self: flex-start;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  border: var(--border-width) solid var(--sev);
+  background: var(--badge-bg);
+  color: var(--text);
+  font-weight: var(--weight-strong);
+}
+.status-badge .status-icon {
+  color: var(--sev);
+}
+/* Toolbar (UI_PRIMITIVES.md § Toolbar) */
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  border: var(--border-width) solid var(--border);
+  background: var(--surface);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-chip);
+}
+.toolbar-btn:hover {
+  border-color: var(--text-muted);
+}
+.toolbar-msg {
+  font-size: var(--size-caption);
+  color: var(--text-muted);
+}
+/* Collapsible section (UI_PRIMITIVES.md § CollapsibleSection) */
+.change-section {
+  display: flex;
+  flex-direction: column;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--inline-gap);
+  padding-bottom: var(--space-3);
+  border-bottom: var(--border-width) solid var(--border);
+}
+.section-title {
+  font-size: var(--size-section);
+  font-weight: var(--weight-strong);
+}
+.section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-strong);
+}
+.section-toggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1);
+}
+.chevron {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--text-muted);
+  border-bottom: 2px solid var(--text-muted);
+  transform: rotate(45deg);
+  transition: transform var(--motion);
+}
+.change-section[data-collapsed="true"] .chevron {
+  transform: rotate(-45deg);
+}
+.section-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  overflow: hidden;
+  max-height: 100000px;
+  transition: max-height var(--motion);
+}
+.change-section[data-collapsed="true"] .section-body {
+  max-height: 0;
+  padding-top: 0;
+}
+.section-more {
+  color: var(--text-muted);
+  font-size: var(--size-caption);
+  padding-top: var(--space-2);
+}
+/* Card (UI_PRIMITIVES.md § Card) */
+.change-card {
+  display: flex;
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  overflow: hidden;
+}
+.card-stripe {
+  flex: 0 0 var(--stripe-width);
+  background: var(--sev);
+}
+.card-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: var(--card-padding);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--inline-gap);
+}
+.card-title {
+  font-size: var(--size-body);
+  font-weight: var(--weight-strong);
+}
+.card-subject {
+  color: var(--text-muted);
+}
+.card-summary {
+  font-size: var(--size-body);
+}
+/* Badge (UI_PRIMITIVES.md § Badge) */
+.card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius);
+  background: var(--badge-bg);
+  color: var(--text);
+  font-size: var(--size-caption);
+  font-weight: var(--weight-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.card-badge::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sev);
+}
+/* IRI chip (UI_PRIMITIVES.md § IRIChip) */
+.iri,
+.card-subject,
+.restriction {
+  font-family: var(--font-code);
+  font-size: 0.92em;
+  font-weight: var(--weight-chip);
+  word-break: break-all;
+}
+.source-name {
+  font-family: var(--font-code);
+  font-weight: var(--weight-chip);
+}
+/* ArrowChange (UI_PRIMITIVES.md § ArrowChange) */
+.arrow {
+  color: var(--text-muted);
+  padding: 0 var(--space-1);
+}
+del {
+  background: var(--del-bg);
+  color: var(--del-text);
+  text-decoration: line-through;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+ins {
+  background: var(--ins-bg);
+  color: var(--ins-text);
+  text-decoration: none;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+/* EvidenceList (UI_PRIMITIVES.md § EvidenceList) */
+.oc-evidence {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--size-caption);
+  color: var(--text-muted);
+}
+.oc-evidence .confidence {
+  color: var(--sev);
+  font-weight: var(--weight-strong);
+}
+.oc-evidence li::before {
+  content: "·";
+  padding-right: var(--space-1);
+}
+.oc-evidence li.confidence-line::before {
+  content: "";
+  padding-right: 0;
+}
+/* Why-breaking note (USER_STORIES.md story 4 — refinement in place) */
+.why-note {
+  border-top: var(--border-width) solid var(--border);
+  margin-top: var(--space-1);
+  padding-top: var(--space-2);
+  font-size: var(--size-caption);
+  color: var(--text-muted);
+}
+.why-note .why-label {
+  font-weight: var(--weight-strong);
+  color: var(--text);
+}
+.why-note .severity-shift {
+  font-family: var(--font-code);
+}
+.why-note .rule-id {
+  font-family: var(--font-code);
+}
+/* Details list (spec § Per-change card rendering) */
+.card-details {
+  font-size: var(--size-caption);
+}
+.card-details-toggle {
+  cursor: pointer;
+  color: var(--sev-rename);
+  font-size: var(--size-caption);
+}
+.card-details-body {
+  padding-top: var(--space-2);
+}
+.details-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+.details-list dt {
+  color: var(--text-muted);
+  font-weight: var(--weight-chip);
+}
+.details-list dd {
+  margin: 0;
+  word-break: break-all;
+}
+.member-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+/* Empty-diff note */
+.empty-note {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-4);
+  text-align: center;
+  color: var(--text-muted);
+}
+.noscript-note {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-2) var(--space-4);
+  color: var(--text-muted);
+  font-size: var(--size-caption);
+}
+
+/* ===== 5. Interactive states ============================================ */
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--sev-rename);
+  outline-offset: 2px;
+}
+.toolbar-btn:active {
+  transform: translateY(1px);
+}
+
+/* ===== 6. Print ======================================================== */
+
+@media print {
+  .report-header .toolbar,
+  .section-toggle {
+    display: none;
+  }
+  .summary-strip {
+    position: static;
+    box-shadow: none;
+  }
+  /* Always print every section and every card detail fully expanded. */
+  .change-section[data-collapsed="true"] .section-body {
+    max-height: none;
+    padding-top: var(--space-4);
+  }
+  .card-details > .card-details-body {
+    display: block;
+  }
+  .change-card {
+    break-inside: avoid;
+  }
+}
+
+/* ===== 7. Reduced motion =============================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}</style>
+</head>
+<body>
+<header class="report-header">
+<div class="header-left"><svg class="logo" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="6.5" cy="8.5" r="2.2" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="13.5" cy="8.5" r="2.2" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="6.5" cy="8.5" r="0.8" fill="currentColor"/><circle cx="13.5" cy="8.5" r="0.8" fill="currentColor"/></svg><span class="wordmark">owlcompare</span></div>
+<div class="header-center">
+<h1 class="report-title">Diff: <code class="source-name" title="tests/fixtures/diff/era_evolution_v1.ttl">era_evolution_v1.ttl</code> vs <code class="source-name" title="tests/fixtures/diff/era_evolution_v2.ttl">era_evolution_v2.ttl</code></h1>
+<div class="status-badge severity-breaking" role="status" aria-label="1 breaking change"><span class="status-icon" aria-hidden="true">🔴</span> 1 breaking change</div>
+</div>
+<div class="header-right toolbar">
+<button class="toolbar-btn" data-action="download-json" aria-label="Download JSON">⬇ JSON</button>
+<button class="toolbar-btn" data-action="copy-link" aria-label="Copy link">🔗 Copy link</button>
+<button class="toolbar-btn" data-action="theme-toggle" aria-label="Toggle theme">🌓</button>
+</div>
+</header>
+<div class="summary-strip" role="region" aria-label="Change counts by severity">
+<span class="count count-breaking">Breaking: <strong>1</strong></span>
+<span class="count count-non-breaking">Non-breaking: <strong>1</strong></span>
+<span class="count count-additive">Additive: <strong>1</strong></span>
+<span class="count count-info">Info: <strong>2</strong></span>
+<span class="count count-renames">Renames: <strong>0</strong></span>
+</div>
+<main class="report-main">
+<section class="change-section section-breaking" id="section-breaking">
+<header class="section-header">
+<h2 class="section-title">Breaking changes</h2>
+<span class="section-count">1</span>
+<button class="section-toggle" aria-expanded="true" aria-controls="section-breaking-body"><span class="chevron"></span></button>
+</header>
+<div class="section-body" id="section-breaking-body">
+<article class="change-card severity-breaking" data-change-id="structural:object_property_removed:98b75c19b466e7127aa82f78912a1ce7cd17ea7d" data-kind="object_property_removed" data-severity="breaking">
+<div class="card-stripe" aria-hidden="true"></div>
+<div class="card-body">
+<header class="card-header">
+<span class="card-badge severity-breaking">BREAKING</span>
+<h3 class="card-title">Object property removed</h3>
+<code class="card-subject" title="http://data.europa.eu/949/locatedOn">era:locatedOn</code>
+</header>
+<div class="card-summary"><span class="label">&quot;located on&quot;@en</span></div>
+<details class="card-details">
+<summary class="card-details-toggle">Show details</summary>
+<div class="card-details-body"><dl class="details-list"><dt>Kind</dt><dd><code>object_property_removed</code></dd><dt>Severity</dt><dd><code>breaking</code></dd><dt>Subject</dt><dd><code>http://data.europa.eu/949/locatedOn</code></dd><dt>Change ID</dt><dd><code>structural:object_property_removed:98b75c19b466e7127aa82f78912a1ce7cd17ea7d</code></dd><dt>Entity iri</dt><dd><code>http://data.europa.eu/949/locatedOn</code></dd><dt>Entity kind</dt><dd><code>object_property</code></dd><dt>Label</dt><dd><code>located on</code></dd><dt>Language</dt><dd><code>en</code></dd></dl></div>
+</details>
+</div>
+</article>
+</div>
+</section>
+<section class="change-section section-other" id="section-other">
+<header class="section-header">
+<h2 class="section-title">Other changes</h2>
+<span class="section-count">4</span>
+<button class="section-toggle" aria-expanded="true" aria-controls="section-other-body"><span class="chevron"></span></button>
+</header>
+<div class="section-body" id="section-other-body">
+<article class="change-card severity-additive" data-change-id="structural:class_added:0e77bd9eff6c6e127936060df0e498e8270eadaa" data-kind="class_added" data-severity="additive">
+<div class="card-stripe" aria-hidden="true"></div>
+<div class="card-body">
+<header class="card-header">
+<span class="card-badge severity-additive">ADDITIVE</span>
+<h3 class="card-title">Class added</h3>
+<code class="card-subject" title="http://data.europa.eu/949/Platform">era:Platform</code>
+</header>
+<div class="card-summary"><span class="label">&quot;Platform&quot;@en</span></div>
+<details class="card-details">
+<summary class="card-details-toggle">Show details</summary>
+<div class="card-details-body"><dl class="details-list"><dt>Kind</dt><dd><code>class_added</code></dd><dt>Severity</dt><dd><code>additive</code></dd><dt>Subject</dt><dd><code>http://data.europa.eu/949/Platform</code></dd><dt>Change ID</dt><dd><code>structural:class_added:0e77bd9eff6c6e127936060df0e498e8270eadaa</code></dd><dt>Entity iri</dt><dd><code>http://data.europa.eu/949/Platform</code></dd><dt>Entity kind</dt><dd><code>class</code></dd><dt>Label</dt><dd><code>Platform</code></dd><dt>Language</dt><dd><code>en</code></dd></dl></div>
+</details>
+</div>
+</article>
+<article class="change-card severity-info" data-change-id="structural:annotation_changed:4de3d3cdba4eb385b17fdab7a8705fa04b2acb58" data-kind="annotation_changed" data-severity="info">
+<div class="card-stripe" aria-hidden="true"></div>
+<div class="card-body">
+<header class="card-header">
+<span class="card-badge severity-info">INFO</span>
+<h3 class="card-title">Label changed</h3>
+<code class="card-subject" title="http://data.europa.eu/949/Track">era:Track</code>
+</header>
+<div class="card-summary"><del>&quot;Voie&quot;</del> <span class="arrow" aria-hidden="true">&rarr;</span> <ins>&quot;Voie ferrée&quot;</ins> <span class="lang">(fr)</span></div>
+<details class="card-details">
+<summary class="card-details-toggle">Show details</summary>
+<div class="card-details-body"><dl class="details-list"><dt>Kind</dt><dd><code>annotation_changed</code></dd><dt>Severity</dt><dd><code>info</code></dd><dt>Subject</dt><dd><code>http://data.europa.eu/949/Track</code></dd><dt>Change ID</dt><dd><code>structural:annotation_changed:4de3d3cdba4eb385b17fdab7a8705fa04b2acb58</code></dd><dt>After</dt><dd><code>is_iri_value=False, value=Voie ferrée</code></dd><dt>Before</dt><dd><code>is_iri_value=False, value=Voie</code></dd><dt>Entity iri</dt><dd><code>http://data.europa.eu/949/Track</code></dd><dt>Language</dt><dd><code>fr</code></dd><dt>Predicate iri</dt><dd><code>http://www.w3.org/2000/01/rdf-schema#label</code></dd><dt>Predicate short</dt><dd><code>label</code></dd></dl></div>
+</details>
+</div>
+</article>
+<article class="change-card severity-non-breaking" data-change-id="structural:restriction_changed:1774c8de412d4ffca8ab964c73ad671ad4f861e3" data-kind="restriction_changed" data-severity="non-breaking">
+<div class="card-stripe" aria-hidden="true"></div>
+<div class="card-body">
+<header class="card-header">
+<span class="card-badge severity-non-breaking">NON BREAKING</span>
+<h3 class="card-title">Restriction changed</h3>
+<code class="card-subject" title="http://data.europa.eu/949/Track">era:Track</code>
+</header>
+<div class="card-summary"><code class="restriction">era:hasMaxSpeed max 1 → max 2</code></div>
+<details class="card-details">
+<summary class="card-details-toggle">Show details</summary>
+<div class="card-details-body"><dl class="details-list"><dt>Kind</dt><dd><code>restriction_changed</code></dd><dt>Severity</dt><dd><code>non_breaking</code></dd><dt>Subject</dt><dd><code>http://data.europa.eu/949/Track</code></dd><dt>Change ID</dt><dd><code>structural:restriction_changed:1774c8de412d4ffca8ab964c73ad671ad4f861e3</code></dd><dt>After</dt><dd><code>cardinality=2, filler=None, kind=max_cardinality, urn=urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710</code></dd><dt>Before</dt><dd><code>cardinality=1, filler=None, kind=max_cardinality, urn=urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3</code></dd><dt>Entity iri</dt><dd><code>http://data.europa.eu/949/Track</code></dd><dt>On property</dt><dd><code>http://data.europa.eu/949/hasMaxSpeed</code></dd><dt>Via predicate</dt><dd><code>rdfs:subClassOf</code></dd></dl></div>
+</details>
+</div>
+</article>
+<article class="change-card severity-info" data-change-id="structural:ontology_metadata_changed:773d4bc469dc82b01e745d24aa90da564344014a" data-kind="ontology_metadata_changed" data-severity="info">
+<div class="card-stripe" aria-hidden="true"></div>
+<div class="card-body">
+<header class="card-header">
+<span class="card-badge severity-info">INFO</span>
+<h3 class="card-title">Ontology metadata changed</h3>
+<code class="card-subject" title="http://data.europa.eu/949/ontology">era:ontology</code>
+</header>
+<div class="card-summary"><code class="iri" title="http://www.w3.org/2002/07/owl#versionInfo">owl:versionInfo</code> <del>&quot;1.0.0&quot;</del> <span class="arrow" aria-hidden="true">&rarr;</span> <ins>&quot;2.0.0&quot;</ins></div>
+<details class="card-details">
+<summary class="card-details-toggle">Show details</summary>
+<div class="card-details-body"><dl class="details-list"><dt>Kind</dt><dd><code>ontology_metadata_changed</code></dd><dt>Severity</dt><dd><code>info</code></dd><dt>Subject</dt><dd><code>http://data.europa.eu/949/ontology</code></dd><dt>Change ID</dt><dd><code>structural:ontology_metadata_changed:773d4bc469dc82b01e745d24aa90da564344014a</code></dd><dt>After</dt><dd><code>is_iri_value=False, value=2.0.0</code></dd><dt>Before</dt><dd><code>is_iri_value=False, value=1.0.0</code></dd><dt>Language</dt><dd>&mdash;</dd><dt>Ontology iri</dt><dd><code>http://data.europa.eu/949/ontology</code></dd><dt>Predicate iri</dt><dd><code>http://www.w3.org/2002/07/owl#versionInfo</code></dd><dt>Predicate short</dt><dd><code>versionInfo</code></dd></dl></div>
+</details>
+</div>
+</article>
+</div>
+</section>
+</main>
+<footer class="report-footer">
+<p>Generated by <a href="https://github.com/Phelz/owlcompare">owlcompare</a> 0.0.1 on 2026-06-06 12:24:18 &middot; <a href="https://raw.githubusercontent.com/Phelz/owlcompare/main/docs/schema/diff-result.schema.json">Schema v1</a> &middot; <a href="#" data-action="view-json">View JSON</a> (downloads the JSON payload)</p>
+<noscript><p class="noscript-note">JavaScript is disabled. The report is fully readable; only the toolbar (theme, JSON download, copy link) is inactive.</p></noscript>
+</footer>
+<script id="diff-json" type="application/json">{
+  "schema_version": 1,
+  "summary": {
+    "added": 8,
+    "removed": 10,
+    "total": 23,
+    "breaking": 1
+  },
+  "changes": [
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Removed: era:Track rdfs:label \"Voie\"@fr",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:label",
+        "object": "\"Voie\"@fr",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_removed:63bfb5916047b03a2b77469c840ee493b2df9379"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Removed: era:Track rdfs:subClassOf _restriction:ca0d5fa4",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:subClassOf",
+        "object": "\u003curn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3>",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_removed:ff0df21f4ed90dfbf559772c3e86c067d569cfdd"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/locatedOn",
+      "summary": "Removed: era:locatedOn \u003chttp://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:ObjectProperty",
+      "details": {
+        "subject": "era:locatedOn",
+        "predicate": "\u003chttp://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:ObjectProperty",
+        "subject_iri": "http://data.europa.eu/949/locatedOn",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_removed:fe3cb699fc2ddf15c132d99b4ea0d148714ca9c3"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/locatedOn",
+      "summary": "Removed: era:locatedOn rdfs:domain era:Signal",
+      "details": {
+        "subject": "era:locatedOn",
+        "predicate": "rdfs:domain",
+        "object": "era:Signal",
+        "subject_iri": "http://data.europa.eu/949/locatedOn",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#domain",
+        "change_id": "syntactic:triple_removed:a348ede54189390b3cd2a008595353ccb7497df1"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/locatedOn",
+      "summary": "Removed: era:locatedOn rdfs:label \"located on\"@en",
+      "details": {
+        "subject": "era:locatedOn",
+        "predicate": "rdfs:label",
+        "object": "\"located on\"@en",
+        "subject_iri": "http://data.europa.eu/949/locatedOn",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_removed:d08228701c8db3b207aacc9e420c12c2a6d206a7"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/locatedOn",
+      "summary": "Removed: era:locatedOn rdfs:range era:Track",
+      "details": {
+        "subject": "era:locatedOn",
+        "predicate": "rdfs:range",
+        "object": "era:Track",
+        "subject_iri": "http://data.europa.eu/949/locatedOn",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#range",
+        "change_id": "syntactic:triple_removed:4e9342cd3fb7f77a5aae852ddfbc94312743f44e"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/ontology",
+      "summary": "Removed: era:ontology owl:versionInfo \"1.0.0\"",
+      "details": {
+        "subject": "era:ontology",
+        "predicate": "owl:versionInfo",
+        "object": "\"1.0.0\"",
+        "subject_iri": "http://data.europa.eu/949/ontology",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#versionInfo",
+        "change_id": "syntactic:triple_removed:34249b415b744b8ee3d8b3bb1aac9a9b8ca8b64e"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+      "summary": "Removed: _restriction:ca0d5fa4 \u003chttp://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Restriction",
+      "details": {
+        "subject": "\u003curn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3>",
+        "predicate": "\u003chttp://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Restriction",
+        "subject_iri": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_removed:c029896b888f0e3cf135145a27be188a0ff82836"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+      "summary": "Removed: _restriction:ca0d5fa4 owl:maxCardinality \"1\"^^xsd:nonNegativeInteger",
+      "details": {
+        "subject": "\u003curn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3>",
+        "predicate": "owl:maxCardinality",
+        "object": "\"1\"^^xsd:nonNegativeInteger",
+        "subject_iri": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#maxCardinality",
+        "change_id": "syntactic:triple_removed:fb09200b39cc271f44bf8fe4512c40b69aa6500f"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_removed",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+      "summary": "Removed: _restriction:ca0d5fa4 owl:onProperty era:hasMaxSpeed",
+      "details": {
+        "subject": "\u003curn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3>",
+        "predicate": "owl:onProperty",
+        "object": "era:hasMaxSpeed",
+        "subject_iri": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#onProperty",
+        "change_id": "syntactic:triple_removed:0a59a79bd9222b4f2843e71f3e1d753966ba512c"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Platform",
+      "summary": "Added: era:Platform \u003chttp://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Class",
+      "details": {
+        "subject": "era:Platform",
+        "predicate": "\u003chttp://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Class",
+        "subject_iri": "http://data.europa.eu/949/Platform",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_added:43b960fb27f392167f0dc996bd527554e55ba7fd"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Platform",
+      "summary": "Added: era:Platform rdfs:label \"Platform\"@en",
+      "details": {
+        "subject": "era:Platform",
+        "predicate": "rdfs:label",
+        "object": "\"Platform\"@en",
+        "subject_iri": "http://data.europa.eu/949/Platform",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_added:f74537e247a679e4504bd9827ab664f0418dfa75"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Added: era:Track rdfs:label \"Voie ferrée\"@fr",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:label",
+        "object": "\"Voie ferrée\"@fr",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "change_id": "syntactic:triple_added:dd739ea7072c02b9b36c66bbdfce41b6a18540dd"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Added: era:Track rdfs:subClassOf _restriction:e5a6c74d",
+      "details": {
+        "subject": "era:Track",
+        "predicate": "rdfs:subClassOf",
+        "object": "\u003curn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710>",
+        "subject_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+        "change_id": "syntactic:triple_added:6b1cecd2691fa79bfababe0a368837e762d1b172"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/ontology",
+      "summary": "Added: era:ontology owl:versionInfo \"2.0.0\"",
+      "details": {
+        "subject": "era:ontology",
+        "predicate": "owl:versionInfo",
+        "object": "\"2.0.0\"",
+        "subject_iri": "http://data.europa.eu/949/ontology",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#versionInfo",
+        "change_id": "syntactic:triple_added:b5566eb2a37e1eea9fd227e729380f6d0744cfc7"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+      "summary": "Added: _restriction:e5a6c74d \u003chttp://www.w3.org/1999/02/22-rdf-syntax-ns#type> owl:Restriction",
+      "details": {
+        "subject": "\u003curn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710>",
+        "predicate": "\u003chttp://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+        "object": "owl:Restriction",
+        "subject_iri": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+        "predicate_iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+        "change_id": "syntactic:triple_added:59ecc5ba16212afd11bf3ab8b3e37d87a2fe2496"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+      "summary": "Added: _restriction:e5a6c74d owl:maxCardinality \"2\"^^xsd:nonNegativeInteger",
+      "details": {
+        "subject": "\u003curn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710>",
+        "predicate": "owl:maxCardinality",
+        "object": "\"2\"^^xsd:nonNegativeInteger",
+        "subject_iri": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#maxCardinality",
+        "change_id": "syntactic:triple_added:a7221fe7c4a598aae5b2a9ffb3092829b9aa233a"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "syntactic",
+      "kind": "triple_added",
+      "severity": "info",
+      "subject": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+      "summary": "Added: _restriction:e5a6c74d owl:onProperty era:hasMaxSpeed",
+      "details": {
+        "subject": "\u003curn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710>",
+        "predicate": "owl:onProperty",
+        "object": "era:hasMaxSpeed",
+        "subject_iri": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#onProperty",
+        "change_id": "syntactic:triple_added:20b6a83df6a5fc97d8f982810af205679fec0f25"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "class_added",
+      "severity": "additive",
+      "subject": "http://data.europa.eu/949/Platform",
+      "summary": "Class added: era:Platform \"Platform\"@en",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/Platform",
+        "entity_kind": "class",
+        "label": "Platform",
+        "language": "en",
+        "subsumes": [
+          "syntactic:triple_added:43b960fb27f392167f0dc996bd527554e55ba7fd",
+          "syntactic:triple_added:f74537e247a679e4504bd9827ab664f0418dfa75"
+        ],
+        "change_id": "structural:class_added:0e77bd9eff6c6e127936060df0e498e8270eadaa"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "object_property_removed",
+      "severity": "breaking",
+      "subject": "http://data.europa.eu/949/locatedOn",
+      "summary": "Object property removed: era:locatedOn \"located on\"@en",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/locatedOn",
+        "entity_kind": "object_property",
+        "label": "located on",
+        "language": "en",
+        "subsumes": [
+          "syntactic:triple_removed:d08228701c8db3b207aacc9e420c12c2a6d206a7",
+          "syntactic:triple_removed:fe3cb699fc2ddf15c132d99b4ea0d148714ca9c3"
+        ],
+        "change_id": "structural:object_property_removed:98b75c19b466e7127aa82f78912a1ce7cd17ea7d"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "restriction_changed",
+      "severity": "non_breaking",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Restriction changed on era:Track: era:hasMaxSpeed max 1 → max 2",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/Track",
+        "via_predicate": "rdfs:subClassOf",
+        "on_property": "http://data.europa.eu/949/hasMaxSpeed",
+        "before": {
+          "kind": "max_cardinality",
+          "cardinality": 1,
+          "filler": null,
+          "urn": "urn:owlcompare:restriction:ca0d5fa4cb4dbb17a733fe25f9f17c4e1e86cb39d2c07078e6cf627edf6ec5a3"
+        },
+        "after": {
+          "kind": "max_cardinality",
+          "cardinality": 2,
+          "filler": null,
+          "urn": "urn:owlcompare:restriction:e5a6c74dab89e3b216f41747bfdb4b92c76b81edd541ed0ee385459850730710"
+        },
+        "subsumes": [
+          "syntactic:triple_added:20b6a83df6a5fc97d8f982810af205679fec0f25",
+          "syntactic:triple_added:59ecc5ba16212afd11bf3ab8b3e37d87a2fe2496",
+          "syntactic:triple_added:6b1cecd2691fa79bfababe0a368837e762d1b172",
+          "syntactic:triple_added:a7221fe7c4a598aae5b2a9ffb3092829b9aa233a",
+          "syntactic:triple_removed:0a59a79bd9222b4f2843e71f3e1d753966ba512c",
+          "syntactic:triple_removed:c029896b888f0e3cf135145a27be188a0ff82836",
+          "syntactic:triple_removed:fb09200b39cc271f44bf8fe4512c40b69aa6500f",
+          "syntactic:triple_removed:ff0df21f4ed90dfbf559772c3e86c067d569cfdd"
+        ],
+        "change_id": "structural:restriction_changed:1774c8de412d4ffca8ab964c73ad671ad4f861e3"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "annotation_changed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/Track",
+      "summary": "Label changed on era:Track (fr): 'Voie' → 'Voie ferrée'",
+      "details": {
+        "entity_iri": "http://data.europa.eu/949/Track",
+        "predicate_iri": "http://www.w3.org/2000/01/rdf-schema#label",
+        "predicate_short": "label",
+        "language": "fr",
+        "before": {
+          "value": "Voie",
+          "is_iri_value": false
+        },
+        "after": {
+          "value": "Voie ferrée",
+          "is_iri_value": false
+        },
+        "subsumes": [
+          "syntactic:triple_added:dd739ea7072c02b9b36c66bbdfce41b6a18540dd",
+          "syntactic:triple_removed:63bfb5916047b03a2b77469c840ee493b2df9379"
+        ],
+        "change_id": "structural:annotation_changed:4de3d3cdba4eb385b17fdab7a8705fa04b2acb58"
+      },
+      "before": null,
+      "after": null
+    },
+    {
+      "layer": "structural",
+      "kind": "ontology_metadata_changed",
+      "severity": "info",
+      "subject": "http://data.europa.eu/949/ontology",
+      "summary": "Ontology metadata: owl:versionInfo '1.0.0' → '2.0.0'",
+      "details": {
+        "ontology_iri": "http://data.europa.eu/949/ontology",
+        "predicate_iri": "http://www.w3.org/2002/07/owl#versionInfo",
+        "predicate_short": "versionInfo",
+        "language": null,
+        "before": {
+          "value": "1.0.0",
+          "is_iri_value": false
+        },
+        "after": {
+          "value": "2.0.0",
+          "is_iri_value": false
+        },
+        "subsumes": [
+          "syntactic:triple_added:b5566eb2a37e1eea9fd227e729380f6d0744cfc7",
+          "syntactic:triple_removed:34249b415b744b8ee3d8b3bb1aac9a9b8ca8b64e"
+        ],
+        "change_id": "structural:ontology_metadata_changed:773d4bc469dc82b01e745d24aa90da564344014a"
+      },
+      "before": null,
+      "after": null
+    }
+  ],
+  "metadata": {
+    "severity_refinements": [
+      {
+        "change_id": "syntactic:triple_removed:ff0df21f4ed90dfbf559772c3e86c067d569cfdd",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:fe3cb699fc2ddf15c132d99b4ea0d148714ca9c3",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:a348ede54189390b3cd2a008595353ccb7497df1",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:4e9342cd3fb7f77a5aae852ddfbc94312743f44e",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:c029896b888f0e3cf135145a27be188a0ff82836",
+        "original_severity": "breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:fb09200b39cc271f44bf8fe4512c40b69aa6500f",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_removed:0a59a79bd9222b4f2843e71f3e1d753966ba512c",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:43b960fb27f392167f0dc996bd527554e55ba7fd",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:6b1cecd2691fa79bfababe0a368837e762d1b172",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:59ecc5ba16212afd11bf3ab8b3e37d87a2fe2496",
+        "original_severity": "additive",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:a7221fe7c4a598aae5b2a9ffb3092829b9aa233a",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      },
+      {
+        "change_id": "syntactic:triple_added:20b6a83df6a5fc97d8f982810af205679fec0f25",
+        "original_severity": "non_breaking",
+        "refined_severity": "info",
+        "rule_id": "subsumed-layer0-info",
+        "rationale": "Layer 0 change subsumed by a Layer 1 change"
+      }
+    ]
+  }
+}</script>
+<script>
+/*
+ * owlcompare HTML report — interactive enhancements (Component 17).
+ *
+ * Pure vanilla ES2022, no framework, no build step. Every behaviour here is
+ * *enhancement*: the report is fully readable with this script disabled
+ * (docs/design/FIRST_PAINT.md). Handlers are attached programmatically — the
+ * document carries no inline on* attributes.
+ *
+ * Behaviours: (1) section collapse/expand, (2) theme cycle auto->light->dark,
+ * (3) JSON download, (4) copy link. Nothing else — no analytics, no network.
+ */
+(function () {
+  "use strict";
+
+  var THEMES = ["auto", "light", "dark"];
+  var STORAGE_KEY = "owlcompare-theme";
+  var root = document.documentElement;
+
+  /* --- Theme toggle ---------------------------------------------------- */
+
+  // localStorage is wrapped: under file:// sandboxing or a strict privacy
+  // policy it can throw, in which case the toggle still works for the session
+  // (it just does not persist). See spec § localStorage blocked.
+  function readStoredTheme() {
+    try {
+      var value = window.localStorage.getItem(STORAGE_KEY);
+      return THEMES.indexOf(value) >= 0 ? value : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function storeTheme(theme) {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, theme);
+    } catch (e) {
+      /* persistence unavailable; current-session override still applies */
+    }
+  }
+
+  function applyTheme(theme) {
+    // 'auto' means: defer to prefers-color-scheme, so remove the override.
+    if (theme === "auto") {
+      root.removeAttribute("data-theme");
+    } else {
+      root.setAttribute("data-theme", theme);
+    }
+  }
+
+  function initTheme() {
+    var stored = readStoredTheme();
+    if (stored) {
+      applyTheme(stored);
+    }
+  }
+
+  function currentTheme() {
+    var explicit = root.getAttribute("data-theme");
+    return THEMES.indexOf(explicit) >= 0 ? explicit : "auto";
+  }
+
+  function cycleTheme() {
+    var next = THEMES[(THEMES.indexOf(currentTheme()) + 1) % THEMES.length];
+    applyTheme(next);
+    storeTheme(next);
+  }
+
+  /* --- Section collapse/expand ----------------------------------------- */
+
+  function toggleSection(section) {
+    var collapsed = section.getAttribute("data-collapsed") === "true";
+    section.setAttribute("data-collapsed", collapsed ? "false" : "true");
+    var toggle = section.querySelector(".section-toggle");
+    if (toggle) {
+      toggle.setAttribute("aria-expanded", collapsed ? "true" : "false");
+    }
+  }
+
+  function initSections() {
+    var headers = document.querySelectorAll(".change-section .section-header");
+    headers.forEach(function (header) {
+      var section = header.closest(".change-section");
+      header.addEventListener("click", function () {
+        toggleSection(section);
+      });
+    });
+    // Esc collapses the section currently containing focus (ACCESSIBILITY.md).
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape") {
+        return;
+      }
+      var active = document.activeElement;
+      var section = active && active.closest ? active.closest(".change-section") : null;
+      if (section && section.getAttribute("data-collapsed") !== "true") {
+        toggleSection(section);
+      }
+    });
+  }
+
+  /* --- JSON download --------------------------------------------------- */
+
+  function downloadJson() {
+    var payload = document.getElementById("diff-json");
+    if (!payload) {
+      return;
+    }
+    var blob = new Blob([payload.textContent], { type: "application/json" });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = "owlcompare-diff.json";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    // Release the object URL on the next tick, after the click is processed.
+    setTimeout(function () {
+      URL.revokeObjectURL(url);
+    }, 0);
+  }
+
+  /* --- Copy link ------------------------------------------------------- */
+
+  function flashMessage(button, text) {
+    var note = document.createElement("span");
+    note.className = "toolbar-msg";
+    note.textContent = text;
+    button.parentNode.insertBefore(note, button.nextSibling);
+    setTimeout(function () {
+      if (note.parentNode) {
+        note.parentNode.removeChild(note);
+      }
+    }, 2000);
+  }
+
+  function copyLink(button) {
+    // navigator.clipboard is unavailable on some older browsers and under
+    // file:// restrictions; tell the user rather than failing silently.
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      flashMessage(button, "Not supported in this context");
+      return;
+    }
+    navigator.clipboard.writeText(window.location.href).then(
+      function () {
+        flashMessage(button, "Copied");
+      },
+      function () {
+        flashMessage(button, "Not supported in this context");
+      }
+    );
+  }
+
+  /* --- Wiring ---------------------------------------------------------- */
+
+  function initActions() {
+    document.querySelectorAll("[data-action]").forEach(function (el) {
+      el.addEventListener("click", function (event) {
+        var action = el.getAttribute("data-action");
+        if (action === "theme-toggle") {
+          cycleTheme();
+        } else if (action === "download-json" || action === "view-json") {
+          event.preventDefault();
+          downloadJson();
+        } else if (action === "copy-link") {
+          event.preventDefault();
+          copyLink(el);
+        }
+      });
+    });
+  }
+
+  initTheme();
+  initSections();
+  initActions();
+})();
+</script>
+</body>
+</html>

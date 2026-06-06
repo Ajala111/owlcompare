@@ -717,3 +717,102 @@ def test_cli_diff_format_markdown_exit_code_matches_severity():
         )
         == 10
     )
+
+
+# --------------------------------------------------------------------------- #
+# --format html (Component 17)
+# --------------------------------------------------------------------------- #
+
+
+def test_cli_diff_format_html_writes_html_to_stdout(capsys):
+    rc = main(
+        ["diff", _fx("era_evolution_v1.ttl"), _fx("era_evolution_v2.ttl"), "--format", "html"]
+    )
+    out = capsys.readouterr().out
+    assert rc == 10  # era_evolution has a breaking change
+    assert out.startswith("<!DOCTYPE html>")
+    assert "<title>owlcompare diff:" in out
+    assert out.rstrip().endswith("</html>")
+
+
+def test_cli_diff_format_html_writes_to_out_file(tmp_path, capsys):
+    out_file = tmp_path / "report.html"
+    rc = main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--format",
+            "html",
+            "--out",
+            str(out_file),
+        ]
+    )
+    assert rc == 10
+    assert capsys.readouterr().out.strip() == ""  # nothing on stdout
+    written = out_file.read_text(encoding="utf-8")
+    assert written.startswith("<!DOCTYPE html>")
+    assert written.endswith("</html>\n")
+
+
+def test_cli_diff_html_theme_light_sets_data_attribute(capsys):
+    main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--format",
+            "html",
+            "--html-theme",
+            "light",
+        ]
+    )
+    out = capsys.readouterr().out
+    assert 'data-theme="light"' in out
+    assert 'data-theme-default="light"' in out
+
+
+def test_cli_diff_html_theme_dark_sets_data_attribute(capsys):
+    main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--format",
+            "html",
+            "--html-theme",
+            "dark",
+        ]
+    )
+    out = capsys.readouterr().out
+    assert 'data-theme="dark"' in out
+
+
+def test_cli_diff_html_theme_auto_default(capsys):
+    main(["diff", _fx("era_evolution_v1.ttl"), _fx("era_evolution_v2.ttl"), "--format", "html"])
+    out = capsys.readouterr().out
+    assert 'data-theme-default="auto"' in out
+
+
+def test_cli_diff_no_embed_json_omits_payload_script(capsys):
+    main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--format",
+            "html",
+            "--no-embed-json",
+        ]
+    )
+    out = capsys.readouterr().out
+    assert 'id="diff-json"' not in out
+
+
+def test_cli_diff_format_html_exit_code_matches_severity():
+    # HTML rendering must not change the breaking-change exit-code signal.
+    assert main(["diff", _fx("identical_a.ttl"), _fx("identical_b.ttl"), "--format", "html"]) == 0
+    assert (
+        main(["diff", _fx("era_evolution_v1.ttl"), _fx("era_evolution_v2.ttl"), "--format", "html"])
+        == 10
+    )

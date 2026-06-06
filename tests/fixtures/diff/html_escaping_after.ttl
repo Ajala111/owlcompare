@@ -1,0 +1,15 @@
+# fixture: html_escaping_after.ttl
+# Purpose: exercises HTML escaping in the report (specs/17-html-report.md).
+#  - ex:Evil carries a label packed with HTML-dangerous characters
+#    (<script>, &, ", '), which must render as text (&lt;script&gt; ...),
+#    never as live markup, in both the card body and the title="..." attribute.
+
+@prefix ex: <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Base a owl:Class ;
+    rdfs:label "Base"@en .
+
+ex:Evil a owl:Class ;
+    rdfs:label "<script>alert('xss')</script> & \"quoted\""@en .

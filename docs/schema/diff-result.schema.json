@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/Phelz/owlcompare/main/docs/schema/diff-result.schema.json",
+  "$id": "https://raw.githubusercontent.com/Ajala111/owlcompare/main/docs/schema/diff-result.schema.json",
   "title": "owlcompare DiffResult",
   "description": "The JSON output of `owlcompare diff --format json`. Schema version 1 (Component 14). See docs/schema/diff-result.md for the human-readable companion and DD-019 for the compatibility policy.",
   "type": "object",
