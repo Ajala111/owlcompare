@@ -2,7 +2,7 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 4 IN PROGRESS — Report renderers, **4 of 5 components done**. Components 14 (JSON Schema Lockdown), 15 (Markdown report), 16 (HTML report — design & wireframe), and **17 (HTML report — implementation)** delivered. Component 17 is the project's **headline visual deliverable** — `owlcompare diff … --format html` now emits a beautiful, self-contained, offline-viewable report. Only Component 18 (JUnit XML / CI output) remains in this phase.
+**Current phase:** Phase 5 — Polish & v1 release. **Phase 4 (Report renderers) is COMPLETE**: Components 14 (JSON Schema Lockdown), 15 (Markdown report), 16 (HTML report — design & wireframe), 17 (HTML report — implementation), and **18 (JUnit XML / CI output)** all delivered. `owlcompare diff` now emits JSON, text, Markdown, HTML, and JUnit XML. Next up: Component 19 (GitHub Action wrapper).
 
 ---
 
@@ -103,7 +103,7 @@ restriction_added + 1 annotation_removed = 4 visible changes).
 
 ---
 
-## Phase 4 — Report renderers (IN PROGRESS)
+## Phase 4 — Report renderers ✅ COMPLETE
 
 - [x] Component 14: JSON schema lockdown (canonical, versioned schema) — `specs/14-json-schema.md`
       (The JSON output is now a published JSON Schema 2020-12 contract at
@@ -146,9 +146,26 @@ restriction_added + 1 annotation_removed = 4 visible changes).
       resolved as proposed (embed JSON unconditionally; "View JSON" downloads;
       details collapsed by default). Two Component 16 doc conflicts surfaced for
       reconciliation — see the build summary / backlog below.)
-- [ ] Component 18: JUnit XML / CI output — `specs/18-junit.md` **(next)**
+- [x] Component 18: JUnit XML / CI output — `specs/18-junit-xml.md`
+      (`report/junit_report.py` renders a `DiffResult` as a JUnit XML document via
+      `render(result, JUnitOptions(...))` — one `<testcase>` per change, breaking
+      changes as `<failure>`, info changes optionally as `<skipped>`
+      (`--junit-include-skipped`), renames always pass, and the whole text diff
+      embedded as a `<system-out>` CDATA section (with `]]>`-terminator guarding).
+      New CLI surface: `--format junit`, `--junit-suite-name`,
+      `--junit-include-skipped`; the exit-code logic (10 if breaking, else 0) is
+      unchanged. Output is byte-deterministic — testcases sorted by
+      `(classname, name)`, `timestamp` honours `SOURCE_DATE_EPOCH`, stable attribute
+      order; seven golden fixtures in `tests/fixtures/junit/` lock it and every one
+      round-trips through `xml.etree.ElementTree`. Built from string templates with
+      stdlib `xml.sax.saxutils.escape` (no new dependency). Open questions Q1-Q3
+      resolved as proposed: generic suite name, full text rendering in
+      `<system-out>`, no `<system-err>`.)
 
-**Exit criteria:** `owlcompare diff a.ttl b.ttl --format html --out report.html` produces a beautiful, self-contained, offline-viewable HTML file. **Met by Component 17.**
+**Exit criteria:** `owlcompare diff a.ttl b.ttl --format html --out report.html`
+produces a beautiful, self-contained, offline-viewable HTML file (met by Component
+17); `--format junit --out junit.xml` produces a CI-ready JUnit XML report (met by
+Component 18). **Phase 4 complete.**
 
 ---
 

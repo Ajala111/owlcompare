@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="owlcompare" tests="5" failures="1" errors="0" skipped="2" time="0">
+  <testsuite name="owlcompare.diff" tests="5" failures="1" errors="0" skipped="2" timestamp="1970-01-01T00:00:00" time="0">
+    <testcase classname="structural.annotation_changed" name="era:Track" time="0">
+      <skipped message="info-level change">Label changed on era:Track (fr): 'Voie' → 'Voie ferrée'</skipped>
+    </testcase>
+    <testcase classname="structural.class_added" name="era:Platform" time="0"/>
+    <testcase classname="structural.object_property_removed" name="era:locatedOn" time="0">
+      <failure type="object_property_removed" message="Object property removed: era:locatedOn &quot;located on&quot;@en">Breaking change detected: Object property removed: era:locatedOn "located on"@en
+  Entity:    http://data.europa.eu/949/locatedOn
+  Kind:      object_property_removed
+  Label:     "located on"@en
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_removed:d08228701c8db3b207aacc9e420c12c2a6d206a7
+    - syntactic:triple_removed:fe3cb699fc2ddf15c132d99b4ea0d148714ca9c3
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.ontology_metadata_changed" name="era:ontology" time="0">
+      <skipped message="info-level change">Ontology metadata: owl:versionInfo '1.0.0' → '2.0.0'</skipped>
+    </testcase>
+    <testcase classname="structural.restriction_changed" name="era:Track" time="0"/>
+    <system-out><![CDATA[owlcompare diff
+A: era_evolution_v1.ttl
+B: era_evolution_v2.ttl
+
+8 triples added, 10 triples removed (1 breaking)
+
+Layer 1 — Structural (5 changes)
+  [additive] Class added: era:Platform "Platform"@en
+  [breaking] Object property removed: era:locatedOn "located on"@en
+  [non_breaking] Restriction changed on era:Track: era:hasMaxSpeed max 1 → max 2
+  [info] Label changed on era:Track (fr): 'Voie' → 'Voie ferrée'
+  [info] Ontology metadata: owl:versionInfo '1.0.0' → '2.0.0'
+
+Layer 0 — Syntactic (0 unexplained)        [use --show-syntactic for all]]]></system-out>
+  </testsuite>
+</testsuites>

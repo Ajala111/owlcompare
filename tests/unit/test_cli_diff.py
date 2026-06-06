@@ -816,3 +816,81 @@ def test_cli_diff_format_html_exit_code_matches_severity():
         main(["diff", _fx("era_evolution_v1.ttl"), _fx("era_evolution_v2.ttl"), "--format", "html"])
         == 10
     )
+
+
+# --------------------------------------------------------------------------- #
+# --format junit (Component 18)
+# --------------------------------------------------------------------------- #
+
+
+def test_cli_diff_format_junit_writes_to_stdout(capsys):
+    rc = main(
+        ["diff", _fx("era_evolution_v1.ttl"), _fx("era_evolution_v2.ttl"), "--format", "junit"]
+    )
+    out = capsys.readouterr().out
+    assert rc == 10  # era_evolution has a breaking change
+    assert out.startswith('<?xml version="1.0" encoding="UTF-8"?>')
+    assert '<testsuites name="owlcompare"' in out
+    assert out.rstrip().endswith("</testsuites>")
+
+
+def test_cli_diff_format_junit_writes_to_out_file(tmp_path, capsys):
+    out_file = tmp_path / "junit.xml"
+    rc = main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--format",
+            "junit",
+            "--out",
+            str(out_file),
+        ]
+    )
+    assert rc == 10
+    assert capsys.readouterr().out.strip() == ""  # nothing on stdout
+    written = out_file.read_text(encoding="utf-8")
+    assert written.startswith('<?xml version="1.0" encoding="UTF-8"?>')
+    assert written.endswith("</testsuites>\n")
+
+
+def test_cli_diff_junit_suite_name_flag_overrides_default(capsys):
+    main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--format",
+            "junit",
+            "--junit-suite-name",
+            "My Suite",
+        ]
+    )
+    out = capsys.readouterr().out
+    assert '<testsuite name="My Suite"' in out
+
+
+def test_cli_diff_junit_include_skipped_flag_emits_skipped_elements(capsys):
+    main(
+        [
+            "diff",
+            _fx("era_evolution_v1.ttl"),
+            _fx("era_evolution_v2.ttl"),
+            "--format",
+            "junit",
+            "--junit-include-skipped",
+        ]
+    )
+    out = capsys.readouterr().out
+    assert "<skipped message=" in out
+
+
+def test_cli_diff_format_junit_exit_code_matches_severity():
+    # JUnit rendering must not change the breaking-change exit-code signal.
+    assert main(["diff", _fx("identical_a.ttl"), _fx("identical_b.ttl"), "--format", "junit"]) == 0
+    assert (
+        main(
+            ["diff", _fx("era_evolution_v1.ttl"), _fx("era_evolution_v2.ttl"), "--format", "junit"]
+        )
+        == 10
+    )

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="owlcompare" tests="1" failures="0" errors="0" skipped="0" time="0">
+  <testsuite name="owlcompare.diff" tests="1" failures="0" errors="0" skipped="0" timestamp="1970-01-01T00:00:00" time="0">
+    <testcase classname="owlcompare.diff" name="no-changes" time="0"/>
+    <system-out><![CDATA[owlcompare diff
+A: identical_a.ttl
+B: identical_b.ttl
+
+No changes: the two ontologies are identical after canonicalization.]]></system-out>
+  </testsuite>
+</testsuites>

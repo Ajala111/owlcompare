@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="owlcompare" tests="1" failures="0" errors="0" skipped="0" time="0">
+  <testsuite name="owlcompare.diff" tests="1" failures="0" errors="0" skipped="0" timestamp="1970-01-01T00:00:00" time="0">
+    <testcase classname="structural.range_changed" name="ex:hasPet" time="0"/>
+    <system-out><![CDATA[owlcompare diff
+A: widened_range_before.ttl
+B: widened_range_after.ttl
+
+1 triples added, 1 triples removed
+
+Layer 1 — Structural (1 changes)
+  [non_breaking] Range changed on ex:hasPet: ex:Animal → ex:Thing
+
+Layer 0 — Syntactic (0 unexplained)        [use --show-syntactic for all]]]></system-out>
+  </testsuite>
+</testsuites>

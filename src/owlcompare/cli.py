@@ -51,6 +51,8 @@ from owlcompare.rename_mapping import load as _load_rename_mapping
 from owlcompare.report.html_report import HtmlOptions
 from owlcompare.report.html_report import render as _render_html
 from owlcompare.report.json_report import diff_json
+from owlcompare.report.junit_report import JUnitOptions
+from owlcompare.report.junit_report import render as _render_junit
 from owlcompare.report.markdown_report import MarkdownOptions
 from owlcompare.report.markdown_report import render as _render_markdown
 from owlcompare.schema import validate_diff_json as _validate_diff_json
@@ -72,14 +74,15 @@ class DiffFormat(enum.StrEnum):
     """Supported output formats for the ``diff`` command.
 
     ``markdown`` (Component 15) renders a PR-comment-ready report; ``html``
-    (Component 17) renders the self-contained interactive report. JUnit arrives
-    next in Phase 4 (Component 18).
+    (Component 17) renders the self-contained interactive report; ``junit``
+    (Component 18) renders a JUnit XML report for CI test-results dashboards.
     """
 
     json = "json"
     text = "text"
     markdown = "markdown"
     html = "html"
+    junit = "junit"
 
 
 class HtmlTheme(enum.StrEnum):
@@ -198,7 +201,7 @@ def diff(
     ] = "syntactic,structural",
     output_format: Annotated[
         DiffFormat,
-        typer.Option("--format", help="Output format (json, text or markdown)."),
+        typer.Option("--format", help="Output format (json, text, markdown, html or junit)."),
     ] = DiffFormat.text,
     markdown_heading_level: Annotated[
         int,
@@ -230,6 +233,21 @@ def diff(
             "--no-embed-json",
             help="Don't embed the JSON payload in --format html output (disables the "
             "in-report JSON download button).",
+        ),
+    ] = False,
+    junit_suite_name: Annotated[
+        str | None,
+        typer.Option(
+            "--junit-suite-name",
+            help="Override the testsuite name for --format junit (default 'owlcompare.diff').",
+        ),
+    ] = None,
+    junit_include_skipped: Annotated[
+        bool,
+        typer.Option(
+            "--junit-include-skipped",
+            help="Emit info-severity changes as <skipped> elements in --format junit output "
+            "(they pass silently by default).",
         ),
     ] = False,
     show_syntactic: Annotated[
@@ -405,6 +423,20 @@ def diff(
             out.write_text(html, encoding="utf-8")
         else:
             typer.echo(html, nl=False)
+    elif output_format is DiffFormat.junit:
+        if validate_schema:
+            logger.debug("--validate-schema has no effect when --format is not json")
+        junit = _render_junit(
+            result,
+            JUnitOptions(
+                suite_name=junit_suite_name,
+                include_skipped=junit_include_skipped,
+            ),
+        )
+        if out is not None:
+            out.write_text(junit, encoding="utf-8")
+        else:
+            typer.echo(junit, nl=False)
     else:
         if validate_schema:
             logger.debug("--validate-schema has no effect when --format is not json")

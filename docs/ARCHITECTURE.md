@@ -134,7 +134,8 @@ Each renderer takes a `DiffResult` and produces output in one format. Renderers 
 
 - `json_report.py`: canonical machine-readable output. Versioned schema.
 - `markdown_report.py`: compact PR-comment-ready summary.
-- `html_report.py`: the interactive showcase. Single self-contained HTML file, embedded JSON data, small Preact app (or Alpine.js — TBD in component spec).
+- `html_report.py`: the interactive showcase. Single self-contained HTML file, embedded JSON data, no external resources (Component 17).
+- `junit_report.py`: JUnit XML for CI test-results dashboards (Component 18). One `<testcase>` per change, breaking → `<failure>`, info optionally → `<skipped>`, the full text diff embedded as `<system-out>`. Built from string templates with stdlib XML escaping; deterministic output.
 
 ### Reasoner adapter (`src/owlcompare/reasoner.py`)
 

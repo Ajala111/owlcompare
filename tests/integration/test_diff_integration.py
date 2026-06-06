@@ -735,3 +735,48 @@ def test_era_axleSpacingDistance_html_renders_domain_union_cleanly(monkeypatch):
     visible = out[out.index("<main") : out.index("</main>")]
     assert "_list:" not in visible
     assert "_restriction:" not in visible
+
+
+# --------------------------------------------------------------------------- #
+# Component 18 — JUnit XML report (end-to-end)
+# --------------------------------------------------------------------------- #
+
+JUNIT_GOLDEN = FIXTURES / "junit"
+
+
+def _junit_result(name_a: str, name_b: str, base: Path):
+    a = replace(load(str(base / name_a)), source=name_a)
+    b = replace(load(str(base / name_b)), source=name_b)
+    return orchestrator.run(a, b)
+
+
+def test_era_evolution_junit_output_matches_golden(monkeypatch):
+    from owlcompare.report.junit_report import render
+
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
+    golden = (JUNIT_GOLDEN / "era_evolution.xml").read_text(encoding="utf-8")
+    result = _junit_result("era_evolution_v1.ttl", "era_evolution_v2.ttl", DIFF)
+    assert render(result) == golden
+
+
+def test_era_renames_junit_output_matches_golden(monkeypatch):
+    from owlcompare.report.junit_report import render
+
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
+    golden = (JUNIT_GOLDEN / "era_renames.xml").read_text(encoding="utf-8")
+    result = _junit_result("era_renames_v1.ttl", "era_renames_v2.ttl", RENAME)
+    assert render(result) == golden
+
+
+def test_junit_output_parseable_by_etree():
+    # The well-formedness guarantee: every committed JUnit fixture must round-trip
+    # through Python's stdlib XML parser without error.
+    import xml.etree.ElementTree as ET
+
+    fixtures = sorted(JUNIT_GOLDEN.glob("*.xml"))
+    assert fixtures, "no JUnit golden fixtures found"
+    for fixture in fixtures:
+        tree = ET.parse(fixture)
+        root = tree.getroot()
+        assert root.tag == "testsuites"
+        assert root.find("testsuite") is not None

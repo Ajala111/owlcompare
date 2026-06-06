@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="owlcompare" tests="1" failures="1" errors="0" skipped="0" time="0">
+  <testsuite name="owlcompare.diff" tests="1" failures="1" errors="0" skipped="0" timestamp="1970-01-01T00:00:00" time="0">
+    <testcase classname="structural.class_removed" name="ex:Cat" time="0">
+      <failure type="class_removed" message="Class removed: ex:Cat &quot;Cat&quot;@en">Breaking change detected: Class removed: ex:Cat "Cat"@en
+  Entity:    http://example.org/Cat
+  Kind:      class_removed
+  Label:     "Cat"@en
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_removed:2501abeef71f5fc3d74e934ab5c5fa56ebfd538b
+    - syntactic:triple_removed:e48af29389f3a6a7fcdbab0d0b85c9022b905506
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <system-out><![CDATA[owlcompare diff
+A: removed_class_before.ttl
+B: removed_class_after.ttl
+
+0 triples added, 3 triples removed (1 breaking)
+
+Layer 1 — Structural (1 changes)
+  [breaking] Class removed: ex:Cat "Cat"@en
+
+Layer 0 — Syntactic (0 unexplained)        [use --show-syntactic for all]]]></system-out>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="owlcompare" tests="1" failures="0" errors="0" skipped="0" time="0">
+  <testsuite name="owlcompare.diff" tests="1" failures="0" errors="0" skipped="0" timestamp="1970-01-01T00:00:00" time="0">
+    <testcase classname="structural.class_added" name="ex:Evil" time="0"/>
+    <system-out><![CDATA[owlcompare diff
+A: html_escaping_before.ttl
+B: html_escaping_after.ttl
+
+2 triples added, 0 triples removed
+
+Layer 1 — Structural (1 changes)
+  [additive] Class added: ex:Evil "<script>alert('xss')</script> & "quoted""@en
+
+Layer 0 — Syntactic (0 unexplained)        [use --show-syntactic for all]]]></system-out>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="owlcompare" tests="3" failures="0" errors="0" skipped="0" time="0">
+  <testsuite name="owlcompare.diff" tests="3" failures="0" errors="0" skipped="0" timestamp="1970-01-01T00:00:00" time="0">
+    <testcase classname="structural.class_renamed" name="era:RailwaySignal" time="0"/>
+    <testcase classname="structural.class_renamed" name="era:RailwayTrack" time="0"/>
+    <testcase classname="structural.object_property_renamed" name="era:hasLocation" time="0"/>
+    <system-out><![CDATA[owlcompare diff
+A: era_renames_v1.ttl
+B: era_renames_v2.ttl
+
+15 triples added, 15 triples removed
+
+Renames (3 consolidated)
+  [info] Class renamed: era:Signal → era:RailwaySignal (high confidence; matching label "Signal"@en)
+  [info] Class renamed: era:Track → era:RailwayTrack (high confidence; matching label "Track"@en)
+  [info] Object property renamed: era:locatedOn → era:hasLocation (high confidence; matching label "located on"@en)
+
+Layer 1 — Structural (0 changes)
+
+Layer 0 — Syntactic (0 unexplained)        [use --show-syntactic for all]]]></system-out>
+  </testsuite>
+</testsuites>
