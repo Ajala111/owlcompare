@@ -167,36 +167,25 @@ restriction_added + 1 annotation_removed = 4 visible changes).
 
 ### Surfaced during Component 17 (HTML report)
 
-- **JSON `subsumes`/`cascade_subsumes` ordering is not cross-process deterministic.**
-  Every Layer 1 slice builds these arrays from graph iteration
-  (`[change_id(c) for c in subsumed]`, unsorted — entities/hierarchy/restrictions/
-  annotations/class_sets/replaced_by all share the pattern), so `--format json`
-  output for a change with multiple subsumed triples (e.g. a union domain) can
-  differ between processes (`PYTHONHASHSEED`). It is a *systemic, pre-existing*
-  trait, not introduced by Component 17. The HTML report sidesteps it by sorting
-  those bookkeeping arrays in the **embedded** JSON copy only (so the report is
-  byte-deterministic as the spec requires); the standalone JSON emitter is
-  untouched. Fix: sort the arrays at the producer (or in `diff_json`) so all
-  outputs are reproducible. Low priority; semantically the order is irrelevant.
+- ~~**JSON `subsumes`/`cascade_subsumes` ordering is not cross-process deterministic.**~~
+  **Done (Component 17 follow-up; [[DD-021]]).** Every Layer 1 slice plus the
+  rename slice now sort these arrays lexicographically at the producer
+  (entities/hierarchy/restrictions/annotations/class_sets/replaced_by + `rename`),
+  so `--format json` is byte-reproducible across processes (`PYTHONHASHSEED`). The
+  HTML report's embedded-copy workaround was removed since the root cause is fixed.
 
-- **Reconcile Component 16 `BROWSER_SUPPORT.md` with the localStorage decision.**
-  `docs/design/BROWSER_SUPPORT.md` lists `localStorage`/`IndexedDB` as *banned*,
-  but both `specs/17-html-report.md` (§ JavaScript architecture) and the build
-  instructions mandate persisting the theme choice to `localStorage` with a
-  graceful fallback. Component 17 implemented the spec (theme persists via
-  `localStorage`, wrapped in try/catch so a blocked store degrades to
-  session-only — the doc's `file://` concern is thereby handled). The two
-  Component 16 documents disagree; `BROWSER_SUPPORT.md` should be updated to
-  carve out this one wrapped, fallback-guarded use rather than a blanket ban.
+- ~~**Reconcile Component 16 `BROWSER_SUPPORT.md` with the localStorage decision.**~~
+  **Done (Component 17 follow-up).** `docs/design/BROWSER_SUPPORT.md` now carves
+  out the single `owlcompare:theme` key (values `light`/`dark`/`auto`), wrapped in
+  try/catch with session-only fallback, and documents that no other `localStorage`
+  use is permitted.
 
-- **Reconcile the "cap at 50 changes per section" design note with render-all.**
-  `docs/design/FIRST_PAINT.md` and `INFORMATION_ARCHITECTURE.md` say long
-  sections cap at 50 rendered changes with an "…and N more" affordance, but
-  `specs/17-html-report.md` § Edge cases mandates rendering *every* change (no
-  pagination) and its acceptance test renders 2000 in one document. Component 17
-  follows the spec (renders all; performance via native scrolling, verified
-  <5 MB for 2000 changes). If the 50-cap is still wanted, it belongs in a future
-  revision with the design docs and the spec brought into agreement.
+- ~~**Reconcile the "cap at 50 changes per section" design note with render-all.**~~
+  **Done (Component 17 follow-up).** `docs/design/FIRST_PAINT.md` and
+  `INFORMATION_ARCHITECTURE.md` no longer mention a 50-change cap or "…and N more";
+  both state that sections render every change, with performance from native
+  scrolling and lazy `<details>` (tested to 2000 changes under 5 MB), matching the
+  spec.
 
 
 - ~~Surface structural additions on renamed entities.~~ **Done in Component 12 Part A** (the [[DD-018]] fix): after rename detection consolidates a pair, `rename.re_diff_renamed_entities` re-runs the Layer 1 slices over the renamed entity's IRI-substituted axioms and surfaces any genuine additions as independent changes.

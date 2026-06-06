@@ -624,7 +624,8 @@ def _finalize(
     subsumed: list[Change],
 ) -> Change:
     """Attach subsumption + change_id to a class-set change and register it."""
-    details["subsumes"] = [SubsumptionRegistry.change_id(c) for c in subsumed]
+    # Sorted for a deterministic JSON contract across processes (DD-021).
+    details["subsumes"] = sorted(SubsumptionRegistry.change_id(c) for c in subsumed)
     change = Change(
         layer="structural",
         kind=kind,

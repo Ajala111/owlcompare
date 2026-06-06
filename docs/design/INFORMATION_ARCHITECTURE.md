@@ -50,8 +50,10 @@ single change.
   (story 2) is served by `Ctrl-F` in v1 and the namespace/kind filter in v1.1.
 - **Progressively disclosed, not paginated.** Real diffs run to dozens or a few
   hundred changes. Pagination splits context across pages and defeats find;
-  instead sections collapse/expand and long sections cap at 50 visible with an
-  "…and N more" affordance, keeping everything on one searchable page.
+  instead sections collapse/expand, keeping everything on one searchable page.
+  Sections render every change. Performance comes from native browser scrolling
+  and lazy `<details>` expansion, not from server-side truncation. Tested up to
+  2000 changes producing documents under 5 MB.
 
 ## Story → IA traceability
 

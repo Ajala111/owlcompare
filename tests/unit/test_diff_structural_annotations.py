@@ -211,6 +211,16 @@ def test_diff_subsumes_corresponding_layer0_triples():
         assert registry.is_explained(layer0_id)
 
 
+def test_diff_subsumes_list_is_sorted():
+    # DD-021: a changed annotation subsumes the removed + added triple; sorted.
+    changes, _, _ = _run(
+        "label_changed_different_lang_before.ttl", "label_changed_different_lang_after.ttl"
+    )
+    subsumes = _one(changes, "annotation_changed").details["subsumes"]
+    assert len(subsumes) >= 2  # a meaningful order check needs >1 element
+    assert subsumes == sorted(subsumes)
+
+
 def test_change_id_present_in_details():
     changes, _, _ = _run("label_changed_same_lang_before.ttl", "label_changed_same_lang_after.ttl")
     assert all("change_id" in c.details for c in changes)

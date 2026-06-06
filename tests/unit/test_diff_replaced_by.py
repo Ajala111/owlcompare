@@ -74,6 +74,15 @@ def test_replaced_by_severity_non_breaking():
     assert _one(changes, "replaced_by_set").severity == "non_breaking"
 
 
+def test_replaced_by_subsumes_list_is_sorted():
+    # DD-021: the subsumes array is stored sorted (one isReplacedBy triple here,
+    # but the producer contract mandates a sorted list of change_ids regardless).
+    changes = _run("replaced_by_added_v1.ttl", "replaced_by_added_v2.ttl")
+    subsumes = _one(changes, "replaced_by_set").details["subsumes"]
+    assert all(isinstance(s, str) for s in subsumes)
+    assert subsumes == sorted(subsumes)
+
+
 def test_replaced_by_with_matching_rename_sets_flag_true():
     renames = (_rename(ERA + "TSIMagneticFields", ERA + "tsiMagneticFields"),)
     changes = _run(

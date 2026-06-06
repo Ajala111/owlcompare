@@ -205,6 +205,14 @@ def test_restriction_change_subsumes_corresponding_layer0_triples():
         assert registry.is_explained(layer0_id)
 
 
+def test_restriction_subsumes_list_is_sorted():
+    # DD-021: a restriction_changed subsumes the removed + added chain triples; sorted.
+    changes, _, _ = _run("cardinality_tightened_before.ttl", "cardinality_tightened_after.ttl")
+    subsumes = _one(changes, "restriction_changed").details["subsumes"]
+    assert len(subsumes) >= 2  # a meaningful order check needs >1 element
+    assert subsumes == sorted(subsumes)
+
+
 def test_change_id_present_in_details():
     changes, _, _ = _run("cardinality_tightened_before.ttl", "cardinality_tightened_after.ttl")
     assert all("change_id" in c.details for c in changes)

@@ -175,6 +175,14 @@ def test_rename_subsumes_original_added_and_removed_changes():
     assert len(_renamed(out)[0].details["subsumes"]) == 2
 
 
+def test_rename_subsumes_list_is_sorted():
+    # DD-021: a rename record's subsumes (primary add+remove pair) is sorted.
+    out = rename.detect(_pre_rename("simple_class_rename_v1.ttl", "simple_class_rename_v2.ttl"))
+    subsumes = _renamed(out)[0].details["subsumes"]
+    assert len(subsumes) >= 2  # a meaningful order check needs >1 element
+    assert subsumes == sorted(subsumes)
+
+
 def test_rename_severity_is_info():
     out = rename.detect(_pre_rename("simple_class_rename_v1.ttl", "simple_class_rename_v2.ttl"))
     assert _renamed(out)[0].severity == "info"
@@ -229,6 +237,14 @@ def test_cascade_preserves_independent_changes():
     # The genuinely new restriction on the persisting era:Platform survives.
     assert any(c.kind == "restriction_added" for c in out.changes)
     assert len(_renamed(out)) == 1
+
+
+def test_cascade_subsumes_list_is_sorted():
+    # DD-021: a rename record's cascade_subsumes array is sorted (subclass + range).
+    out = rename.detect(_pre_rename("cascade_simple_v1.ttl", "cascade_simple_v2.ttl"))
+    cascade = _renamed(out)[0].details["cascade_subsumes"]
+    assert len(cascade) >= 2  # a meaningful order check needs >1 element
+    assert cascade == sorted(cascade)
 
 
 # --------------------------------------------------------------------------- #

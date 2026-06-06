@@ -189,6 +189,15 @@ def test_change_id_present_in_details():
     assert all("change_id" in c.details for c in changes)
 
 
+def test_subsumes_list_is_sorted():
+    # DD-021: a union change subsumes the whole reified structure; the list is sorted.
+    changes, _, _ = _pair("domain_union_member_added")
+    union = next(c for c in changes if c.kind.startswith("domain_union_"))
+    subsumes = union.details["subsumes"]
+    assert len(subsumes) >= 2  # a union structure subsumes many Layer 0 triples
+    assert subsumes == sorted(subsumes)
+
+
 def test_summary_uses_prefixed_iris():
     changes, _, _ = _pair("domain_union_member_added")
     summary = _one(changes, "domain_union_added").summary

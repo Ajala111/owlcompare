@@ -579,7 +579,7 @@ def _build_rename_change(
         "score": cand.score,
         "evidence": list(cand.evidence),
         "cascade_subsumes": sorted(cascade_ids),
-        "subsumes": list(subsumes),
+        "subsumes": sorted(subsumes),
     }
     change = Change(
         layer="structural",

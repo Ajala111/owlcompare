@@ -226,6 +226,17 @@ def test_change_id_present_in_details():
     assert changes[0].details["change_id"].startswith("structural:class_parent_added:")
 
 
+def test_reparent_subsumes_list_is_sorted():
+    # DD-021: a reparent subsumes the removed + added edge; the list must be sorted.
+    changes = _hier(
+        "simple_reparent_generalization_before.ttl", "simple_reparent_generalization_after.ttl"
+    )
+    reparented = next(c for c in changes if c.kind == "class_reparented")
+    subsumes = reparented.details["subsumes"]
+    assert len(subsumes) >= 2  # a meaningful order check needs >1 element
+    assert subsumes == sorted(subsumes)
+
+
 def test_summary_uses_prefixed_iris_when_known():
     changes = _hier(
         "simple_reparent_generalization_before.ttl", "simple_reparent_generalization_after.ttl"

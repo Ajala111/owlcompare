@@ -33,10 +33,33 @@ attachment, or served statically — with **no build step** in Component 17.
 | Banned | One-sentence why |
 |--------|------------------|
 | Web Components / custom elements | A single static report needs no component runtime; they add lifecycle complexity and a no-JS blank-element failure mode for zero benefit. |
-| `localStorage` / `IndexedDB` | One document holds its own state in the DOM; persistence would also break under `file://` sandboxing and leak state between unrelated reports. |
+| `IndexedDB` | One document holds its own state in the DOM; a structured datastore would break under `file://` sandboxing and leak state between unrelated reports. |
+| `localStorage` — except the theme carve-out below | Persistence beyond one dedicated key would leak state between unrelated reports and break under `file://` sandboxing; the single permitted key is the only justified exception. |
 | Web fonts from a CDN | Any remote fetch breaks the self-contained, offline guarantee and leaks a request when the report is opened. |
 | **Any** external HTTP request | A report opened from email or disk must never phone home — for privacy, for offline use, and so a proxy can't make it render differently. |
 | Service workers | Pointless and disallowed for a `file://` document; implies caching/lifecycle a single file must not have. |
+
+## Permitted browser storage — the theme carve-out
+
+Exactly **one** `localStorage` key is permitted: **`owlcompare:theme`**, holding one
+of `"light"`, `"dark"`, or `"auto"`. It persists the user's manual theme choice
+across reports and sessions.
+
+- Every read and write **must** be wrapped in `try`/`catch`. When storage is
+  unavailable — `file://` protocol, corporate policy, incognito/private mode —
+  the toggle still works for the current session; it simply does not persist. The
+  exception is swallowed silently (`FIRST_PAINT.md`: the report degrades, never
+  breaks).
+- No other `localStorage` use is permitted. A future feature that needs
+  persistence must justify its own key here, separately; this carve-out does not
+  generalise to "persistence is now allowed."
+
+**Rationale.** Theme persistence is a near-universal, low-risk pattern with high
+user benefit: a reader who prefers dark expects every report to honour that
+without re-toggling. A single, namespaced, enumerated-value key carries no
+cross-report state leak of consequence, and the guarded `try`/`catch` keeps the
+hard `file://`/offline guarantees intact. The blanket ban was the right default;
+this is the one deliberate exception to it.
 
 ## Fallback policy
 

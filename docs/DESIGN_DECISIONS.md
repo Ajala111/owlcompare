@@ -422,3 +422,27 @@ A single-line f-string with the same lambda formats fine; the bug needs the mult
 - *Vendor a minimal validator:* re-implementing 2020-12 `allOf`/`if`/`then`/`$ref` is a maintenance liability with no upside over the de-facto standard library. Rejected.
 
 **Implication:** the schema file ships in the wheel as package data (`[tool.hatch.build.targets.wheel.force-include]`, mapping `docs/schema/diff-result.schema.json` under the package), so `load_schema()` works for installed users via `importlib.resources` even though the *validator* is dev-only. In a source/editable checkout the bundled resource is absent, so `load_schema()` falls back to the canonical `docs/schema/` copy.
+
+---
+
+## DD-021: Stable ordering of subsumption arrays
+
+Status: accepted
+Date: 2026-06-06
+
+Decision: The `subsumes` and `cascade_subsumes` arrays in Change records
+and rename records MUST be sorted lexicographically before storage. This
+is a contract obligation on producers (every Layer 1 slice plus the
+rename slice).
+
+Reasoning:
+- These arrays are part of the JSON schema (v1) and must be deterministic
+  for cross-process diff comparisons, golden tests, and CI reliability.
+- Sorting at the producer is cheaper than sorting at serialization time
+  (done once, not per render).
+- The arrays carry change_ids only — string sort is sufficient.
+
+Implication: future Layer 1 slices and rename refinements must honor this
+contract. Tests should verify sorted output. The HTML report's former
+embedded-JSON-only workaround (sorting these arrays at render time) was
+removed once the producers became the single source of order.

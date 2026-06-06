@@ -10,7 +10,6 @@ changes belong there, not here. See ``specs/17-html-report.md``.
 
 from __future__ import annotations
 
-import json
 import os
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -331,21 +330,12 @@ def _render_footer() -> str:
 def _render_json_payload(result: DiffResult) -> str:
     """The hidden JSON block the download button reads (Q1: embedded unconditionally).
 
-    The producers build each change's ``subsumes`` / ``cascade_subsumes`` arrays
-    from graph iteration, whose order is not stable across processes (a systemic,
-    pre-existing trait of the JSON output — see ROADMAP backlog). The embedded
-    copy sorts those bookkeeping arrays so the report stays byte-deterministic, as
-    Component 17 requires; their order is semantically irrelevant.
+    The ``subsumes`` / ``cascade_subsumes`` bookkeeping arrays are sorted at the
+    producer (DD-021), so the embedded copy is byte-deterministic across processes
+    with no post-processing here.
     """
     refinements = result.metadata.get("severity_refinements", ())
-    payload = json.loads(diff_json(list(result.changes), refinements))
-    for change in payload.get("changes", []):
-        details = change.get("details")
-        if isinstance(details, dict):
-            for key in ("subsumes", "cascade_subsumes"):
-                if isinstance(details.get(key), list):
-                    details[key] = sorted(details[key])
-    rendered = json.dumps(payload, indent=2, ensure_ascii=False)
+    rendered = diff_json(list(result.changes), refinements)
     # Neutralise any "</script>" sequence a user-supplied label could smuggle in;
     # "<" is valid JSON and keeps the script element from closing early.
     safe = rendered.replace("<", "\\u003c")

@@ -10,12 +10,15 @@ must still render. JS only ever *enhances*; it never *enables* reading.
 - The `<header>`: wordmark, title (`source_A → source_B`), and the `StatusBadge`.
 - The sticky summary strip with all severity counts.
 - Every section heading (`Renames`, `Breaking`, `Other`, `Unexplained Layer 0`).
-- The first **5 changes in each section**, fully rendered with their headline and
-  subject. (Sections cap at 50 rendered changes total; "…and N more" is static
-  text, not a JS-loaded continuation.)
+- **Every change in each section**, fully rendered with its headline and subject.
+  Sections render in full — there is no truncation and no "…and N more" affordance.
 - Each card's expandable body is present in the DOM and openable via native
   `<details>` — no JS needed to read detail.
 - The `<footer>`.
+
+Sections render every change. Performance comes from native browser scrolling and
+lazy `<details>` expansion, not from server-side truncation. Tested up to 2000
+changes producing documents under 5 MB.
 
 ## May wait for JS (graceful enhancement)
 

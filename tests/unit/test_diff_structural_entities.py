@@ -247,6 +247,14 @@ def test_diff_subsumes_field_populated_when_layer0_matched():
     assert len(structural[0].details["subsumes"]) == 2
 
 
+def test_diff_subsumes_list_is_sorted():
+    # DD-021: the subsumes array must be lexicographically sorted at the producer.
+    structural, _, _ = _diff(_canon("class_added_before.ttl"), _canon("class_added_after.ttl"))
+    subsumes = structural[0].details["subsumes"]
+    assert len(subsumes) >= 2  # a meaningful order check needs >1 element
+    assert subsumes == sorted(subsumes)
+
+
 def test_diff_subsumes_empty_when_no_matching_layer0():
     # Defensive: with no Layer 0 changes supplied, the structural change is still
     # emitted and its subsumes list is empty.
