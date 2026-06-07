@@ -446,3 +446,59 @@ Implication: future Layer 1 slices and rename refinements must honor this
 contract. Tests should verify sorted output. The HTML report's former
 embedded-JSON-only workaround (sorting these arrays at render time) was
 removed once the producers became the single source of order.
+
+---
+
+## DD-022: `PyYAML` as a test-only dependency
+
+**Status:** accepted
+**Date:** 2026-06-07
+
+**Decision:** Add `PyYAML` (PyPI, MIT) to `[dependency-groups].dev` only — **not**
+to the runtime `dependencies`. It backs `tests/unit/test_action_yml.py`, which
+parses the repo-root `action.yml` (Component 19) to assert it is well-formed and
+that its inputs/outputs stay in sync with `docs/github-action.md`.
+
+**Reasoning:**
+- owlcompare's runtime never reads YAML — the Action's metadata is consumed by
+  GitHub's runner, not by our Python code. The dependency is purely a test-time
+  convenience for static validation.
+- `PyYAML` was not already in the resolved tree (`uv tree` showed no transitive
+  `yaml`), so it had to be added explicitly; scoping it to `dev` keeps a plain
+  `pip install owlcompare` lean, consistent with [[DD-020]] (`jsonschema`).
+
+**Alternatives considered:**
+- *Hand-roll a YAML check:* re-parsing YAML by hand is error-prone and pointless
+  when the de-facto stdlib-adjacent parser exists. Rejected.
+- *Skip the static test, rely on the manual smoke test:* loses the fast local
+  signal that `action.yml` is structurally valid before a runner ever sees it.
+  Rejected.
+
+**Implication:** CI (which runs `uv sync --all-extras`) gets `PyYAML` and the
+`action.yml` tests run there. An installed user never pulls it in.
+
+---
+
+## DD-023: GitHub Action input handling via env-var indirection
+
+Status: accepted
+Date: 2026-06-07
+
+Decision: Every user-controlled input to action.yml is passed into
+`run:` scripts via the `env:` block, NEVER via direct `${{ }}`
+interpolation into the script body.
+
+Reasoning:
+- Direct GitHub-expression interpolation into shell scripts is a
+  well-documented injection vector. An input value containing shell
+  metacharacters (semicolons, backticks, $() substitutions) gets
+  executed by the runner shell.
+- Env-var indirection ($ENV_VAR inside the script) neutralises
+  injection: the value is a shell-variable expansion, not part of
+  the script source.
+- As a bonus, env-var indirection also fixes quoting for inputs
+  containing spaces or special characters.
+
+Implication: any future modifications to action.yml MUST follow this
+pattern. New inputs are wired through `env:` blocks, referenced as
+"$ENV_NAME" inside scripts (always quoted to handle empty/whitespace).

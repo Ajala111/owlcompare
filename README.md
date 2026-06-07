@@ -21,6 +21,22 @@ uv tool install owlcompare
 owlcompare diff old.ttl new.ttl --out report.html
 ```
 
+## Use with GitHub Actions
+
+Diff your ontology on every pull request in three lines:
+
+```yaml
+- uses: actions/checkout@v4
+- uses: phelz/owlcompare@v1
+  with:
+    ontology-path: ontology/my-ontology.ttl
+```
+
+You get a PR comment with the diff, the HTML and JUnit reports uploaded as
+artifacts, and a check that fails on breaking changes. See
+[`docs/github-action.md`](docs/github-action.md) for the full reference — inputs,
+outputs, baseline detection, and more examples.
+
 ## Documentation
 
 - [Project brief](docs/PROJECT_BRIEF.md) — vision, audience, success criteria

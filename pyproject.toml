@@ -35,6 +35,7 @@ dev = [
     "mypy>=1.11",
     "respx>=0.23.1",
     "jsonschema>=4.26.0",  # DD-020: test-only schema validation; not a runtime dependency
+    "pyyaml>=6.0",
 ]
 
 [build-system]

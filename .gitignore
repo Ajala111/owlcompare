@@ -39,3 +39,10 @@ uv.toml
 # Manual verification artifacts
 *.canonical.ttl
 *.canonical.nt
+
+# GitHub Action runtime artifacts (Component 19)
+_baseline_owlcompare/
+owlcompare-report.html
+owlcompare-report.xml
+owlcompare-report.md
+owlcompare-report.json

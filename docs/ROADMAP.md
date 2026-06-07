@@ -2,7 +2,20 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 5 — Polish & v1 release. **Phase 4 (Report renderers) is COMPLETE**: Components 14 (JSON Schema Lockdown), 15 (Markdown report), 16 (HTML report — design & wireframe), 17 (HTML report — implementation), and **18 (JUnit XML / CI output)** all delivered. `owlcompare diff` now emits JSON, text, Markdown, HTML, and JUnit XML. Next up: Component 19 (GitHub Action wrapper).
+**Current phase:** Phase 5 — Polish & v1 release. **Phase 5 has begun**:
+Component 19 (GitHub Action wrapper) is delivered. **Phase 4 (Report renderers)
+is COMPLETE**: Components 14 (JSON Schema Lockdown), 15 (Markdown report), 16
+(HTML report — design & wireframe), 17 (HTML report — implementation), and 18
+(JUnit XML / CI output) all delivered. `owlcompare diff` now emits JSON, text,
+Markdown, HTML, and JUnit XML, and is wrappable as a three-line GitHub Actions
+step. Next up: Component 20 (documentation site).
+
+> **Soft prerequisite flagged:** Component 22 (PyPI release pipeline) is now a
+> soft prerequisite for the Action to be fully usable by **external** users —
+> `owlcompare-version: latest` can only `pip install owlcompare` once owlcompare
+> is on PyPI. Until then external users install a pinned commit via
+> `pip install git+https://github.com/phelz/owlcompare.git@<ref>`, and the Action
+> self-tests inside this repo via `owlcompare-version: local`.
 
 ---
 
@@ -171,7 +184,16 @@ Component 18). **Phase 4 complete.**
 
 ## Phase 5 — Polish & v1 release
 
-- [ ] Component 19: GitHub Action wrapper — `specs/19-github-action.md`
+- [x] Component 19: GitHub Action wrapper — `specs/19-github-action.md`
+      (Composite Action at the repo-root `action.yml`: full input/output schema,
+      baseline detection (PR base / `HEAD~1` / previous tag / explicit /
+      fallback) with `git worktree` checkout, multi-format diff runs, artifact
+      upload, update-in-place PR comment via a marker, and deferred
+      `fail-on-breaking` build status. `docs/github-action.md` is the user
+      reference; `tests/unit/test_action_yml.py` statically validates the YAML
+      (PyYAML, dev-only — [[DD-022]]); `.github/workflows/action-smoke-test.yml`
+      is the manual end-to-end check. Open questions Q1-Q3 resolved as proposed.
+      Three deviations surfaced below.)
 - [ ] Component 20: Documentation site (`docs/` → static site) — `specs/20-docsite.md`
 - [ ] Component 21: Flagship ERA ontology demo — `specs/21-era-demo.md`
 - [ ] Component 22: PyPI release pipeline — `specs/22-release.md`
@@ -181,6 +203,41 @@ Component 18). **Phase 4 complete.**
 ---
 
 ## Backlog (post-v1)
+
+### Surfaced during Component 19 (GitHub Action)
+
+- **One diff run, many output formats.** The Action runs `owlcompare diff` once
+  per requested format (JSON for counts, then JUnit/HTML/Markdown), which re-parses
+  and re-diffs each time. A CLI enhancement — e.g. `--format a,b,c` with an
+  `--out-template report.{ext}` — would let one invocation emit every format. v1.1;
+  the Action's per-format loop is already shaped to adopt it. (From specs/19 § CLI
+  integration.)
+- **A `pull_request_target` recipe for trusted forks.** The PR-comment step can't
+  write on fork PRs (read-only token). A documented, safe `pull_request_target`
+  pattern would let maintainers opt trusted forks in. Security-sensitive; deferred.
+
+#### Component 19 deviations (delivered, intentional)
+
+1. **`baseline-ref` default is the sentinel `auto`, not a raw GitHub expression.**
+   The spec's inputs table shows the default as
+   `${{ github.event.pull_request.base.ref }}` (auto) or `main`. A single input
+   default can't express the full algorithm (PR base / `HEAD~1` / previous tag /
+   fallback), so the default is the literal `auto` and the detection runs in bash
+   — exactly as the spec's § Baseline detection prose describes ("defaults to
+   auto"). Explicit refs are honoured verbatim.
+2. **Inputs are passed to `run:` scripts via `env:`, never interpolated with
+   `${{ }}`.** The spec outline interpolates inputs directly; injecting
+   user-controlled values into a shell is a known injection vector, so every
+   input reaches bash as an environment variable instead. Also fixes quoting for
+   paths with spaces. (Surfaced per the "be attentive to runner-environment
+   surprises / permissions" instruction.)
+3. **The `latest` git-install fallback uses `github.repository`/`github.sha`,
+   which only resolves to owlcompare inside this repo.** For external repos the
+   canonical path is PyPI (Component 22) or an explicit pinned commit; the git
+   fallback is a development-testing convenience, documented as such in
+   `docs/github-action.md` § Installation modes and § Known limitations. The
+   `owlcompare-version: local` mode (editable install of the checkout) is what the
+   smoke test uses to exercise live code with no published package.
 
 ### Surfaced during Component 17 (HTML report)
 

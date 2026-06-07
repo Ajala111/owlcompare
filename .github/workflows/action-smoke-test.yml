@@ -1,0 +1,92 @@
+# Manual smoke test for the composite Action (Component 19).
+#
+# Triggered by hand (workflow_dispatch) only — we don't burn CI minutes running
+# it on every push. Run it from the Actions tab after merging changes to
+# action.yml to verify the Action works end-to-end against the live code.
+#
+# The Action's model is "the same ontology path, diffed across two git refs".
+# To exercise it faithfully we synthesise a tiny two-commit history from the
+# era_evolution v1/v2 fixtures: commit v1 as the baseline, commit v2 as head,
+# then point the Action at the baseline commit. This produces a real diff
+# through the Action's normal worktree path.
+#
+# It installs owlcompare with `owlcompare-version: local` (editable install of
+# the checked-out repo), so there's no dependency on a published PyPI package.
+# `fail-on-breaking` is disabled so the job stays green regardless of what
+# severities the fixtures produce — the point is to confirm the Action runs and
+# uploads artifacts, not to gate on the fixture's contents.
+name: Action smoke test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Synthesise a two-commit ontology history from the fixtures
+        shell: bash
+        run: |
+          git config user.email "smoke-test@owlcompare.invalid"
+          git config user.name "owlcompare smoke test"
+          # Baseline commit: the v1 fixture under a stable path.
+          cp tests/fixtures/diff/era_evolution_v1.ttl smoke-ontology.ttl
+          git add smoke-ontology.ttl
+          git commit -m "smoke: baseline ontology (era_evolution v1)" --no-verify
+          echo "BASELINE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          # Head commit: replace it with the v2 fixture so there is a real diff.
+          cp tests/fixtures/diff/era_evolution_v2.ttl smoke-ontology.ttl
+          git add smoke-ontology.ttl
+          git commit -m "smoke: head ontology (era_evolution v2)" --no-verify
+
+      - name: Run owlcompare Action across the two commits
+        id: owlcompare
+        uses: ./
+        with:
+          ontology-path: smoke-ontology.ttl
+          baseline-ref: ${{ env.BASELINE_SHA }}
+          owlcompare-version: local
+          formats: junit,html,markdown
+          post-pr-comment: "false"
+          fail-on-breaking: "false"
+
+      - name: Assert the Action produced reports and a real diff
+        shell: bash
+        env:
+          HTML_PATH: ${{ steps.owlcompare.outputs.report-html-path }}
+          JUNIT_PATH: ${{ steps.owlcompare.outputs.report-junit-path }}
+          TOTAL: ${{ steps.owlcompare.outputs.total-changes }}
+          BREAKING: ${{ steps.owlcompare.outputs.breaking-count }}
+          EXIT_CODE: ${{ steps.owlcompare.outputs.exit-code }}
+        run: |
+          echo "total-changes=$TOTAL breaking-count=$BREAKING exit-code=$EXIT_CODE"
+          echo "html=$HTML_PATH junit=$JUNIT_PATH"
+          test -n "$HTML_PATH" || { echo "::error::no HTML report path output"; exit 1; }
+          test -f "$HTML_PATH" || { echo "::error::HTML report file missing"; exit 1; }
+          test -n "$JUNIT_PATH" || { echo "::error::no JUnit report path output"; exit 1; }
+          test -f "$JUNIT_PATH" || { echo "::error::JUnit report file missing"; exit 1; }
+          # The v1->v2 fixtures differ, so the Action must report at least one change.
+          test "$TOTAL" -gt 0 || { echo "::error::expected a non-empty diff for v1 vs v2"; exit 1; }
+          echo "Smoke test passed: the Action ran end-to-end and produced reports."
+
+      - name: Download the uploaded artifact to confirm upload
+        uses: actions/download-artifact@v4
+        with:
+          name: owlcompare-diff-${{ github.run_id }}
+          path: _downloaded_artifacts
+
+      - name: Confirm the artifact contents
+        shell: bash
+        run: |
+          ls -la _downloaded_artifacts
+          test -f _downloaded_artifacts/owlcompare-report.html || { echo "::error::artifact missing HTML report"; exit 1; }
+          test -f _downloaded_artifacts/owlcompare-report.xml || { echo "::error::artifact missing JUnit XML"; exit 1; }
+          echo "Artifact upload verified."

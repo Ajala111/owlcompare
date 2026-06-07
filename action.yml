@@ -1,0 +1,483 @@
+# owlcompare GitHub Action (Component 19).
+#
+# A *composite* Action — no Docker image, no Node.js build, just YAML + bash +
+# the standard actions/* building blocks. It wraps the `owlcompare diff` CLI so
+# that adding ontology diffing to a project's CI is a three-line workflow step
+# rather than an hour of bespoke scripting.
+#
+# This file MUST live at the repo root: GitHub resolves `uses: phelz/owlcompare@v1`
+# by looking for `action.yml` (or `action.yaml`) at the root of the referenced
+# repository. See docs/github-action.md for the user-facing reference.
+#
+# Security note: every user-controlled input is passed into `run:` scripts via
+# the `env:` block, never interpolated directly with `${{ }}`. Interpolating
+# untrusted input into a shell script is a well-known injection vector; the
+# env-var indirection neutralises it and also sidesteps quoting problems for
+# paths that contain spaces.
+name: 'owlcompare ontology diff'
+description: 'Diff OWL/RDF ontologies in CI with severity classification and rename detection'
+author: 'phelz'
+branding:
+  icon: 'git-pull-request'
+  color: 'blue'
+
+inputs:
+  ontology-path:
+    description: 'Path to the ontology file, relative to the repo root (e.g. ontology/era.ttl).'
+    required: true
+  baseline-ref:
+    description: >-
+      Git ref (branch, tag, or commit SHA) to diff against. The default "auto"
+      resolves per the Action's baseline-detection algorithm: the PR base branch
+      in a pull_request, the previous commit (HEAD~1) on a branch push, the
+      previous tag on a tag push, and "main" as a last-resort fallback. A
+      workflow_dispatch run with "auto" fails fast and asks for an explicit ref.
+    required: false
+    default: 'auto'
+  formats:
+    description: >-
+      Comma-separated output formats to generate. Valid values: junit, html,
+      markdown, json. The markdown report is what gets posted as the PR comment;
+      html and xml (junit) are uploaded as artifacts.
+    required: false
+    default: 'junit,html,markdown'
+  python-version:
+    description: 'Python version for actions/setup-python to install.'
+    required: false
+    default: '3.11'
+  owlcompare-version:
+    description: >-
+      Which owlcompare to install. "latest" installs the newest published
+      release (with a git fallback for development), "local" installs the
+      checked-out repository in editable mode (used to self-test this Action
+      against live code), and any other value is treated as an exact version
+      (pip install owlcompare==<value>).
+    required: false
+    default: 'latest'
+  fail-on-breaking:
+    description: 'Fail the CI build (exit non-zero) when breaking changes are detected.'
+    required: false
+    default: 'true'
+  post-pr-comment:
+    description: >-
+      Post the Markdown report as a PR comment, updating the same comment in
+      place on subsequent runs. Has no effect outside a pull_request event.
+    required: false
+    default: 'true'
+  upload-artifacts:
+    description: 'Upload the generated HTML/JUnit (and other) reports as a workflow artifact.'
+    required: false
+    default: 'true'
+  severity-config:
+    description: 'Path to a TOML severity-override config (empty = use built-in severity rules).'
+    required: false
+    default: ''
+  rename-mapping:
+    description: 'Path to a TOML rename-mapping file (empty = rely on automatic rename detection).'
+    required: false
+    default: ''
+  rename-confidence:
+    description: >-
+      Lowest rename-detection confidence to accept: certain, high (default),
+      medium, or none (disable rename detection).
+    required: false
+    default: 'high'
+  comment-marker:
+    description: >-
+      Hidden HTML-comment marker that identifies this Action's PR comment, so it
+      can be updated in place instead of posting a new comment each run.
+    required: false
+    default: '<!-- owlcompare-diff -->'
+
+outputs:
+  breaking-count:
+    description: 'Number of breaking changes detected.'
+    value: ${{ steps.diff.outputs.breaking-count }}
+  total-changes:
+    description: 'Total number of changes detected (all severities).'
+    value: ${{ steps.diff.outputs.total-changes }}
+  report-html-path:
+    description: 'Filesystem path to the generated HTML report (empty if not generated).'
+    value: ${{ steps.diff.outputs.report-html-path }}
+  report-junit-path:
+    description: 'Filesystem path to the generated JUnit XML report (empty if not generated).'
+    value: ${{ steps.diff.outputs.report-junit-path }}
+  report-markdown:
+    description: 'The Markdown report content, for use in subsequent workflow steps.'
+    value: ${{ steps.diff.outputs.report-markdown }}
+  exit-code:
+    description: 'The owlcompare exit code (0 = no breaking changes, 10 = breaking changes).'
+    value: ${{ steps.diff.outputs.exit-code }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install owlcompare
+      shell: bash
+      env:
+        OWLCOMPARE_VERSION: ${{ inputs.owlcompare-version }}
+        # github.repository / github.sha drive the development git-install
+        # fallback. Note: this fallback only resolves to owlcompare when the
+        # workflow runs *inside the owlcompare repository itself* (self-test).
+        # For external repos, "latest" relies on the published PyPI package
+        # (Component 22); see the limitation documented in docs/github-action.md.
+        GH_REPOSITORY: ${{ github.repository }}
+        GH_SHA: ${{ github.sha }}
+      run: |
+        python -m pip install --upgrade pip
+        case "$OWLCOMPARE_VERSION" in
+          local)
+            # Development / self-test path: install the repository that is
+            # currently checked out into the workspace, in editable mode. Used
+            # by the smoke-test workflow to exercise this Action against live
+            # code without needing a published package.
+            echo "Installing owlcompare from the local checkout ($GITHUB_WORKSPACE)"
+            python -m pip install -e "$GITHUB_WORKSPACE"
+            ;;
+          latest)
+            # Canonical path for external users (works once Component 22 has
+            # published owlcompare to PyPI). Until then we fall back to a git
+            # install of the exact commit — which only resolves correctly when
+            # this workflow runs inside the owlcompare repo.
+            echo "Installing the latest published owlcompare"
+            python -m pip install owlcompare || {
+              echo "::warning::PyPI install failed; falling back to a git install of $GH_REPOSITORY@$GH_SHA"
+              python -m pip install "git+https://github.com/${GH_REPOSITORY}.git@${GH_SHA}"
+            }
+            ;;
+          *)
+            # Exact version pin.
+            echo "Installing owlcompare==$OWLCOMPARE_VERSION"
+            python -m pip install "owlcompare==$OWLCOMPARE_VERSION"
+            ;;
+        esac
+        # Confirm the CLI is importable via the SAC-safe `python -m` form (DD-016).
+        python -m owlcompare --version
+
+    - name: Check out baseline
+      shell: bash
+      env:
+        EVENT_NAME: ${{ github.event_name }}
+        REF_TYPE: ${{ github.ref_type }}
+        REF_NAME: ${{ github.ref_name }}
+        BASELINE_INPUT: ${{ inputs.baseline-ref }}
+        PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+      run: |
+        # --- Baseline detection -------------------------------------------------
+        # Resolve `baseline-ref` (possibly "auto") to a concrete ref string. Each
+        # branch below maps to one case in the spec's detection algorithm.
+        if [ "$BASELINE_INPUT" != "auto" ]; then
+          # The user pinned an explicit ref; honour it verbatim.
+          RESOLVED_REF="$BASELINE_INPUT"
+          echo "Baseline: explicit ref '$RESOLVED_REF'"
+        elif [ "$EVENT_NAME" = "pull_request" ] || [ "$EVENT_NAME" = "pull_request_target" ]; then
+          # Case 1 — pull request: diff against the PR's target (base) branch.
+          RESOLVED_REF="$PR_BASE_REF"
+          echo "Baseline: PR base branch '$RESOLVED_REF'"
+        elif [ "$EVENT_NAME" = "push" ] && [ "$REF_TYPE" = "tag" ]; then
+          # Case 3 — push of a tag: diff against the previous tag reachable from
+          # this one. Resolved below once tags are fetched.
+          RESOLVED_REF="__previous_tag__"
+          echo "Baseline: previous tag (push to tag '$REF_NAME')"
+        elif [ "$EVENT_NAME" = "push" ]; then
+          # Case 2 — push to a branch (e.g. main): diff against the previous
+          # commit on this branch.
+          RESOLVED_REF="HEAD~1"
+          echo "Baseline: previous commit HEAD~1 (push to branch '$REF_NAME')"
+        elif [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+          # Case 4 — manual run with no explicit baseline: we cannot guess.
+          echo "::error::workflow_dispatch runs require an explicit 'baseline-ref' input (cannot auto-detect a baseline for a manual run)."
+          exit 1
+        else
+          # Case 5 — anything else (schedule, repository_dispatch, ...): fall back
+          # to main and warn that auto-detection could not be precise.
+          echo "::warning::could not auto-detect a baseline for event '$EVENT_NAME'; falling back to 'main'. Set 'baseline-ref' explicitly to silence this."
+          RESOLVED_REF="main"
+        fi
+
+        # --- Baseline checkout via git worktree ---------------------------------
+        # Resolve RESOLVED_REF to a commit SHA and lay it down in a detached
+        # worktree at `_baseline_owlcompare/`, leaving the head checkout untouched.
+        if [ "$RESOLVED_REF" = "HEAD~1" ]; then
+          # actions/checkout is shallow by default; deepen so HEAD~1 exists.
+          git fetch --deepen=1 origin >/dev/null 2>&1 || true
+          if ! BASELINE_SHA="$(git rev-parse HEAD~1 2>/dev/null)"; then
+            echo "::error::could not resolve HEAD~1 — this looks like the first commit, or the checkout has no history (set 'fetch-depth: 2' or more on actions/checkout)."
+            exit 1
+          fi
+        elif [ "$RESOLVED_REF" = "__previous_tag__" ]; then
+          git fetch --tags --force origin >/dev/null 2>&1 || true
+          PREV_TAG="$(git describe --tags --abbrev=0 "${REF_NAME}^" 2>/dev/null || echo '')"
+          if [ -z "$PREV_TAG" ]; then
+            echo "::warning::no previous tag found before '$REF_NAME'; falling back to 'main'."
+            git fetch origin main >/dev/null 2>&1 || { echo "::error::failed to fetch fallback baseline 'main'."; exit 1; }
+            BASELINE_SHA="$(git rev-parse FETCH_HEAD)"
+          else
+            echo "Baseline tag resolved to '$PREV_TAG'"
+            BASELINE_SHA="$(git rev-parse "$PREV_TAG")"
+          fi
+        elif echo "$RESOLVED_REF" | grep -Eq '^[0-9a-fA-F]{7,40}$'; then
+          # Looks like a commit SHA: fetch it directly, then use it as-is.
+          git fetch origin "$RESOLVED_REF" >/dev/null 2>&1 || true
+          BASELINE_SHA="$RESOLVED_REF"
+        else
+          # Branch or tag name: fetch and resolve FETCH_HEAD to a SHA.
+          if ! git fetch origin "$RESOLVED_REF" >/dev/null 2>&1; then
+            echo "::error::failed to fetch baseline ref '$RESOLVED_REF' from origin. Does it exist on the remote?"
+            exit 1
+          fi
+          BASELINE_SHA="$(git rev-parse FETCH_HEAD)"
+        fi
+
+        echo "Baseline commit: $BASELINE_SHA"
+        # Remove any stale worktree from a previous run on the same runner.
+        git worktree remove --force _baseline_owlcompare >/dev/null 2>&1 || true
+        rm -rf _baseline_owlcompare
+        git worktree add --detach _baseline_owlcompare "$BASELINE_SHA"
+
+    - name: Run owlcompare diff
+      id: diff
+      shell: bash
+      env:
+        ONTOLOGY_PATH: ${{ inputs.ontology-path }}
+        FORMATS: ${{ inputs.formats }}
+        SEVERITY_CONFIG: ${{ inputs.severity-config }}
+        RENAME_MAPPING: ${{ inputs.rename-mapping }}
+        RENAME_CONFIDENCE: ${{ inputs.rename-confidence }}
+      run: |
+        BASELINE_FILE="_baseline_owlcompare/${ONTOLOGY_PATH}"
+        HEAD_FILE="${ONTOLOGY_PATH}"
+
+        # Helper: write a multi-line value to a step output using GitHub's
+        # heredoc syntax with a randomised delimiter (avoids collisions/injection
+        # if the content happens to contain a fixed marker).
+        emit_markdown_output() {
+          local file="$1"
+          local delim="owlcompare_md_$(date +%s)_${RANDOM}${RANDOM}"
+          {
+            echo "report-markdown<<${delim}"
+            cat "$file"
+            echo "${delim}"
+          } >> "$GITHUB_OUTPUT"
+        }
+
+        # --- Edge case: ontology missing on one or both sides -------------------
+        if [ ! -f "$HEAD_FILE" ] && [ ! -f "$BASELINE_FILE" ]; then
+          echo "::error::ontology file '$ONTOLOGY_PATH' was not found at the head or the baseline. Check the 'ontology-path' input."
+          exit 4
+        fi
+        if [ ! -f "$BASELINE_FILE" ]; then
+          # New ontology file: nothing to diff against. Not a breaking change.
+          echo "New ontology file '$ONTOLOGY_PATH' (absent at baseline); no diff to compute."
+          {
+            echo "### owlcompare: new ontology file"
+            echo ""
+            echo "\`$ONTOLOGY_PATH\` is new in this change; there is no baseline version to diff against."
+          } > owlcompare-report.md
+          {
+            echo "breaking-count=0"
+            echo "total-changes=0"
+            echo "exit-code=0"
+            echo "report-html-path="
+            echo "report-junit-path="
+            echo "has-artifacts=false"
+          } >> "$GITHUB_OUTPUT"
+          emit_markdown_output owlcompare-report.md
+          exit 0
+        fi
+        if [ ! -f "$HEAD_FILE" ]; then
+          # Deleted ontology file: every downstream consumer will break, but
+          # there is no diff to compute. Warn loudly and exit successfully.
+          echo "::warning::ontology file '$ONTOLOGY_PATH' was deleted in this change; all consumers that import it will break."
+          {
+            echo "### owlcompare: ontology file deleted"
+            echo ""
+            echo "\`$ONTOLOGY_PATH\` was removed in this change. There is no head version to diff, but **every consumer that imports this ontology will break.**"
+          } > owlcompare-report.md
+          {
+            echo "breaking-count=0"
+            echo "total-changes=0"
+            echo "exit-code=0"
+            echo "report-html-path="
+            echo "report-junit-path="
+            echo "has-artifacts=false"
+          } >> "$GITHUB_OUTPUT"
+          emit_markdown_output owlcompare-report.md
+          exit 0
+        fi
+
+        # --- Build the shared CLI flags from the optional inputs ----------------
+        EXTRA_FLAGS=(--rename-confidence "$RENAME_CONFIDENCE")
+        if [ -n "$SEVERITY_CONFIG" ]; then
+          EXTRA_FLAGS+=(--severity-config "$SEVERITY_CONFIG")
+        fi
+        if [ -n "$RENAME_MAPPING" ]; then
+          EXTRA_FLAGS+=(--rename-mapping "$RENAME_MAPPING")
+        fi
+
+        # --- Authoritative run: JSON (drives counts + error propagation) --------
+        # owlcompare exits 10 when breaking changes are present, 0 otherwise, and
+        # other non-zero codes for real errors (loader=4, usage=2, ...). We must
+        # not let exit 10 abort the step (default bash is `set -e`), but we DO
+        # propagate genuine errors immediately.
+        set +e
+        python -m owlcompare diff "$BASELINE_FILE" "$HEAD_FILE" \
+          --format json --out owlcompare-report.json "${EXTRA_FLAGS[@]}"
+        EXIT_CODE=$?
+        set -e
+        if [ "$EXIT_CODE" != "0" ] && [ "$EXIT_CODE" != "10" ]; then
+          echo "::error::owlcompare diff failed with exit code $EXIT_CODE."
+          exit "$EXIT_CODE"
+        fi
+        echo "owlcompare exited with code $EXIT_CODE"
+
+        # Pull the summary counts straight from the schema-locked JSON.
+        BREAKING_COUNT="$(python -c "import json; print(json.load(open('owlcompare-report.json'))['summary']['breaking'])")"
+        TOTAL_CHANGES="$(python -c "import json; print(json.load(open('owlcompare-report.json'))['summary']['total'])")"
+
+        # --- Generate every requested human/CI format ---------------------------
+        # These re-runs also exit 10 on breaking; the JSON run above is already
+        # the source of truth for the exit code, so tolerate 10 here.
+        HTML_PATH=""
+        JUNIT_PATH=""
+        set +e
+        IFS=',' read -ra REQUESTED_FORMATS <<< "$FORMATS"
+        for fmt in "${REQUESTED_FORMATS[@]}"; do
+          fmt="$(echo "$fmt" | tr -d '[:space:]')"
+          case "$fmt" in
+            json)
+              : ;; # already generated above
+            junit)
+              python -m owlcompare diff "$BASELINE_FILE" "$HEAD_FILE" \
+                --format junit --out owlcompare-report.xml "${EXTRA_FLAGS[@]}"
+              JUNIT_PATH="$(pwd)/owlcompare-report.xml" ;;
+            html)
+              python -m owlcompare diff "$BASELINE_FILE" "$HEAD_FILE" \
+                --format html --out owlcompare-report.html "${EXTRA_FLAGS[@]}"
+              HTML_PATH="$(pwd)/owlcompare-report.html" ;;
+            markdown)
+              python -m owlcompare diff "$BASELINE_FILE" "$HEAD_FILE" \
+                --format markdown --out owlcompare-report.md "${EXTRA_FLAGS[@]}" ;;
+            "")
+              : ;;
+            *)
+              echo "::warning::unknown format '$fmt' ignored (valid: json, junit, html, markdown)." ;;
+          esac
+        done
+        set -e
+
+        # Markdown is what the PR comment posts. If it wasn't requested, render it
+        # anyway so the comment step always has content.
+        if [ ! -f owlcompare-report.md ]; then
+          python -m owlcompare diff "$BASELINE_FILE" "$HEAD_FILE" \
+            --format markdown --out owlcompare-report.md "${EXTRA_FLAGS[@]}" || true
+        fi
+
+        # --- Emit all outputs ---------------------------------------------------
+        {
+          echo "breaking-count=$BREAKING_COUNT"
+          echo "total-changes=$TOTAL_CHANGES"
+          echo "exit-code=$EXIT_CODE"
+          echo "report-html-path=$HTML_PATH"
+          echo "report-junit-path=$JUNIT_PATH"
+        } >> "$GITHUB_OUTPUT"
+        if [ -f owlcompare-report.html ] || [ -f owlcompare-report.xml ]; then
+          echo "has-artifacts=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "has-artifacts=false" >> "$GITHUB_OUTPUT"
+        fi
+        emit_markdown_output owlcompare-report.md
+
+    - name: Upload artifacts
+      if: inputs.upload-artifacts == 'true' && steps.diff.outputs.has-artifacts == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: owlcompare-diff-${{ github.run_id }}
+        if-no-files-found: ignore
+        path: |
+          owlcompare-report.html
+          owlcompare-report.xml
+          owlcompare-report.md
+          owlcompare-report.json
+
+    - name: Post PR comment
+      if: >-
+        inputs.post-pr-comment == 'true' &&
+        (github.event_name == 'pull_request' || github.event_name == 'pull_request_target')
+      uses: actions/github-script@v7
+      env:
+        COMMENT_MARKER: ${{ inputs.comment-marker }}
+        MARKDOWN_PATH: owlcompare-report.md
+      with:
+        script: |
+          const fs = require('fs');
+          const marker = process.env.COMMENT_MARKER;
+          const mdPath = process.env.MARKDOWN_PATH;
+
+          const report = fs.existsSync(mdPath)
+            ? fs.readFileSync(mdPath, 'utf8')
+            : '_owlcompare produced no Markdown report._';
+          const stamp = new Date().toISOString();
+          const body = `${marker}\n\n${report}\n\n_Updated: ${stamp}_`;
+
+          const { owner, repo } = context.repo;
+          const issue_number = context.payload.pull_request.number;
+
+          try {
+            // Find any prior comment from this Action by its hidden marker, so we
+            // update it in place rather than spamming the PR with a new comment
+            // on every push.
+            const comments = await github.paginate(
+              github.rest.issues.listComments,
+              { owner, repo, issue_number, per_page: 100 },
+            );
+            const existing = comments.find(
+              (c) => typeof c.body === 'string' && c.body.includes(marker),
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner, repo, comment_id: existing.id, body,
+              });
+              core.info(`Updated existing owlcompare comment #${existing.id}`);
+            } else {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number, body,
+              });
+              core.info('Created a new owlcompare comment');
+            }
+          } catch (error) {
+            // Forked PRs from external contributors run with a read-only token,
+            // so commenting fails. That is a known limitation — warn, don't fail
+            // the build; artifacts and the check status still convey the result.
+            core.warning(
+              `Could not post the PR comment (this is expected for forked PRs ` +
+              `without write access): ${error.message}`,
+            );
+          }
+
+    - name: Set build status
+      if: inputs.fail-on-breaking == 'true'
+      shell: bash
+      env:
+        EXIT_CODE: ${{ steps.diff.outputs.exit-code }}
+      run: |
+        # Deferred failure: PR comment and artifact upload have already run, so a
+        # red build still comes with a usable report. owlcompare uses exit code 10
+        # to signal "at least one breaking change" (DD-008).
+        if [ "$EXIT_CODE" = "10" ]; then
+          echo "::error::Breaking ontology changes detected; failing the build (fail-on-breaking is true)."
+          exit 1
+        fi
+        echo "No breaking changes detected (owlcompare exit code ${EXIT_CODE:-0})."
+
+    - name: Clean up baseline worktree
+      if: always()
+      shell: bash
+      run: |
+        git worktree remove --force _baseline_owlcompare >/dev/null 2>&1 || true
+        rm -rf _baseline_owlcompare
