@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dcterms="http://purl.org/dc/terms/"
+   xmlns:era="http://data.europa.eu/949/"
+   xmlns:owl="http://www.w3.org/2002/07/owl#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+   xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+   xmlns:vs="http://www.w3.org/2003/06/sw-vocab-status/ns#"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+>
+  <rdf:Description rdf:about="http://data.europa.eu/949/tsiOPEAppendixD3Index">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-11-04</dcterms:created>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-08-13</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dcterms:modified>
+    <rdfs:comment xml:lang="en">The index of a vocabulary term in Appendix D3 ERTMS trackside engineering information relevant to operation that the infrastructure manager shall provide to the railway undertaking.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">TSI operation appendix D3 index</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <skos:altLabel xml:lang="en">Appendix D3 index</skos:altLabel>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db6">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://data.europa.eu/949/startsAfterEvents"/>
+    <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minQualifiedCardinality>
+    <owl:onClass rdf:resource="http://data.europa.eu/949/OperationalEventRef"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db14">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:unionOf rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db15"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/WarningMeasureEventExecutionReport">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db7"/>
+    <rdfs:subClassOf rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db8"/>
+    <rdfs:subClassOf rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db9"/>
+    <rdfs:subClassOf rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db10"/>
+    <era:ccsView>OPP</era:ccsView>
+    <rdfs:comment xml:lang="en">Defines state of execution of a warning measure event (completed, failed, warning).</rdfs:comment>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-02-19</dcterms:created>
+    <rdfs:label xml:lang="en">Warning Measure Event Execution Report</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#altLabel">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db5">
+    <rdf:first rdf:resource="http://data.europa.eu/949/VehicleTypeAuthorisationCase"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/affectedClass">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-04</dcterms:created>
+    <rdfs:comment xml:lang="en">Annotation property used in SHACL shapes. Name of the classes that are the subject of properties that are being validated in a SHACL shape.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">affected Class</rdfs:label>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/shaclShapeValidationRule">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-04</dcterms:created>
+    <rdfs:comment xml:lang="en">Annotation used to point to the SHACL shape that implements the validation for a certain RINF parameter (property). Each shape contains constraints for valid datatypes, patterns, min and max count, valid SKOS values and business rules.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">SHACL shape validation rule</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/tentReference">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dcterms:created>
+    <rdfs:comment xml:lang="en">Used to annotate properties coming from the TenT regulations, to be used for monitoring the provision of the data.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">TenT reference</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+    <cc:license rdf:resource="http://data.europa.eu/eli/dec_impl/2017/863/oj"/>
+    <dcterms:contributor rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db1"/>
+    <dcterms:creator rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db2"/>
+    <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-04-18</dcterms:issued>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-04-18</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-05-24</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-06-03</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-06-05</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-07-05</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-08-02</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-08-12</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-08-13</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-09-19</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-09-20</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-09-24</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-09-25</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-10-24</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-10-28</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-10-29</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-10-30</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-10-31</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-04</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-05</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-12</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-20</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-22</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-27</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-12-02</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-12-03</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-12-05</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-12-10</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-12-12</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-12-13</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-01-30</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-02-11</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-02-13</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-02-18</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-02-19</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-02-20</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-03-01</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-03-05</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-03-07</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-03-10</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-03-11</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-03-17</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-03-24</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-03-26</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-04-25</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-05-05</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-05-06</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-05-09</dcterms:modified>
+    <dcterms:publisher>European Union Agency for Railways</dcterms:publisher>
+    <dcterms:title xml:lang="en">ERA Ontology</dcterms:title>
+    <rdfs:comment xml:lang="en">This is the human and machine-readable Ontology governed by the European Union Agency for Railways (https://www.era.europa.eu/). It represents the concepts and relationships linked to the sectorial legal framework and the use cases under the Agency´s remit, as described in the Commission Implementing Regulation (EU) [to be updated after publication] on the common specifications for the register of railway infrastructure [to be updated after publication].
+
+
+Currently, this Ontology covers the European railway infrastructure and the vehicle types authorized to operate over it. It is a semantic/browsable representation of the RINF application guide (1) and ERATV application guide (2) that were built by domain experts in the RINF and ERATV working parties.
+
+The Ontology also includes the route book concepts described in appendix D2 "Elements the infrastructure manager has to provide to the railway undertaking for the Route Book" as presented in the Commission Implementing Regulation (EU) [to be updated after publication] 2019/773 of 16 May 2019 on the technical specification for interoperability relating to the operation and traffic management subsystem of the rail system within the European Union and [to be updated after publication] and the Appendix D3 [to be updated after publication].</rdfs:comment>
+    <rdfs:label xml:lang="en">ERA Ontology</rdfs:label>
+    <rdfs:seeAlso rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://www.era.europa.eu/sites/default/files/registers/docs/iu-eratv_application_guide_for_register_2016-797_en.pdf</rdfs:seeAlso>
+    <rdfs:seeAlso rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://www.era.europa.eu/sites/default/files/registers/docs/rinf_application_guide_for_register_en.pdf</rdfs:seeAlso>
+    <owl:priorVersion rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://gitlab.com/era-europa-eu/public/interoperable-data-programme/era-ontology/era-ontology/-/releases/v3.1.0</owl:priorVersion>
+    <owl:versionInfo>v3.1.2</owl:versionInfo>
+    <owl:versionURI rdf:resource="https://gitlab.com/era-europa-eu/public/interoperable-data-programme/era-ontology/era-ontology/-/releases/v3.1.1"/>
+    <skos:changeNote xml:lang="en">
+
+Revision 05-06-2024:
+- linked with existing (updated) or new SKOS Concepts, related to the TWG RINF CCS;
+- included references and guidelines as in Table 5 of the RINF Application Guide.
+
+Revision 03-06-2024:
+- added properties for the primary and subsidiary locations
+- reuse the organisation ontology to address the ERA stakeholder organisations (bodies) and their roles
+- deprecated classes related to organisation
+- error corrections
+- added several definitions
+
+Revision 24-05-2024:
+- remove of the owl:FunctionalProperty from every object or data property;
+- addition of new classes for the purpose of the Topical Wrokgroup micro-level;               
+- reshaping the topology layer, deprecating unused properties and renaming some of the classes
+- reuse of the time ontology for addressing the validity and applicability;
+- remove of the axiom era:TopologicalObject as subclass of era:Feature;
+- changing the domains of multiple data and object properties to subclasses of era:TechnicalCharacteristics;
+- removed some of the relations between tracks, sidings, tunnels, etc.;
+- deprecated the properties addressing the validity;
+- TODO: deprecate unused properties from version 3.0.0;
+
+Revision 18-04-2024:
+- updated as per results of the Topical Working Group RINF-CCS (Draft report 0.2);
+- include upcoming remarks from TWG members (inclusing those as documented in Report 0.3);
+- linked with existing (updated) or new SKOS Concepts, related to the TWG RINF CCS;
+- included references and guidelines as in Table 5 of the RINF Application Guide.</skos:changeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/inSkosConceptScheme">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-11-17</dcterms:created>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-08-13</dcterms:modified>
+    <rdfs:comment xml:lang="en">Property that links an object SKOS property to a the URI of the corresponding SKOS Concept Scheme.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">in SKOS Concept Scheme</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/legalDeadline">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-22</dcterms:created>
+    <rdfs:comment xml:lang="en">Annotation used to point to legal obligation of a parameter in RINF</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">legal deadline</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db4">
+    <rdf:first rdf:resource="http://data.europa.eu/949/VehicleAuthorisationCase"/>
+    <rdf:rest rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db5"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/tsiOPEAppendixD1Index">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dcterms:created>
+    <rdfs:comment xml:lang="en">The index of a vocabulary term in Appendix D1 Vehicle and train Route compatibility checks.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">TSI operation appendix D1 index</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <skos:altLabel xml:lang="en">Appendix D1 index</skos:altLabel>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db9">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://data.europa.eu/949/failureReason"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db8">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://data.europa.eu/949/warning"/>
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/tsiOPEAppendixD2Index">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-11-04</dcterms:created>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-08-13</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dcterms:modified>
+    <rdfs:comment xml:lang="en">The index of a vocabulary term in Appendix D2 Elements the infrastructure manager has to provide to the railway undertaking for the Route Book from the document Commission Implementing Regulation (EU) 2019/773 of 16 May 2019 on the technical specification for interoperability relating to the operation and traffic management subsystem of the rail system within the European Union and repealing Decision 2012/757/EU.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">TSI operation appendix D2 index</rdfs:label>
+    <skos:altLabel xml:lang="en">Appendix D2 index</skos:altLabel>
+    <skos:definition xml:lang="en">The index of a vocabulary term in Appendix D2 Elements the infrastructure manager has to provide to the railway undertaking for the Route Book from the document Commission Implementing Regulation (EU) 2019/773 of 16 May 2019 on the technical specification for interoperability relating to the operation and traffic management subsystem of the rail system within the European Union and repealing Decision 2012/757/EU.</skos:definition>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/authorisingMemberState">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://data.europa.eu/949/vehicleTypeTechnicalObjectCharacteristic"/>
+    <rdfs:domain rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db3"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <era:eratvIndex>3.1.1</era:eratvIndex>
+    <era:inSkosConceptScheme rdf:resource="http://publications.europa.eu/resource/authority/country"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-02-19</dcterms:created>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-01-29</dcterms:modified>
+    <rdfs:comment xml:lang="en">Indicates the authorized local state within the Region.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">Member State of authorisation</rdfs:label>
+    <skos:editorialNote xml:lang="en">Present and unchanged since &lt;http://data.europa.eu/eli/dec_impl/2011/665&gt;</skos:editorialNote>
+    <vs:term_status>stable</vs:term_status>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/ordered">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-03-18</dcterms:created>
+    <rdfs:comment xml:lang="en">indicate whether the object is ordered according to their key-attribute by key or by index.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">ordered by</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/dNvovtrp">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://data.europa.eu/949/etcsNationalValuesDataParameter"/>
+    <rdfs:domain rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db14"/>
+    <rdfs:range rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db17"/>
+    <era:applicable>Y/N/NYA</era:applicable>
+    <era:dependencyNote xml:lang="en">A value has to be provided when ETCS is present (a value is provided on 1.1.1.3.2.1).</era:dependencyNote>
+    <era:formatNote>NNNNNNN.N whereby the last digit is only used when Q_SCALE = 10 CM</era:formatNote>
+    <era:legalDeadline xml:lang="en">12 months after publication of Article 7 Guide</era:legalDeadline>
+    <era:rinfIndex>1.1.1.3.2.16.5</era:rinfIndex>
+    <era:rinfIndex>1.2.1.1.1.16.5</era:rinfIndex>
+    <era:shaclShapeValidationRule rdf:resource="http://data.europa.eu/949/shapes/DNvovtrp"/>
+    <era:shaclShapeValidationRule rdf:resource="http://data.europa.eu/949/shapes/DNvovtrpApplicability"/>
+    <era:tsiOPEAppendixD3Index>1.5.5</era:tsiOPEAppendixD3Index>
+    <era:unitOfMeasure rdf:resource="http://qudt.org/vocab/unit/M"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-11-07</dcterms:created>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-01-08</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-04-18</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-12-05</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-02-27</dcterms:modified>
+    <dcterms:relation rdf:resource="http://data.europa.eu/949/etcsLevelType"/>
+    <dcterms:source rdf:resource="http://data.europa.eu/eli/reg_impl/2023/1695/oj"/>
+    <rdfs:comment xml:lang="en">Maximum distance for overriding the train trip in metres, according to the specification referenced in Appendix A-1, index [C].</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">D_NVOVTRP</rdfs:label>
+    <rdfs:seeAlso rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://www.era.europa.eu/domains/technical-specifications-interoperability/control-command-and-signalling-tsi_en#oe-content-paragraph-1632</rdfs:seeAlso>
+    <vs:term_status>stable</vs:term_status>
+    <skos:scopeNote xml:lang="en">Precision: the value must be expressed in meter. 
+             
+Depending on the chosen Q_SCALE, the maximal value will be: +327670 M, +32767 M or +3276.7 M.
+
+As in TSI CCS Subset 26, chapter 7. 7.5.1.15 D_NVOVTRP.</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/eratvIndex">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-11-03</dcterms:created>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-11-03</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-08-13</dcterms:modified>
+    <rdfs:comment xml:lang="en">Index code used in the original definition of a parameter in ERATV.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">ERATV index</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/ns/org#Organization">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="fr">Organisation</rdfs:label>
+    <rdfs:label xml:lang="en">Organization</rdfs:label>
+    <rdfs:label xml:lang="it">Organizzazione</rdfs:label>
+    <rdfs:label xml:lang="es">organización</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/axleSpacingDistance">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <era:eratvIndex>4.5.3.4</era:eratvIndex>
+    <rdfs:domain rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db22"/>
+    <rdfs:range rdf:resource="http://data.europa.eu/949/AxleSpacing"/>
+    <era:shaclShapeValidationRule rdf:resource="http://data.europa.eu/949/shapes/AxleSpacingDistance"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-02-19</dcterms:created>
+    <dcterms:isRequiredBy rdf:resource="http://data.europa.eu/eli/dec_impl/2011/665/2019-06-16"/>
+    <dcterms:isRequiredBy rdf:resource="http://data.europa.eu/eli/dec_impl/2011/665/2021-05-18"/>
+    <dcterms:isRequiredBy rdf:resource="http://data.europa.eu/eli/dec_impl/2011/665/2023-09-08"/>
+    <rdfs:comment xml:lang="en">Position of the axles along the unit. a: Distance between axles; b: Distance from end axle to the end of the nearest coupling plane; c: distance between two inside axles.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">Axle spacing</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <skos:scopeNote xml:lang="en">Depending on the chosen Q_SCALE, the maximal value will be: +327670 M, +3276</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/hashSource">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-02-06</dcterms:created>
+    <rdfs:comment xml:lang="en">This property indicates for each infrastructure element, the source, i.e. the identifier  or key that was input to the hash function in order to generate the hash value that is part of the hash URI.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">Hash source</rdfs:label>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://data.europa.eu/949/InfrastructureElement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2006/time#TemporalEntity">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="en">Temporal entity</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/sameKeyAs">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-11-13</dcterms:created>
+    <rdfs:comment xml:lang="en">if a big class is splitted into parts (layers), all parts share the same key representing original object. Here is the reference to other part-class e.g. infra.TrackEdge.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">same Key As</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/usedInRCCCalculations">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-04-12</dcterms:created>
+    <rdfs:comment xml:lang="en">Indicates whether a RINF parameter is used in Route Compatibility Check calculations according to Commission Implementing Regulation (EU) 2019/773 of 16 May 2019 on the technical specification for interoperability relating to the operation and traffic management subsystem of the rail system within the European Union and repealing Decision.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">Parameter is used in Route Compatibility Check (RCC) calculations</rdfs:label>
+    <rdfs:seeAlso rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://eur-lex.europa.eu/eli/reg_impl/2019/773/oj#:~:text=Commission%20Implementing%20Regulation</rdfs:seeAlso>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/formatNote">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-12-03</dcterms:created>
+    <rdfs:comment xml:lang="en">This property is used to annotate in human readable the format of parameters</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">format note</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db13">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://data.europa.eu/949/name"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db15">
+    <rdf:first rdf:resource="http://data.europa.eu/949/CommonCharacteristicsSubset"/>
+    <rdf:rest rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db16"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/key">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-11-13</dcterms:created>
+    <rdfs:comment xml:lang="en">defines if the data-object is addressable by this attribute.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">key</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db7">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://data.europa.eu/949/failureReason"/>
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/XMLName">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-05-26</dcterms:created>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-08-13</dcterms:modified>
+    <rdfs:comment xml:lang="en">Corresponding XML name as indicated in the RINF application guide</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">XML name</rdfs:label>
+    <rdfs:seeAlso rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://www.era.europa.eu/sites/default/files/registers/docs/rinf_application_guide_for_register_en.pdf</rdfs:seeAlso>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/applicable">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-22</dcterms:created>
+    <rdfs:comment xml:lang="en">Annotation used to point to the applicability of a parameter in RINF. Values are Y/N/NYA</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">applicable</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://creativecommons.org/ns#license">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db21">
+    <rdf:first rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db19"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/rinfIndex">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-11-03</dcterms:created>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-11-03</dcterms:modified>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-08-13</dcterms:modified>
+    <rdfs:comment xml:lang="en">Index code used in the original definition of a parameter in RINF.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">RINF index</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/canonicalURI">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-12-13</dcterms:created>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-02-06</dcterms:modified>
+    <rdfs:comment xml:lang="en">The canonical URI is defined for each instance of an Infrastructure element, e.g. section of line, operational point, track, tunnel, siding.
+Objects of the infrastructure generated through RML mappings include (when provided) their validity start and end dates. With its identifier, plus all identifiers of its "parent" elements, and its validity dates, a hash URI is generated.
+The canonical URI is the element's URI with its identifiers and without the validity dates. All of the hash URIs of an element point to its canonical URI.
+Additionally, SoLs point to the canonical URIs of their start OP and end OP.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">Canonical URI</rdfs:label>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+    <rdfs:domain rdf:resource="http://data.europa.eu/949/InfrastructureElement"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/dependencyNote">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-12-02</dcterms:created>
+    <rdfs:comment xml:lang="en">This property is used to specify dependencies in natural language not covered by skos:scopeNote</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">dependency note</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/Document">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="en">Document</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/exp">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-11-13</dcterms:created>
+    <rdfs:comment xml:lang="en">factor to use int for fixed point e.g. 23e-3=0.023</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">Exponential</rdfs:label>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2002/07/owl#versionURI">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/WarningMeasureEvent">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db6"/>
+    <era:ccsView>OPP</era:ccsView>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-02-19</dcterms:created>
+    <rdfs:comment xml:lang="en">Defines planned activation/removal of warning area</rdfs:comment>
+    <rdfs:label xml:lang="en">Warning Measure Event</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/AllocationSection">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db11"/>
+    <rdfs:subClassOf rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db12"/>
+    <rdfs:subClassOf rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db13"/>
+    <era:ccsView>TP</era:ccsView>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-02-19</dcterms:created>
+    <rdfs:comment xml:lang="en">Defines an allocation section for a section of track</rdfs:comment>
+    <rdfs:label xml:lang="en">Allocation Section</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db22">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:unionOf rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db23"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db24">
+    <rdf:first rdf:resource="http://data.europa.eu/949/VehicleTypeConfigParameterSet"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db17">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+    <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+    <owl:withRestrictions rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db20"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db20">
+    <rdf:first rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db18"/>
+    <rdf:rest rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db21"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2006/time#Instant">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="en">Time instant</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/source">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db16">
+    <rdf:first rdf:resource="http://data.europa.eu/949/ETCS"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2006/time#TemporalDuration">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="en">Temporal duration</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db12">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://data.europa.eu/949/name"/>
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/affectedProperty">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-04</dcterms:created>
+    <rdfs:comment xml:lang="en">Annotation property used in SHACL shapes. Name of the properties that are being validated in a SHACL shape.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">affected Property</rdfs:label>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/unitOfMeasure">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-05-16</dcterms:created>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-08-13</dcterms:modified>
+    <rdfs:comment xml:lang="en">Magnitude of a quantity, defined and adopted by convention or by law, that is used as a standard for measurement of the same kind of quantity.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">Unit of measure</rdfs:label>
+    <rdfs:range rdf:resource="http://qudt.org/vocab/unit/"/>
+    <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/scope">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-04</dcterms:created>
+    <rdfs:comment xml:lang="en">Annotation property used in SHACL shapes. Indicates if the SHACL shape is validating a property of a specific instance ("local"), or if it needs to check other instances ("global"). For example, SHACL shape to validate no repeated ids within a specific track.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">scope</rdfs:label>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/ccsView">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-05-28</dcterms:created>
+    <rdfs:comment xml:lang="en">A view for one of the namespace of CCS TMS</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">CCS view</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#Concept">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="en">Concept</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db11">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://data.europa.eu/949/dependencies"/>
+    <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minQualifiedCardinality>
+    <owl:onClass rdf:resource="http://data.europa.eu/949/AllocationSection"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db23">
+    <rdf:first rdf:resource="http://data.europa.eu/949/VehicleType"/>
+    <rdf:rest rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db24"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.europa.eu/949/isECC">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-06-16</dcterms:created>
+    <rdfs:comment xml:lang="en">Indicates that the class is constrained such that exactly one of several properties may be used per instance — i.e., it enforces an exclusive choice among attributes.</rdfs:comment>
+    <rdfs:isDefinedBy rdf:resource="http://data.europa.eu/949/"/>
+    <rdfs:label xml:lang="en">Exclusive Choice Class</rdfs:label>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#editorialNote">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/publisher">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db10">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://data.europa.eu/949/warning"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2002/07/owl#ObjectProperty">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2002/07/owl#DatatypeProperty">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/Person">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="en">Person</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/contributor">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#Geometry">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <era:shaclShapeValidationRule rdf:resource="http://data.europa.eu/949/shapes/GeometryShape"/>
+    <rdfs:label xml:lang="en">Geometry</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#Feature">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="en">Feature</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/title">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#List">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db19">
+    <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">327670.0</xsd:maxInclusive>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/date">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/ns/org#memberOf">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#prefLabel">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/modified">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/issued">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#changeNote">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/creator">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#scopeNote">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#wktLiteral">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/replaces">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/relation">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#example">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.opengis.net/ont/sf#Point">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="en">Point</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db3">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:unionOf rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#definition">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2001/XMLSchema#date">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/isReplacedBy">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/created">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="n001fa4a63ac14c2fb1869e899abbcd6db18">
+    <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</xsd:minInclusive>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2003/06/sw-vocab-status/ns#term_status">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+</rdf:RDF>

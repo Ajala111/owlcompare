@@ -1,0 +1,696 @@
+@prefix : <http://data.europa.eu/949/> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix sf: <http://www.opengis.net/ont/sf#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix era: <http://data.europa.eu/949/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix unit: <http://qudt.org/vocab/unit/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@base <http://data.europa.eu/949/> .
+
+<http://data.europa.eu/949/> rdf:type owl:Ontology ;
+                              cc:license <http://data.europa.eu/eli/dec_impl/2017/863/oj> ;
+                              dcterms:contributor [ ];
+                              dcterms:creator [ ] ;
+                              dcterms:issued "2024-04-18"^^xsd:date ;
+                              dcterms:modified "2024-04-18"^^xsd:date ,
+                                               "2024-05-24"^^xsd:date ,
+                                               "2024-06-03"^^xsd:date ,
+                                               "2024-06-05"^^xsd:date ,
+                                               "2024-07-05"^^xsd:date ,
+                                               "2024-08-02"^^xsd:date ,
+                                               "2024-08-12"^^xsd:date ,
+                                               "2024-08-13"^^xsd:date ,
+                                               "2024-09-19"^^xsd:date ,
+                                               "2024-09-20"^^xsd:date ,
+                                               "2024-09-24"^^xsd:date ,
+                                               "2024-09-25"^^xsd:date ,
+                                               "2024-10-24"^^xsd:date ,
+                                               "2024-10-28"^^xsd:date ,
+                                               "2024-10-29"^^xsd:date ,
+                                               "2024-10-30"^^xsd:date ,
+                                               "2024-10-31"^^xsd:date ,
+                                               "2024-11-04"^^xsd:date ,
+                                               "2024-11-05"^^xsd:date ,
+                                               "2024-11-12"^^xsd:date ,
+                                               "2024-11-20"^^xsd:date ,
+                                               "2024-11-22"^^xsd:date ,
+                                               "2024-11-26"^^xsd:date ,
+                                               "2024-11-27"^^xsd:date ,
+                                               "2024-12-02"^^xsd:date ,
+                                               "2024-12-03"^^xsd:date ,
+                                               "2024-12-05"^^xsd:date ,
+                                               "2024-12-10"^^xsd:date ,
+                                               "2024-12-12"^^xsd:date ,
+                                               "2024-12-13"^^xsd:date ,
+                                               "2025-01-30"^^xsd:date ,
+                                               "2025-02-11"^^xsd:date ,
+                                               "2025-02-13"^^xsd:date ,
+                                               "2025-02-18"^^xsd:date ,
+                                               "2025-02-19"^^xsd:date ,
+                                               "2025-02-20"^^xsd:date ,
+                                               "2025-03-01"^^xsd:date ,
+                                               "2025-03-05"^^xsd:date ,
+                                               "2025-03-07"^^xsd:date ,
+                                               "2025-03-10"^^xsd:date ,
+                                               "2025-03-11"^^xsd:date ,
+                                               "2025-03-17"^^xsd:date ,
+                                               "2025-03-24"^^xsd:date ,
+                                               "2025-03-26"^^xsd:date ,
+                                               "2025-04-25"^^xsd:date ,
+                                               "2025-05-05"^^xsd:date ,
+                                               "2025-05-06"^^xsd:date ,
+                                               "2025-05-09"^^xsd:date ;
+                              dcterms:publisher "European Union Agency for Railways" ;
+                              dcterms:title "ERA Ontology"@en ;
+                              rdfs:comment """This is the human and machine-readable Ontology governed by the European Union Agency for Railways (https://www.era.europa.eu/). It represents the concepts and relationships linked to the sectorial legal framework and the use cases under the Agency´s remit, as described in the Commission Implementing Regulation (EU) [to be updated after publication] on the common specifications for the register of railway infrastructure [to be updated after publication].
+
+
+Currently, this Ontology covers the European railway infrastructure and the vehicle types authorized to operate over it. It is a semantic/browsable representation of the RINF application guide (1) and ERATV application guide (2) that were built by domain experts in the RINF and ERATV working parties.
+
+The Ontology also includes the route book concepts described in appendix D2 \"Elements the infrastructure manager has to provide to the railway undertaking for the Route Book\" as presented in the Commission Implementing Regulation (EU) [to be updated after publication] 2019/773 of 16 May 2019 on the technical specification for interoperability relating to the operation and traffic management subsystem of the rail system within the European Union and [to be updated after publication] and the Appendix D3 [to be updated after publication]."""@en ;
+                              rdfs:label "ERA Ontology"@en ;
+                              rdfs:seeAlso "https://www.era.europa.eu/sites/default/files/registers/docs/iu-eratv_application_guide_for_register_2016-797_en.pdf"^^xsd:anyURI ,
+                                           "https://www.era.europa.eu/sites/default/files/registers/docs/rinf_application_guide_for_register_en.pdf"^^xsd:anyURI ;
+                              owl:priorVersion "https://gitlab.com/era-europa-eu/public/interoperable-data-programme/era-ontology/era-ontology/-/releases/v3.1.0"^^xsd:anyURI ;
+                              owl:versionInfo "v3.1.2" ;
+                              owl:versionURI <https://gitlab.com/era-europa-eu/public/interoperable-data-programme/era-ontology/era-ontology/-/releases/v3.1.1> ;
+                              skos:changeNote """
+
+Revision 05-06-2024:
+- linked with existing (updated) or new SKOS Concepts, related to the TWG RINF CCS;
+- included references and guidelines as in Table 5 of the RINF Application Guide.
+
+Revision 03-06-2024:
+- added properties for the primary and subsidiary locations
+- reuse the organisation ontology to address the ERA stakeholder organisations (bodies) and their roles
+- deprecated classes related to organisation
+- error corrections
+- added several definitions
+
+Revision 24-05-2024:
+- remove of the owl:FunctionalProperty from every object or data property;
+- addition of new classes for the purpose of the Topical Wrokgroup micro-level;               
+- reshaping the topology layer, deprecating unused properties and renaming some of the classes
+- reuse of the time ontology for addressing the validity and applicability;
+- remove of the axiom era:TopologicalObject as subclass of era:Feature;
+- changing the domains of multiple data and object properties to subclasses of era:TechnicalCharacteristics;
+- removed some of the relations between tracks, sidings, tunnels, etc.;
+- deprecated the properties addressing the validity;
+- TODO: deprecate unused properties from version 3.0.0;
+
+Revision 18-04-2024:
+- updated as per results of the Topical Working Group RINF-CCS (Draft report 0.2);
+- include upcoming remarks from TWG members (inclusing those as documented in Report 0.3);
+- linked with existing (updated) or new SKOS Concepts, related to the TWG RINF CCS;
+- included references and guidelines as in Table 5 of the RINF Application Guide."""@en .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://creativecommons.org/ns#license
+cc:license rdf:type owl:AnnotationProperty .
+
+
+###  http://data.europa.eu/949/XMLName
+era:XMLName rdf:type owl:AnnotationProperty ;
+            dcterms:created "2023-05-26"^^xsd:date ;
+            dcterms:modified "2024-08-13"^^xsd:date ;
+            rdfs:comment "Corresponding XML name as indicated in the RINF application guide"@en ;
+            rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+            rdfs:label "XML name"@en ;
+            rdfs:seeAlso "https://www.era.europa.eu/sites/default/files/registers/docs/rinf_application_guide_for_register_en.pdf"^^xsd:anyURI ;
+            rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/affectedClass
+era:affectedClass rdf:type owl:AnnotationProperty ;
+                  dcterms:created "2024-11-04"^^xsd:date ;
+                  rdfs:comment "Annotation property used in SHACL shapes. Name of the classes that are the subject of properties that are being validated in a SHACL shape."@en ;
+                  rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                  rdfs:label "affected Class"@en ;
+                  rdfs:range xsd:anyURI .
+
+
+###  http://data.europa.eu/949/affectedProperty
+era:affectedProperty rdf:type owl:AnnotationProperty ;
+                     dcterms:created "2024-11-04"^^xsd:date ;
+                     rdfs:comment "Annotation property used in SHACL shapes. Name of the properties that are being validated in a SHACL shape."@en ;
+                     rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                     rdfs:label "affected Property"@en ;
+                     rdfs:range xsd:anyURI .
+
+
+###  http://data.europa.eu/949/applicable
+era:applicable rdf:type owl:AnnotationProperty ;
+               dcterms:created "2024-11-22"^^xsd:date ;
+               rdfs:comment "Annotation used to point to the applicability of a parameter in RINF. Values are Y/N/NYA"@en ;
+               rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+               rdfs:label "applicable"@en ;
+               vs:term_status "stable" ;
+               rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/canonicalURI
+era:canonicalURI rdf:type owl:AnnotationProperty ;
+                 dcterms:created "2022-12-13"^^xsd:date ;
+                 dcterms:modified "2024-02-06"^^xsd:date ;
+                 rdfs:comment """The canonical URI is defined for each instance of an Infrastructure element, e.g. section of line, operational point, track, tunnel, siding.
+Objects of the infrastructure generated through RML mappings include (when provided) their validity start and end dates. With its identifier, plus all identifiers of its \"parent\" elements, and its validity dates, a hash URI is generated.
+The canonical URI is the element's URI with its identifiers and without the validity dates. All of the hash URIs of an element point to its canonical URI.
+Additionally, SoLs point to the canonical URIs of their start OP and end OP."""@en ;
+                 rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                 rdfs:label "Canonical URI"@en ;
+                 rdfs:range xsd:anyURI ;
+                 rdfs:domain era:InfrastructureElement .
+
+
+###  http://data.europa.eu/949/ccsView
+era:ccsView rdf:type owl:AnnotationProperty ;
+            dcterms:created "2024-05-28"^^xsd:date ;
+            rdfs:comment "A view for one of the namespace of CCS TMS"@en ;
+            rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+            rdfs:label "CCS view"@en .
+
+
+###  http://data.europa.eu/949/isECC
+era:isECC a owl:AnnotationProperty ;
+                    dcterms:created "2025-06-16"^^xsd:date ;
+                    rdfs:comment "Indicates that the class is constrained such that exactly one of several properties may be used per instance — i.e., it enforces an exclusive choice among attributes."@en ;
+                    rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                    rdfs:label "Exclusive Choice Class"@en ;
+                    rdfs:range xsd:boolean .
+
+
+###  http://data.europa.eu/949/dependencyNote
+era:dependencyNote rdf:type owl:AnnotationProperty ;
+                   dcterms:created "2024-12-02"^^xsd:date ;
+                   rdfs:comment "This property is used to specify dependencies in natural language not covered by skos:scopeNote"@en ;
+                   rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                   rdfs:label "dependency note"@en ;
+                   vs:term_status "stable" ;
+                   rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/eratvIndex
+era:eratvIndex rdf:type owl:AnnotationProperty ;
+               dcterms:created "2020-11-03"^^xsd:date ;
+               dcterms:modified "2020-11-03"^^xsd:date ,
+                                "2024-08-13"^^xsd:date ;
+               rdfs:comment "Index code used in the original definition of a parameter in ERATV."@en ;
+               rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+               rdfs:label "ERATV index"@en ;
+               vs:term_status "stable" ;
+               rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/exp
+era:exp rdf:type owl:AnnotationProperty ;
+        dcterms:created "2023-11-13"^^xsd:date ;
+        rdfs:comment "factor to use int for fixed point e.g. 23e-3=0.023"@en ;
+        rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+        rdfs:label "Exponential"@en ;
+        rdfs:range xsd:int .
+
+
+###  http://data.europa.eu/949/formatNote
+era:formatNote rdf:type owl:AnnotationProperty ;
+               dcterms:created "2024-12-03"^^xsd:date ;
+               rdfs:comment "This property is used to annotate in human readable the format of parameters"@en ;
+               rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+               rdfs:label "format note"@en ;
+               vs:term_status "stable" ;
+               rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/hashSource
+era:hashSource rdf:type owl:AnnotationProperty ;
+               dcterms:created "2024-02-06"^^xsd:date ;
+               rdfs:comment "This property indicates for each infrastructure element, the source, i.e. the identifier  or key that was input to the hash function in order to generate the hash value that is part of the hash URI."@en ;
+               rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+               rdfs:label "Hash source"@en ;
+               rdfs:range xsd:string ;
+               rdfs:domain era:InfrastructureElement .
+
+
+###  http://data.europa.eu/949/inSkosConceptScheme
+era:inSkosConceptScheme rdf:type owl:AnnotationProperty ;
+                        dcterms:created "2022-11-17"^^xsd:date ;
+                        dcterms:modified "2024-08-13"^^xsd:date ;
+                        rdfs:comment "Property that links an object SKOS property to a the URI of the corresponding SKOS Concept Scheme."@en ;
+                        rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                        rdfs:label "in SKOS Concept Scheme"@en ;
+                        vs:term_status "stable" ;
+                        rdfs:range skos:ConceptScheme ;
+                        rdfs:domain owl:ObjectProperty .
+
+
+###  http://data.europa.eu/949/key
+era:key rdf:type owl:AnnotationProperty ;
+        dcterms:created "2023-11-13"^^xsd:date ;
+        rdfs:comment "defines if the data-object is addressable by this attribute."@en ;
+        rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+        rdfs:label "key"@en .
+
+
+###  http://data.europa.eu/949/legalDeadline
+era:legalDeadline rdf:type owl:AnnotationProperty ;
+                  dcterms:created "2024-11-22"^^xsd:date ;
+                  rdfs:comment "Annotation used to point to legal obligation of a parameter in RINF"@en ;
+                  rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                  rdfs:label "legal deadline"@en ;
+                  vs:term_status "stable" ;
+                  rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/ordered
+era:ordered rdf:type owl:AnnotationProperty ;
+            dcterms:created "2025-03-18"^^xsd:date ;
+            rdfs:comment "indicate whether the object is ordered according to their key-attribute by key or by index."@en ;
+            rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+            rdfs:label "ordered by"@en .
+
+
+###  http://data.europa.eu/949/rinfIndex
+era:rinfIndex rdf:type owl:AnnotationProperty ;
+              dcterms:created "2020-11-03"^^xsd:date ;
+              dcterms:modified "2020-11-03"^^xsd:date ,
+                               "2024-08-13"^^xsd:date ;
+              rdfs:comment "Index code used in the original definition of a parameter in RINF."@en ;
+              rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+              rdfs:label "RINF index"@en ;
+              vs:term_status "stable" ;
+              rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/sameKeyAs
+era:sameKeyAs rdf:type owl:AnnotationProperty ;
+              dcterms:created "2023-11-13"^^xsd:date ;
+              rdfs:comment "if a big class is splitted into parts (layers), all parts share the same key representing original object. Here is the reference to other part-class e.g. infra.TrackEdge."@en ;
+              rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+              rdfs:label "same Key As"@en .
+
+
+###  http://data.europa.eu/949/scope
+era:scope rdf:type owl:AnnotationProperty ;
+          dcterms:created "2024-11-04"^^xsd:date ;
+          rdfs:comment "Annotation property used in SHACL shapes. Indicates if the SHACL shape is validating a property of a specific instance (\"local\"), or if it needs to check other instances (\"global\"). For example, SHACL shape to validate no repeated ids within a specific track."@en ;
+          rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+          rdfs:label "scope"@en ;
+          rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/shaclShapeValidationRule
+era:shaclShapeValidationRule rdf:type owl:AnnotationProperty ;
+                             dcterms:created "2024-11-04"^^xsd:date ;
+                             rdfs:comment "Annotation used to point to the SHACL shape that implements the validation for a certain RINF parameter (property). Each shape contains constraints for valid datatypes, patterns, min and max count, valid SKOS values and business rules."@en ;
+                             rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                             rdfs:label "SHACL shape validation rule"@en .
+
+
+###  http://data.europa.eu/949/tentReference
+era:tentReference rdf:type owl:AnnotationProperty ;
+                  dcterms:created "2024-11-26"^^xsd:date ;
+                  rdfs:comment "Used to annotate properties coming from the TenT regulations, to be used for monitoring the provision of the data."@en ;
+                  rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                  rdfs:label "TenT reference"@en ;
+                  vs:term_status "stable" ;
+                  rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/tsiOPEAppendixD1Index
+era:tsiOPEAppendixD1Index rdf:type owl:AnnotationProperty ;
+                          dcterms:created "2024-11-26"^^xsd:date ;
+                          rdfs:comment "The index of a vocabulary term in Appendix D1 Vehicle and train Route compatibility checks."@en ;
+                          rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                          rdfs:label "TSI operation appendix D1 index"@en ;
+                          vs:term_status "stable" ;
+                          skos:altLabel "Appendix D1 index"@en ;
+                          rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/tsiOPEAppendixD2Index
+era:tsiOPEAppendixD2Index rdf:type owl:AnnotationProperty ;
+                          dcterms:created "2022-11-04"^^xsd:date ;
+                          dcterms:modified "2024-08-13"^^xsd:date ,
+                                           "2024-11-26"^^xsd:date ;
+                          rdfs:comment "The index of a vocabulary term in Appendix D2 Elements the infrastructure manager has to provide to the railway undertaking for the Route Book from the document Commission Implementing Regulation (EU) 2019/773 of 16 May 2019 on the technical specification for interoperability relating to the operation and traffic management subsystem of the rail system within the European Union and repealing Decision 2012/757/EU."@en ;
+                          rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                          rdfs:label "TSI operation appendix D2 index"@en ;
+                          skos:altLabel "Appendix D2 index"@en ;
+                          skos:definition "The index of a vocabulary term in Appendix D2 Elements the infrastructure manager has to provide to the railway undertaking for the Route Book from the document Commission Implementing Regulation (EU) 2019/773 of 16 May 2019 on the technical specification for interoperability relating to the operation and traffic management subsystem of the rail system within the European Union and repealing Decision 2012/757/EU."@en ;
+                          rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/tsiOPEAppendixD3Index
+era:tsiOPEAppendixD3Index rdf:type owl:AnnotationProperty ;
+                          dcterms:created "2022-11-04"^^xsd:date ;
+                          dcterms:modified "2024-08-13"^^xsd:date ,
+                                           "2024-11-26"^^xsd:date ;
+                          rdfs:comment "The index of a vocabulary term in Appendix D3 ERTMS trackside engineering information relevant to operation that the infrastructure manager shall provide to the railway undertaking."@en ;
+                          rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                          rdfs:label "TSI operation appendix D3 index"@en ;
+                          vs:term_status "stable" ;
+                          skos:altLabel "Appendix D3 index"@en ;
+                          rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/949/unitOfMeasure
+era:unitOfMeasure rdf:type owl:AnnotationProperty ;
+                  dcterms:created "2024-05-16"^^xsd:date ;
+                  dcterms:modified "2024-08-13"^^xsd:date ;
+                  rdfs:comment "Magnitude of a quantity, defined and adopted by convention or by law, that is used as a standard for measurement of the same kind of quantity."@en ;
+                  rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                  rdfs:label "Unit of measure"@en ;
+                  rdfs:range unit: ;
+                  rdfs:domain owl:DatatypeProperty .
+
+
+###  http://data.europa.eu/949/usedInRCCCalculations
+era:usedInRCCCalculations rdf:type owl:AnnotationProperty ;
+                          dcterms:created "2023-04-12"^^xsd:date ;
+                          rdfs:comment "Indicates whether a RINF parameter is used in Route Compatibility Check calculations according to Commission Implementing Regulation (EU) 2019/773 of 16 May 2019 on the technical specification for interoperability relating to the operation and traffic management subsystem of the rail system within the European Union and repealing Decision."@en ;
+                          rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                          rdfs:label "Parameter is used in Route Compatibility Check (RCC) calculations"@en ;
+                          rdfs:seeAlso "https://eur-lex.europa.eu/eli/reg_impl/2019/773/oj#:~:text=Commission%20Implementing%20Regulation"^^xsd:anyURI ;
+                          rdfs:range xsd:boolean .
+
+
+###  http://purl.org/dc/terms/contributor
+dcterms:contributor rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/created
+dcterms:created rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/creator
+dcterms:creator rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/date
+dcterms:date rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/isReplacedBy
+dcterms:isReplacedBy rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/issued
+dcterms:issued rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/modified
+dcterms:modified rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/publisher
+dcterms:publisher rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/relation
+dcterms:relation rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/replaces
+dcterms:replaces rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/source
+dcterms:source rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/title
+dcterms:title rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2002/07/owl#versionURI
+owl:versionURI rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2003/06/sw-vocab-status/ns#term_status
+vs:term_status rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#altLabel
+skos:altLabel rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#changeNote
+skos:changeNote rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#definition
+skos:definition rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#editorialNote
+skos:editorialNote rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#example
+skos:example rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#prefLabel
+skos:prefLabel rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#scopeNote
+skos:scopeNote rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/ns/org#memberOf
+org:memberOf rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.opengis.net/ont/geosparql#wktLiteral
+geo:wktLiteral rdf:type rdfs:Datatype .
+
+
+###  http://www.w3.org/2001/XMLSchema#date
+xsd:date rdf:type rdfs:Datatype .
+
+
+era:authorisingMemberState rdf:type owl:ObjectProperty ;
+                           rdfs:subPropertyOf era:vehicleTypeTechnicalObjectCharacteristic ;
+                           rdfs:domain [ rdf:type owl:Class ;
+                                         owl:unionOf ( era:VehicleAuthorisationCase
+                                                       era:VehicleTypeAuthorisationCase
+                                                     )
+                                       ] ;
+                           rdfs:range skos:Concept ;
+                           era:eratvIndex "3.1.1" ;
+                           era:inSkosConceptScheme <http://publications.europa.eu/resource/authority/country> ;
+                           dcterms:created "2025-02-19"^^xsd:date ;
+                           dcterms:modified "2026-01-29"^^xsd:date ;
+                           rdfs:comment "Indicates the authorized local state within the Region."@en ;
+                           rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                           rdfs:label "Member State of authorisation"@en ;
+                           skos:editorialNote "Present and unchanged since <http://data.europa.eu/eli/dec_impl/2011/665>"@en ;
+                           vs:term_status "stable" .
+
+###  http://data.europa.eu/949/WarningMeasureEvent
+era:WarningMeasureEvent rdf:type owl:Class ;
+                        rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                          owl:onProperty era:startsAfterEvents ;
+                                          owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+                                          owl:onClass era:OperationalEventRef
+                                        ] ;
+                        era:ccsView "OPP" ;
+                        dcterms:created "2025-02-19"^^xsd:date ;
+                        rdfs:comment "Defines planned activation/removal of warning area"@en ;
+                        rdfs:label "Warning Measure Event"@en .
+
+
+###  http://data.europa.eu/949/WarningMeasureEventExecutionReport
+era:WarningMeasureEventExecutionReport rdf:type owl:Class ;
+                                       rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                                         owl:onProperty era:failureReason ;
+                                                         owl:minCardinality "0"^^xsd:nonNegativeInteger
+                                                       ] ,
+                                                       [ rdf:type owl:Restriction ;
+                                                         owl:onProperty era:warning ;
+                                                         owl:minCardinality "0"^^xsd:nonNegativeInteger
+                                                       ] ,
+                                                       [ rdf:type owl:Restriction ;
+                                                         owl:onProperty era:failureReason ;
+                                                         owl:maxCardinality "1"^^xsd:nonNegativeInteger
+                                                       ] ,
+                                                       [ rdf:type owl:Restriction ;
+                                                         owl:onProperty era:warning ;
+                                                         owl:maxCardinality "1"^^xsd:nonNegativeInteger
+                                                       ] ;
+                                       era:ccsView "OPP" ;
+                                       rdfs:comment "Defines state of execution of a warning measure event (completed, failed, warning)."@en ;
+                                       dcterms:created "2025-02-19"^^xsd:date ;
+                                       rdfs:label "Warning Measure Event Execution Report"@en .
+
+
+era:AllocationSection rdf:type owl:Class ;
+                      rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                        owl:onProperty era:dependencies ;
+                                        owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                        owl:onClass era:AllocationSection
+                                      ] ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty era:name ;
+                                        owl:minCardinality "0"^^xsd:nonNegativeInteger
+                                      ] ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty era:name ;
+                                        owl:maxCardinality "1"^^xsd:nonNegativeInteger
+                                      ] ;
+                      era:ccsView "TP" ;
+                      dcterms:created "2025-02-19"^^xsd:date ;
+                      rdfs:comment "Defines an allocation section for a section of track"@en ;
+                      rdfs:label "Allocation Section"@en .
+					  
+
+era:dNvovtrp23 rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf era:etcsNationalValuesDataParameter ;
+             rdf:type owl:FunctionalProperty ;
+             rdfs:domain [ rdf:type owl:Class ;
+                           owl:unionOf ( era:CommonCharacteristicsSubset
+                                         era:ETCS
+                                       )
+                         ] ;
+             rdfs:range [ rdf:type rdfs:Datatype ;
+                          owl:onDatatype xsd:decimal ;
+                          owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                 ]
+                                                 [ xsd:maxInclusive 327670.0
+                                                 ]
+                                               )
+                        ] ;
+             era:applicable "Y/N/NYA" ;
+             era:dependencyNote "A value has to be provided when ETCS is present (a value is provided on 1.1.1.3.2.1)."@en ;
+             era:formatNote "NNNNNNN.N whereby the last digit is only used when Q_SCALE = 10 CM" ;
+             era:legalDeadline "12 months after publication of Article 7 Guide"@en ;
+             era:rinfIndex "1.1.1.3.2.16.5" ,
+                           "1.2.1.1.1.16.5" ;
+             era:shaclShapeValidationRule <http://data.europa.eu/949/shapes/DNvovtrp> ,
+                                          <http://data.europa.eu/949/shapes/DNvovtrpApplicability> ;
+             era:tsiOPEAppendixD3Index "1.5.5" ;
+             era:unitOfMeasure unit:M ;
+             dcterms:created "2022-11-07"^^xsd:date ;
+             dcterms:modified "2024-01-08"^^xsd:date ,
+                              "2024-04-18"^^xsd:date ,
+                              "2024-12-05"^^xsd:date ,
+                              "2026-02-27"^^xsd:date ;
+             dcterms:relation era:etcsLevelType ;
+             dcterms:source <http://data.europa.eu/eli/reg_impl/2023/1695/oj> ;
+             rdfs:comment "Maximum distance for overriding the train trip in metres, according to the specification referenced in Appendix A-1, index [C]."@en ;
+             rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+             rdfs:label "D_NVOVTRP"@en ;
+             rdfs:seeAlso "https://www.era.europa.eu/domains/technical-specifications-interoperability/control-command-and-signalling-tsi_en#oe-content-paragraph-1632"^^xsd:anyURI ;
+             vs:term_status "stable" ;
+             skos:scopeNote """Precision: the value must be expressed in meter. 
+             
+Depending on the chosen Q_SCALE, the maximal value will be: +327670 M, +32767 M or +3276.7 M.
+
+As in TSI CCS Subset 26, chapter 7. 7.5.1.15 D_NVOVTRP."""@en .
+
+
+era:axleSpacingDistance a owl:ObjectProperty ;
+                        era:eratvIndex "4.5.3.4" ;
+                        rdfs:domain [ rdf:type owl:Class ;
+                                    owl:unionOf ( era:VehicleType
+                                                  era:VehicleTypeConfigParameterSet
+												  era:VehicleTypeOriginal
+                                                )
+                                  ] ;
+                        rdfs:range era:AxleSpacing ;
+                        era:shaclShapeValidationRule <http://data.europa.eu/949/shapes/AxleSpacingDistance> ;
+                        dcterms:created "2025-02-19"^^xsd:date ;
+                        dcterms:isRequiredBy
+                                <http://data.europa.eu/eli/dec_impl/2011/665/2019-06-16> ,
+                                <http://data.europa.eu/eli/dec_impl/2011/665/2021-05-18> ,
+                                <http://data.europa.eu/eli/dec_impl/2011/665/2023-09-08> ;
+                        rdfs:comment "Position of the axles along the unit. a: Distance between axles; b: Distance from end axle to the end of the nearest coupling plane; c: distance between two inside axles."@en ;
+                        rdfs:isDefinedBy <http://data.europa.eu/949/> ;
+                        rdfs:label "Axle spacing"@en ;
+                        vs:term_status "stable" ;
+                        skos:scopeNote "Depending on the chosen Q_SCALE, the maximal value will be: +327670 M, +3276"@en .
+
+
+###  http://www.opengis.net/ont/geosparql#Feature
+geo:Feature rdf:type owl:Class ;
+            rdfs:label "Feature"@en .
+
+
+###  http://www.opengis.net/ont/geosparql#Geometry
+geo:Geometry rdf:type owl:Class ;
+             era:shaclShapeValidationRule <http://data.europa.eu/949/shapes/GeometryShape> ;
+             rdfs:label "Geometry"@en .
+
+
+###  http://www.opengis.net/ont/sf#Point
+sf:Point rdf:type owl:Class ;
+         rdfs:label "Point"@en .
+
+
+###  http://www.w3.org/1999/02/22-rdf-syntax-ns#List
+rdf:List rdf:type owl:Class .
+
+
+###  http://www.w3.org/2002/07/owl#DatatypeProperty
+owl:DatatypeProperty rdf:type owl:Class .
+
+
+###  http://www.w3.org/2002/07/owl#ObjectProperty
+owl:ObjectProperty rdf:type owl:Class .
+
+
+###  http://www.w3.org/2004/02/skos/core#Concept
+skos:Concept rdf:type owl:Class ;
+             rdfs:label "Concept"@en .
+
+
+###  http://www.w3.org/2006/time#Instant
+time:Instant rdf:type owl:Class ;
+             rdfs:label "Time instant"@en .
+
+
+###  http://www.w3.org/2006/time#TemporalDuration
+time:TemporalDuration rdf:type owl:Class ;
+                      rdfs:label "Temporal duration"@en .
+
+
+###  http://www.w3.org/2006/time#TemporalEntity
+time:TemporalEntity rdf:type owl:Class ;
+                    rdfs:label "Temporal entity"@en .
+
+
+###  http://www.w3.org/ns/org#Organization
+org:Organization rdf:type owl:Class ;
+                 rdfs:label "Organisation"@fr ,
+                            "Organization"@en ,
+                            "Organizzazione"@it ,
+                            "organización"@es .
+
+
+###  http://xmlns.com/foaf/0.1/Document
+foaf:Document rdf:type owl:Class ;
+              rdfs:label "Document"@en .
+
+
+###  http://xmlns.com/foaf/0.1/Person
+foaf:Person rdf:type owl:Class ;
+            rdfs:label "Person"@en .
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

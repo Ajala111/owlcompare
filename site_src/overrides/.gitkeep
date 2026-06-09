@@ -1,0 +1,6 @@
+# This directory is the MkDocs Material `custom_dir` (see mkdocs.yml `theme.custom_dir`).
+# It is intentionally empty: owlcompare overrides no Material theme partials
+# (the spec's rule is "nothing structural is overridden"). The directory must
+# exist for MkDocs to start, so this placeholder keeps it tracked in git.
+# Drop a `main.html` (extending Material's base) here only if a future change
+# genuinely needs a theme-level override.

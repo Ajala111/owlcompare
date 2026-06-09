@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 48" width="220" height="48" role="img" aria-label="owlcompare">
+  <title>owlcompare</title>
+  <!-- Owl mark: two eyes over a diff bracket, in white so it reads on the
+       indigo Material header bar. -->
+  <g fill="none" stroke="#ffffff" stroke-width="3">
+    <circle cx="15" cy="18" r="8"/>
+    <circle cx="34" cy="18" r="8"/>
+  </g>
+  <g fill="#ffffff">
+    <circle cx="15" cy="18" r="3"/>
+    <circle cx="34" cy="18" r="3"/>
+    <!-- beak -->
+    <path d="M21 27 l4 7 l4 -7 z"/>
+  </g>
+  <!-- wordmark -->
+  <text x="52" y="32" font-family="'Inter','Segoe UI',system-ui,sans-serif"
+        font-size="22" font-weight="700" fill="#ffffff" letter-spacing="-0.5">
+    owl<tspan font-weight="400">compare</tspan>
+  </text>
+</svg>

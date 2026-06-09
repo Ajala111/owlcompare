@@ -1,0 +1,134 @@
+# Component 20: documentation site configuration.
+#
+# The Markdown sources live under site_src/docs/ (docs_dir below); the custom
+# marketing landing page is site_src/index.html and is served at the site root,
+# overwriting MkDocs' generated index during the publish workflow
+# (.github/workflows/docs.yml). Build locally with:
+#
+#     uv sync --group docs
+#     uv run mkdocs serve        # live preview at http://127.0.0.1:8000/
+#     uv run mkdocs build --strict   # --strict fails on any broken internal link
+#
+# NOTE (deviation from the spec sketch): assets live under site_src/docs/assets/
+# rather than site_src/assets/, because MkDocs resolves `extra_css`, `logo`, and
+# `favicon` paths relative to docs_dir. Keeping them inside docs_dir is the only
+# way Material picks them up, and it lets `mkdocs build --strict` validate them.
+site_name: owlcompare
+site_url: https://ajala111.github.io/owlcompare/
+site_description: Modern semantic ontology diff for OWL/RDF
+site_author: phelz
+copyright: Copyright &copy; 2026 phelz — MIT licensed
+
+repo_url: https://github.com/Ajala111/owlcompare
+repo_name: Ajala111/owlcompare
+edit_uri: edit/main/site_src/docs/
+
+docs_dir: site_src/docs
+site_dir: site
+
+# Markdown files that live under docs_dir but are NOT site pages. Without this,
+# `mkdocs build --strict` fails them as "not included in the nav". assets/README.md
+# is a contributor note (screenshot-capture instructions), not a published page.
+exclude_docs: |
+  assets/README.md
+
+theme:
+  name: material
+  custom_dir: site_src/overrides/
+  features:
+    - navigation.tabs               # Top-level nav as tabs
+    - navigation.tabs.sticky        # Tabs stay visible on scroll
+    - navigation.sections           # Section headers in sidebar
+    - navigation.expand             # Expand all sidebar items by default
+    - navigation.top                # "Back to top" button
+    - search.suggest                # Search autocomplete
+    - search.highlight              # Highlight matched terms in results
+    - content.code.copy             # Copy button on code blocks
+    - content.tabs.link             # Linked content tabs
+    - toc.follow                    # Right-sidebar TOC follows scroll
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Inter           # Google Font — the spec's documented exception to the
+    code: JetBrains Mono  # "no external resources" rule (applies to the docs tier
+                          # only; the landing page stays fully self-contained).
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  icon:
+    repo: fontawesome/brands/github
+
+extra_css:
+  - assets/overrides.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Ajala111/owlcompare
+  generator: false
+
+markdown_extensions:
+  - admonition                      # Callout boxes (note, warning, tip)
+  - pymdownx.details                # Collapsible content
+  - pymdownx.superfences            # Better code blocks
+  - pymdownx.tabbed:                # Tabbed content
+      alternate_style: true
+  - pymdownx.highlight:             # Syntax highlighting
+      anchor_linenums: true
+  - pymdownx.snippets               # Include external files
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - tables
+  - toc:
+      permalink: true               # Headerlink anchors
+
+plugins:
+  - search
+  - tags                            # Tag pages (used for changelog organization)
+
+nav:
+  # "Home" points at the docs index (docs/index.md). The publish workflow
+  # overwrites the built site/index.html with the custom landing page, so this
+  # tab lands visitors on the marketing storefront at the site root. Using a
+  # real page (not a raw '/') keeps `mkdocs build --strict` happy — an absolute
+  # '/' nav target is flagged as a broken reference under --strict.
+  - Home: index.md
+  - Getting Started:
+    - getting-started/installation.md
+    - getting-started/first-diff.md
+    - getting-started/understanding-output.md
+    - getting-started/next-steps.md
+  - Guides:
+    - guides/ci-integration.md
+    - guides/severity-overrides.md
+    - guides/rename-detection.md
+    - guides/reading-html-report.md
+    - guides/working-with-large-ontologies.md
+  - Reference:
+    - reference/cli.md
+    - reference/json-schema.md
+    - reference/severity-rules.md
+    - reference/change-kinds.md
+    - reference/exit-codes.md
+  - Architecture:
+    - architecture/overview.md
+    - architecture/diff-layers.md
+    - architecture/rename-detection-internals.md
+    - architecture/canonicalization.md
+  - FAQ: faq.md
+  - Changelog: changelog.md
+  - Contributing: contributing.md

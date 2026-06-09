@@ -1,0 +1,79 @@
+# Component 20: build and publish the documentation site to GitHub Pages.
+#
+# Runs only on push to main (where docs sources change) and on manual dispatch.
+# Preview builds on PRs are out of scope for v1. The build uses
+# `mkdocs build --strict`, which fails on any broken internal link — the cheapest
+# way to catch link rot before it's published.
+#
+# Repository setup required once: Settings → Pages → Source: "GitHub Actions".
+name: Publish docs
+
+on:
+  push:
+    branches: [main]
+    # Only rebuild when something that affects the site changes.
+    paths:
+      - 'site_src/**'
+      - 'mkdocs.yml'
+      - '.github/workflows/docs.yml'
+      - 'pyproject.toml'
+  workflow_dispatch:
+
+# Least-privilege token plus the two scopes GitHub Pages deployment needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two publishes at once; let an in-flight run finish (don't cancel a
+# deploy mid-flight).
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install the docs toolchain
+        # Only the optional `docs` dependency group — mkdocs-material and the
+        # pymdown extensions. The default runtime deps aren't needed to build the
+        # site.
+        run: uv sync --only-group docs
+
+      - name: Build the site (strict)
+        # --strict fails on broken internal links; --clean wipes any stale output.
+        run: uv run mkdocs build --strict --clean
+
+      - name: Overlay the custom landing page
+        # MkDocs generates its own site/index.html from docs/index.md and copies
+        # everything under docs_dir (including assets/) into site/. We overwrite
+        # only the index with the hand-built marketing landing page, which is
+        # intentionally NOT part of the MkDocs build.
+        run: cp site_src/index.html site/index.html
+
+      - name: Upload the Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

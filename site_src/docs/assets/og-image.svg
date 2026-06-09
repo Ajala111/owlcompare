@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="owlcompare">
+  <rect width="1200" height="630" fill="#1f2335"/>
+  <g fill="none" stroke="#a9b1ff" stroke-width="10">
+    <circle cx="470" cy="250" r="60"/>
+    <circle cx="620" cy="250" r="60"/>
+  </g>
+  <g fill="#a9b1ff">
+    <circle cx="470" cy="250" r="24"/>
+    <circle cx="620" cy="250" r="24"/>
+    <path d="M515 330 l30 52 l30 -52 z"/>
+  </g>
+  <text x="600" y="450" text-anchor="middle" font-family="system-ui,sans-serif" font-size="72" font-weight="800" fill="#ffffff">owlcompare</text>
+  <text x="600" y="510" text-anchor="middle" font-family="system-ui,sans-serif" font-size="30" fill="#c7cbe6">See what actually changed between two ontologies</text>
+</svg>

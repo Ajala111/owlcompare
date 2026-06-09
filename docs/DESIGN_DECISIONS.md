@@ -502,3 +502,36 @@ Reasoning:
 Implication: any future modifications to action.yml MUST follow this
 pattern. New inputs are wired through `env:` blocks, referenced as
 "$ENV_NAME" inside scripts (always quoted to handle empty/whitespace).
+
+---
+
+## DD-025: Exit code contract (post-Phase-4 reality)
+
+Status: accepted
+Date: 2026-06-10
+
+Decision: The owlcompare CLI exit codes are:
+  0  = success, no breaking changes
+  1  = general/unexpected error
+  2  = usage error (including missing file, invalid argument)
+  3  = load / parse error (LoadError)
+  4  = diff or canonicalization error
+  5  = report generation or schema validation error
+  6  = config error (severity config, rename mapping)
+  10 = breaking changes detected
+
+This contract is documented in docs/reference/exit-codes.md and
+implemented across exceptions.py and cli.py.
+
+Reasoning:
+- Component 01's original spec proposed a tentative layout; the contract
+  evolved naturally during implementation across Components 02 (LoadError
+  → 3), 10 (SeverityConfigError → 6), 12 (RenameMappingError → 6), and 14
+  (SchemaValidationError → 5). Component 20 surfaced and documented the
+  resulting actual contract.
+- Rather than retrofit code to match an aspirational spec, we document
+  reality as the v1 contract.
+
+Implication: any future exit code additions follow this contract. New
+error types either pick an existing code or introduce a new code (7+)
+with DD documentation.

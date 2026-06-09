@@ -2,13 +2,15 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 5 — Polish & v1 release. **Phase 5 has begun**:
-Component 19 (GitHub Action wrapper) is delivered. **Phase 4 (Report renderers)
-is COMPLETE**: Components 14 (JSON Schema Lockdown), 15 (Markdown report), 16
-(HTML report — design & wireframe), 17 (HTML report — implementation), and 18
-(JUnit XML / CI output) all delivered. `owlcompare diff` now emits JSON, text,
-Markdown, HTML, and JUnit XML, and is wrappable as a three-line GitHub Actions
-step. Next up: Component 20 (documentation site).
+**Current phase:** Phase 5 — Polish & v1 release. **Phase 5 in progress**:
+Component 19 (GitHub Action wrapper) and Component 20 (documentation site) are
+delivered. **Phase 4 (Report renderers) is COMPLETE**: Components 14 (JSON Schema
+Lockdown), 15 (Markdown report), 16 (HTML report — design & wireframe), 17 (HTML
+report — implementation), and 18 (JUnit XML / CI output) all delivered.
+`owlcompare diff` now emits JSON, text, Markdown, HTML, and JUnit XML, is
+wrappable as a three-line GitHub Actions step, and has a public MkDocs Material
+documentation site (build pipeline + landing page + priority pages + stubs).
+Next up: Component 21 (flagship ERA ontology demo).
 
 > **Soft prerequisite flagged:** Component 22 (PyPI release pipeline) is now a
 > soft prerequisite for the Action to be fully usable by **external** users —
@@ -194,7 +196,24 @@ Component 18). **Phase 4 complete.**
       (PyYAML, dev-only — [[DD-022]]); `.github/workflows/action-smoke-test.yml`
       is the manual end-to-end check. Open questions Q1-Q3 resolved as proposed.
       Three deviations surfaced below.)
-- [ ] Component 20: Documentation site (`docs/` → static site) — `specs/20-docsite.md`
+- [x] Component 20: Documentation site (`docs/` → static site) — `specs/20-docs-site.md`
+      (MkDocs Material site at `https://ajala111.github.io/owlcompare/`: optional
+      `docs` dependency group (default `uv sync` doesn't pull it), `mkdocs.yml` at
+      the repo root (`docs_dir: site_src/docs`), a self-contained custom landing
+      page (`site_src/index.html` — hero, see-it-in-action, three columns, install
+      tabs, real-world "18 raw → 5 meaningful" example, footer; no external
+      resources), and a structure-plus-stubs content set: 10 complete priority
+      pages (landing, installation, first-diff, understanding-output,
+      ci-integration, cli, exit-codes, faq, changelog, contributing) plus 12
+      well-structured stubs (100+ words each, with an `!!! info` "being expanded"
+      note). Two live interactive example reports generated from the era fixtures
+      ship at `/examples/`. `.github/workflows/docs.yml` builds with
+      `mkdocs build --strict` and deploys to GitHub Pages; `tests/unit/test_docs_build.py`
+      and `test_docs_content.py` (16 + 63 cases) validate config, nav targets,
+      landing-page self-containment, and zero broken internal links as part of the
+      normal pytest run. Open questions Q1-Q3 resolved as proposed (live sample
+      reports linked from the landing page; ROBOT comparison as a single FAQ
+      entry; no custom domain in v1). Deviations surfaced in the build summary.)
 - [ ] Component 21: Flagship ERA ontology demo — `specs/21-era-demo.md`
 - [ ] Component 22: PyPI release pipeline — `specs/22-release.md`
 

@@ -38,6 +38,15 @@ dev = [
     "pyyaml>=6.0",
 ]
 
+# Component 20: the documentation site. Optional group — a plain `uv sync` does
+# NOT pull these in; build the site with `uv sync --group docs`. The docs CI
+# workflow installs only this group via `uv sync --only-group docs`.
+docs = [
+    "mkdocs>=1.6",
+    "mkdocs-material>=9.5",
+    "pymdown-extensions>=10.7",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

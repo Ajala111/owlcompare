@@ -169,6 +169,11 @@ if __name__ == "__main__":
 | 6 | Severity config invalid (malformed TOML, unknown schema_version/severity, missing kind_pattern) — Component 10. A missing config *file* is a usage error (2), not 6. |
 | 10 | Diff completed but breaking changes found (active since Component 05; survives severity refinement in Component 10) |
 
+> **Note:** the table above is the original Component 01 sketch. The contract
+> evolved naturally during later components; for the authoritative v1 exit-code
+> contract as actually implemented, see `docs/DESIGN_DECISIONS.md` § DD-025 (and
+> the user-facing `docs/reference/exit-codes.md`).
+
 ## Edge cases & failure modes
 
 - **No arguments:** show top-level help and exit 0 (Typer's `no_args_is_help=True`).
