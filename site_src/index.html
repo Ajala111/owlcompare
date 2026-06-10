@@ -303,7 +303,9 @@
           Five output formats: terminal, beautiful <strong>HTML</strong>,
           PR-comment-ready <strong>Markdown</strong>, plus <strong>JSON</strong> and
           <strong>JUnit XML</strong> for automation. &nbsp;
-          <a href="examples/era_evolution.html">Open a live HTML report →</a>
+          <a href="examples/sample.html">Open a live HTML report →</a>
+          &nbsp;·&nbsp;
+          <a href="examples/sample-renames.html">a rename example →</a>
         </p>
       </div>
     </section>
@@ -386,25 +388,25 @@ owlcompare diff old.ttl new.ttl <span class="k">--format</span> html <span class
     <section class="alt" id="example">
       <div class="wrap">
         <h2 class="center">From noise to signal</h2>
-        <p class="section-lead">A real edit to a small ERA railway ontology fragment, two versions apart.</p>
+        <p class="section-lead">A real edit to a small example ontology, two versions apart.</p>
         <div class="example">
           <div>
-<pre><span class="c">$ owlcompare diff era_v1.ttl era_v2.ttl</span>
+<pre><span class="c">$ owlcompare diff sample_v1.ttl sample_v2.ttl</span>
 
-8 triples added, 10 triples removed <span class="c">(1 breaking)</span>
+9 triples added, 10 triples removed <span class="c">(1 breaking)</span>
 
 Layer 1 — Structural (5 changes)
-  [<span class="sev a">additive</span>]     Class added: era:Platform
-  [<span class="sev b">breaking</span>]     Object property removed: era:locatedOn
-  [<span class="sev n">non_breaking</span>] Restriction changed on era:Track:
-                 era:hasMaxSpeed max 1 → max 2
-  [<span class="sev i">info</span>]         Label changed on era:Track (fr)
+  [<span class="sev a">additive</span>]     Class added: ex:ElectricVehicle
+  [<span class="sev b">breaking</span>]     Object property removed: ex:assembledAt
+  [<span class="sev n">non_breaking</span>] Restriction changed on ex:Car:
+                 ex:hasWheel max 4 → max 6
+  [<span class="sev i">info</span>]         Label changed on ex:Vehicle (fr)
   [<span class="sev i">info</span>]         Ontology metadata: versionInfo 1.0.0 → 2.0.0</pre>
           </div>
           <div>
-            <div class="bignum"><span class="from">18</span><span class="arrow">→</span><span class="to">5</span></div>
-            <p class="sub"><strong>18 raw triple changes</strong> become <strong>5 meaningful events</strong> — and exactly one is flagged <span class="sev b">breaking</span>, so your CI knows when to stop the merge.</p>
-            <p class="sub"><a href="examples/era_evolution.html">See the full interactive report →</a></p>
+            <div class="bignum"><span class="from">19</span><span class="arrow">→</span><span class="to">5</span></div>
+            <p class="sub"><strong>19 raw triple changes</strong> become <strong>5 meaningful events</strong> — and exactly one is flagged <span class="sev b">breaking</span>, so your CI knows when to stop the merge.</p>
+            <p class="sub"><a href="examples/sample.html">See the full interactive report →</a></p>
           </div>
         </div>
       </div>

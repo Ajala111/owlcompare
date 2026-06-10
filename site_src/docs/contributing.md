@@ -61,6 +61,9 @@ The custom landing page (`site_src/index.html`) is **not** built by MkDocs — i
 copied over the generated `site/index.html` by the publish workflow. To preview
 it, open `site_src/index.html` directly in a browser after a build.
 
+We pin to mkdocs 1.x and mkdocs-material 9.x. The MkDocs ecosystem may evolve
+significantly in 2026–2027; revisit pinning when migrating.
+
 ## The spec-driven workflow
 
 Every component starts as a spec in `specs/NN-*.md` and is built to that contract.

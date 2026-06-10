@@ -37,7 +37,11 @@ def render_summary(snapshot: OntologySnapshot, stream: TextIO | None = None) -> 
         print(snapshot.summary(), file=stream)
         return
 
-    console = Console(file=stream)
+    # emoji=False: do NOT interpret ``:shortcode:`` substrings as emoji. IRIs and
+    # prefixed names routinely contain colons (``ex:Car``), and a fragment like
+    # ``:Car:`` would otherwise be substituted with 🚗. markup (severity colours,
+    # bold) stays on — emoji=False disables only shortcode substitution.
+    console = Console(file=stream, emoji=False)
     _render_title(snapshot, console)
     _render_metadata(snapshot, console)
     _render_entities(snapshot, console)

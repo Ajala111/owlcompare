@@ -168,7 +168,7 @@ owlcompare load [OPTIONS] SOURCE
 | `--base-iri IRI` | *(none)* | Base IRI for resolving relative references. |
 
 ```bash
-owlcompare load ontology/era.ttl
+owlcompare load ontology/vehicles.ttl
 owlcompare load https://example.org/ontology.owl --format xml --timeout 60
 ```
 

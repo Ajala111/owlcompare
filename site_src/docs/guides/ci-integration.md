@@ -96,7 +96,7 @@ blocking the merge**, turn it off:
 ```yaml
 - uses: Ajala111/owlcompare@v1
   with:
-    ontology-path: ontology/era.ttl
+    ontology-path: ontology/vehicles.ttl
     fail-on-breaking: "false"
 ```
 
@@ -107,7 +107,7 @@ built-in gate and act on the Action's outputs:
 - id: ontology
   uses: Ajala111/owlcompare@v1
   with:
-    ontology-path: ontology/era.ttl
+    ontology-path: ontology/vehicles.ttl
     fail-on-breaking: "false"   # we'll decide ourselves
 
 - name: Gate on a breaking-change budget
@@ -153,7 +153,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ontology: [ontology/era.ttl, ontology/vehicles.ttl]
+        ontology: [ontology/vehicles.ttl, ontology/infrastructure.ttl]
     permissions:
       contents: read
       pull-requests: write
@@ -179,8 +179,8 @@ ontology-diff:
     - pip install owlcompare
     # Fetch the target branch's version of the ontology as the baseline.
     - git fetch origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
-    - git show "origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:ontology/era.ttl" > baseline.ttl
-    - owlcompare diff baseline.ttl ontology/era.ttl --format junit --out report.xml
+    - git show "origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME:ontology/vehicles.ttl" > baseline.ttl
+    - owlcompare diff baseline.ttl ontology/vehicles.ttl --format junit --out report.xml
   artifacts:
     when: always
     reports:
@@ -203,9 +203,9 @@ pipeline {
     stage('Ontology diff') {
       steps {
         sh 'pip install owlcompare'
-        sh 'git show origin/main:ontology/era.ttl > baseline.ttl'
+        sh 'git show origin/main:ontology/vehicles.ttl > baseline.ttl'
         // Don't let exit 10 abort the stage; we publish the report first.
-        sh 'owlcompare diff baseline.ttl ontology/era.ttl --format junit --out report.xml || true'
+        sh 'owlcompare diff baseline.ttl ontology/vehicles.ttl --format junit --out report.xml || true'
       }
     }
   }

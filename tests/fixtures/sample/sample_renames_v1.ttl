@@ -1,0 +1,42 @@
+# fixture: sample_renames_v1.ttl
+# Purpose: a generic rename example for documentation purposes; for the
+# railway-specific rename scenario, see era_renames_*.ttl in this directory.
+#
+# v2 renames ONE entity, with its label preserved (so it is a high-confidence
+# label match) and referenced elsewhere so the rename produces cascade
+# consequences:
+#   - ex:Vehicle -> ex:MotorVehicle
+#       cascade 1: ex:Car's subClassOf ex:Vehicle -> ex:MotorVehicle (reparent)
+#       cascade 2: ex:Garage's restriction filler ex:Vehicle -> ex:MotorVehicle
+# Both cascades reference only the renamed entity, so both are subsumed under the
+# rename. Expected after detection: 1 *_renamed change, 0 unexplained Layer 0,
+# and no leftover reparent / restriction_changed.
+
+@prefix ex:   <http://example.org/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/fleet> a owl:Ontology ;
+    owl:versionInfo "1.0.0" .
+
+ex:Thing a owl:Class ;
+    rdfs:label "Thing"@en .
+
+ex:Vehicle a owl:Class ;
+    rdfs:label "Vehicle"@en ;
+    rdfs:subClassOf ex:Thing .
+
+ex:Car a owl:Class ;
+    rdfs:label "Car"@en ;
+    rdfs:subClassOf ex:Vehicle .
+
+ex:Garage a owl:Class ;
+    rdfs:label "Garage"@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:stores ;
+        owl:someValuesFrom ex:Vehicle
+    ] .
+
+ex:stores a owl:ObjectProperty ;
+    rdfs:label "stores"@en .

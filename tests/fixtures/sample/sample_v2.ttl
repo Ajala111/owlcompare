@@ -1,0 +1,46 @@
+# fixture: sample_v2.ttl
+# Purpose: a generic example for documentation purposes; for railway-specific
+# examples, see era_*.ttl in adjacent directories (tests/fixtures/diff/,
+# tests/fixtures/rename/).
+#
+# Version 2 of the Vehicle fragment. See sample_v1.ttl for the full list of
+# intended edits. Relative to v1:
+#   + ex:ElectricVehicle added (class declaration, label, subClassOf ex:Vehicle)
+#   - ex:assembledAt removed entirely (4 triples) — breaking
+#   ~ ex:hasWheel restriction on ex:Car: max 4 -> max 6 (relaxed -> non_breaking)
+#   ~ ex:Vehicle French label "Véhicule" -> "Véhicule à moteur"
+#   ~ owl:versionInfo "1.0.0" -> "2.0.0"
+
+@prefix ex:   <http://example.org/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/ontology> a owl:Ontology ;
+    owl:versionInfo "2.0.0" ;
+    rdfs:label "Vehicle Example Ontology"@en .
+
+ex:Vehicle a owl:Class ;
+    rdfs:label "Vehicle"@en ;
+    rdfs:label "Véhicule à moteur"@fr .
+
+ex:Car a owl:Class ;
+    rdfs:subClassOf ex:Vehicle ;
+    rdfs:label "Car"@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasWheel ;
+        owl:maxCardinality "6"^^xsd:nonNegativeInteger
+    ] .
+
+ex:ElectricVehicle a owl:Class ;
+    rdfs:subClassOf ex:Vehicle ;
+    rdfs:label "Electric Vehicle"@en .
+
+ex:Factory a owl:Class ;
+    rdfs:label "Factory"@en .
+
+ex:hasWheel a owl:DatatypeProperty ;
+    rdfs:domain ex:Car ;
+    rdfs:range xsd:integer ;
+    rdfs:label "has wheel count"@en .

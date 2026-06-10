@@ -18,7 +18,7 @@ landing on top of it before the release is tagged.
 
 - Publishing owlcompare to PyPI so `pip install owlcompare` and
   `uv tool install owlcompare` work out of the box.
-- A flagship demo comparing two real ERA ontology versions.
+- A flagship demo comparing two real published ontology versions.
 
 ## [0.0.1] — initial release
 

@@ -6,7 +6,7 @@ the same diff as the terminal view, but organized for unhurried review — break
 changes first, everything else grouped and collapsible. This page will be a
 guided tour of every part of it. Generate one with `owlcompare diff a.ttl b.ttl
 --format html --out report.html`, or open the
-[live example](../examples/era_evolution.html).
+[live example](../examples/sample.html).
 
 !!! info "This page is being expanded"
     The outline below anchors the scope; the full annotated tour is coming.

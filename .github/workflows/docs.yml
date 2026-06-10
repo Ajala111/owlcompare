@@ -53,6 +53,10 @@ jobs:
 
       - name: Build the site (strict)
         # --strict fails on broken internal links; --clean wipes any stale output.
+        env:
+          # Silence the MkDocs 2.0 warning banner Material started printing in
+          # Feb 2026 — an upstream-dispute notice that doesn't affect our build.
+          NO_MKDOCS_2_WARNING: "1"
         run: uv run mkdocs build --strict --clean
 
       - name: Overlay the custom landing page

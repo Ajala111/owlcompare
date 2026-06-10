@@ -16,7 +16,7 @@ the right place; pick a path below.
 
 - **Evaluating owlcompare?** Read [Understanding the output](getting-started/understanding-output.md)
   to see how the four-layer model turns axiom noise into a short list of meaningful
-  events, then open a [live example report](examples/era_evolution.html).
+  events, then open a [live example report](examples/sample.html).
 - **Integrating it into CI?** The [CI integration guide](guides/ci-integration.md)
   gets you a three-line GitHub Action that comments on every pull request.
 - **Going deep?** The [CLI reference](reference/cli.md) documents every command and

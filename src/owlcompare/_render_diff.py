@@ -187,7 +187,9 @@ def render_diff_text(
             file=stream,
         )
         return
-    console = Console(file=stream)
+    # emoji=False: prefixed names contain colons (``ex:Car``); without this, a
+    # fragment like ``:Car:`` is substituted with an emoji (🚗). markup stays on.
+    console = Console(file=stream, emoji=False)
     _render_rich(
         changes,
         registry,
@@ -282,7 +284,7 @@ def render_severity_explanations(
     if not is_terminal:
         print(severity_explanations_plain(refinements), file=stream)
         return
-    console = Console(file=stream)
+    console = Console(file=stream, emoji=False)  # see note above: ``ex:Car`` vs 🚗
     if not refinements:
         console.print("\n[bold]Severity explanations[/bold]\n[dim](no refinements applied)[/dim]")
         return

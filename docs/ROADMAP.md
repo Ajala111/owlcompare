@@ -213,7 +213,13 @@ Component 18). **Phase 4 complete.**
       landing-page self-containment, and zero broken internal links as part of the
       normal pytest run. Open questions Q1-Q3 resolved as proposed (live sample
       reports linked from the landing page; ROBOT comparison as a single FAQ
-      entry; no custom domain in v1). Deviations surfaced in the build summary.)
+      entry; no custom domain in v1). Deviations surfaced in the build summary.
+      **Positioning follow-up (2026-06-10):** the public-facing docs (landing
+      page, first-diff tutorial, example reports) use a generic Vehicle example
+      fixture (`tests/fixtures/sample/sample_*.ttl`, `ex:` prefix) rather than the
+      railway/ERA fixtures, so the public framing isn't tied to one domain; the
+      ERA fixtures remain internal (test suite + the planned Component 21 demo).
+      Tone softened to category-level framing throughout.)
 - [ ] Component 21: Flagship ERA ontology demo — `specs/21-era-demo.md`
 - [ ] Component 22: PyPI release pipeline — `specs/22-release.md`
 

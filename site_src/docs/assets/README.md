@@ -40,8 +40,8 @@ result:
 ```bash
 # 1. Generate a real report (this produces HTML, not an image).
 uv run python -m owlcompare diff \
-  tests/fixtures/diff/era_evolution_v1.ttl \
-  tests/fixtures/diff/era_evolution_v2.ttl \
+  tests/fixtures/sample/sample_v1.ttl \
+  tests/fixtures/sample/sample_v2.ttl \
   --format html --out tmp-report.html
 
 # 2. Open tmp-report.html in Chrome at a 1440×900 viewport.
@@ -56,8 +56,8 @@ uv run python -m owlcompare diff \
 ```bash
 # 1. Render the Markdown the GitHub Action posts.
 uv run python -m owlcompare diff \
-  tests/fixtures/diff/era_evolution_v1.ttl \
-  tests/fixtures/diff/era_evolution_v2.ttl \
+  tests/fixtures/sample/sample_v1.ttl \
+  tests/fixtures/sample/sample_v2.ttl \
   --format markdown --out tmp-report.md
 
 # 2. Paste it into a draft PR comment in the owlcompare repo, submit, and

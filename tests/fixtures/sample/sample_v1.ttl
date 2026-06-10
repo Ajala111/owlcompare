@@ -1,0 +1,49 @@
+# fixture: sample_v1.ttl
+# Purpose: a generic example for documentation purposes — the user-facing docs
+# and the landing page use this Vehicle-domain pair instead of the railway
+# (ERA) fixtures, so the public framing isn't tied to one domain. For
+# railway-specific examples, see era_*.ttl in adjacent directories
+# (tests/fixtures/diff/, tests/fixtures/rename/).
+#
+# Version 1 of a small Vehicle fragment. Pairs with sample_v2.ttl, which applies
+# four realistic edits plus a version bump (mirrors era_evolution exactly):
+#   - one class added        (ex:ElectricVehicle appears in v2)
+#   - one property removed    (ex:assembledAt is gone in v2 — breaking)
+#   - one cardinality change  (ex:hasWheel max 4 -> max 6 on ex:Car — relaxed)
+#   - one French label change (ex:Vehicle "Véhicule"@fr -> "Véhicule à moteur"@fr)
+# Kept well under 50 triples.
+
+@prefix ex:   <http://example.org/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/ontology> a owl:Ontology ;
+    owl:versionInfo "1.0.0" ;
+    rdfs:label "Vehicle Example Ontology"@en .
+
+ex:Vehicle a owl:Class ;
+    rdfs:label "Vehicle"@en ;
+    rdfs:label "Véhicule"@fr .
+
+ex:Car a owl:Class ;
+    rdfs:subClassOf ex:Vehicle ;
+    rdfs:label "Car"@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasWheel ;
+        owl:maxCardinality "4"^^xsd:nonNegativeInteger
+    ] .
+
+ex:Factory a owl:Class ;
+    rdfs:label "Factory"@en .
+
+ex:hasWheel a owl:DatatypeProperty ;
+    rdfs:domain ex:Car ;
+    rdfs:range xsd:integer ;
+    rdfs:label "has wheel count"@en .
+
+ex:assembledAt a owl:ObjectProperty ;
+    rdfs:domain ex:Car ;
+    rdfs:range ex:Factory ;
+    rdfs:label "assembled at"@en .
