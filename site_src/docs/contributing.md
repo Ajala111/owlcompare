@@ -57,9 +57,9 @@ uv run mkdocs serve              # live preview at http://127.0.0.1:8000/
 uv run mkdocs build --strict     # production build; --strict fails on broken links
 ```
 
-The custom landing page (`site_src/index.html`) is **not** built by MkDocs — it's
-copied over the generated `site/index.html` by the publish workflow. To preview
-it, open `site_src/index.html` directly in a browser after a build.
+The landing page (`site_src/index.html`) is overlaid onto the built site via the
+`overlay_landing_page` hook. Local `mkdocs serve` shows the same landing page as
+the deployed site.
 
 We pin to mkdocs 1.x and mkdocs-material 9.x. The MkDocs ecosystem may evolve
 significantly in 2026–2027; revisit pinning when migrating.
@@ -113,10 +113,10 @@ is a manual step at review time.
 ## Publishing the docs
 
 The site deploys automatically: a push to `main` triggers
-`.github/workflows/docs.yml`, which builds with `mkdocs build --strict`, copies
-the custom landing page over the generated index, and deploys to GitHub Pages. If
-a deploy fails, check **Settings → Pages → Source: GitHub Actions** is enabled on
-the repository.
+`.github/workflows/docs.yml`, which builds with `mkdocs build --strict` (the
+`overlay_landing_page` hook drops the custom landing page over the generated
+index during that build) and deploys to GitHub Pages. If a deploy fails, check
+**Settings → Pages → Source: GitHub Actions** is enabled on the repository.
 
 ## License
 

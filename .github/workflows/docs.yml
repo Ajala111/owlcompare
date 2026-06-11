@@ -57,14 +57,10 @@ jobs:
           # Silence the MkDocs 2.0 warning banner Material started printing in
           # Feb 2026 — an upstream-dispute notice that doesn't affect our build.
           NO_MKDOCS_2_WARNING: "1"
+        # The custom marketing landing page is overlaid onto site/index.html by
+        # the overlay_landing_page MkDocs hook during the build itself, so no
+        # separate copy step is needed here.
         run: uv run mkdocs build --strict --clean
-
-      - name: Overlay the custom landing page
-        # MkDocs generates its own site/index.html from docs/index.md and copies
-        # everything under docs_dir (including assets/) into site/. We overwrite
-        # only the index with the hand-built marketing landing page, which is
-        # intentionally NOT part of the MkDocs build.
-        run: cp site_src/index.html site/index.html
 
       - name: Upload the Pages artifact
         uses: actions/upload-pages-artifact@v3

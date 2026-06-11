@@ -259,43 +259,24 @@
         <div class="shots">
           <figure class="shot">
             <div class="chrome"><i class="dot-r"></i><i class="dot-y"></i><i class="dot-g"></i></div>
-            <!-- Inline placeholder keeps the page self-contained. Replace the SVG
-                 body with a real screenshot export (see assets/README.md). -->
-            <svg class="frame" viewBox="0 0 1440 760" role="img" aria-label="owlcompare HTML report — placeholder pending real screenshot">
-              <rect width="1440" height="760" fill="#eef0f4"/>
-              <rect x="40" y="36" width="380" height="34" rx="8" fill="#cdd3dd"/>
-              <rect x="40" y="96" width="1360" height="70" rx="10" fill="#ffffff" stroke="#dde1e8"/>
-              <rect x="64" y="118" width="14" height="26" rx="3" fill="#cf222e"/>
-              <rect x="96" y="120" width="300" height="22" rx="5" fill="#c3c9d3"/>
-              <rect x="40" y="190" width="1360" height="150" rx="10" fill="#ffffff" stroke="#dde1e8"/>
-              <rect x="40" y="190" width="6" height="150" fill="#1a7f37"/>
-              <rect x="72" y="214" width="420" height="20" rx="5" fill="#c3c9d3"/>
-              <rect x="72" y="252" width="700" height="14" rx="4" fill="#dde1e8"/>
-              <rect x="72" y="280" width="560" height="14" rx="4" fill="#dde1e8"/>
-              <rect x="40" y="364" width="1360" height="150" rx="10" fill="#ffffff" stroke="#dde1e8"/>
-              <rect x="40" y="364" width="6" height="150" fill="#9a6700"/>
-              <rect x="72" y="388" width="500" height="20" rx="5" fill="#c3c9d3"/>
-              <rect x="72" y="426" width="640" height="14" rx="4" fill="#dde1e8"/>
-              <rect x="72" y="454" width="480" height="14" rx="4" fill="#dde1e8"/>
-              <text x="720" y="640" text-anchor="middle" font-family="system-ui,sans-serif" font-size="26" font-weight="700" fill="#8a93a3">HTML report — screenshot pending</text>
-              <text x="720" y="676" text-anchor="middle" font-family="system-ui,sans-serif" font-size="17" fill="#a3abb8">Capture from real output (assets/README.md), or click the live example below</text>
-            </svg>
+            <!-- References a real image file so dropping a captured screenshot
+                 into site_src/docs/assets/ updates the page (see assets/README.md).
+                 assets/ resolves relative to the site root, where MkDocs serves
+                 site_src/docs/assets/. -->
+            <img class="frame"
+                 src="assets/screenshot-html.png"
+                 alt="owlcompare HTML report rendering a Vehicle-domain diff: five Layer 1 changes spanning a class addition (additive), an object property removal (breaking), a restriction relaxation (non-breaking), a French label refinement (info), and an ontology metadata bump (info)."
+                 loading="lazy"
+                 width="1440" height="760">
             <figcaption>The interactive HTML report: severity-striped cards, grouped by Renames → Breaking → Other.</figcaption>
           </figure>
           <figure class="shot">
             <div class="chrome"><i class="dot-r"></i><i class="dot-y"></i><i class="dot-g"></i></div>
-            <svg class="frame" viewBox="0 0 1440 420" role="img" aria-label="owlcompare PR comment — placeholder pending real screenshot">
-              <rect width="1440" height="420" fill="#eef0f4"/>
-              <rect x="40" y="36" width="1360" height="60" rx="10" fill="#ffffff" stroke="#dde1e8"/>
-              <circle cx="74" cy="66" r="14" fill="#cdd3dd"/>
-              <rect x="100" y="56" width="520" height="20" rx="5" fill="#c3c9d3"/>
-              <rect x="40" y="120" width="1360" height="260" rx="10" fill="#ffffff" stroke="#dde1e8"/>
-              <rect x="72" y="150" width="640" height="22" rx="5" fill="#c3c9d3"/>
-              <rect x="72" y="196" width="900" height="14" rx="4" fill="#dde1e8"/>
-              <rect x="72" y="226" width="820" height="14" rx="4" fill="#dde1e8"/>
-              <rect x="72" y="256" width="760" height="14" rx="4" fill="#dde1e8"/>
-              <text x="720" y="340" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" font-weight="700" fill="#8a93a3">PR comment (Markdown) — screenshot pending</text>
-            </svg>
+            <img class="frame"
+                 src="assets/screenshot-pr.png"
+                 alt="The same diff rendered as a Markdown PR comment, posted automatically by the owlcompare GitHub Action and updated in place on subsequent commits."
+                 loading="lazy"
+                 width="1440" height="420">
             <figcaption>The same diff as a PR comment — posted and updated in place by the GitHub Action.</figcaption>
           </figure>
         </div>

@@ -2,8 +2,9 @@
 #
 # The Markdown sources live under site_src/docs/ (docs_dir below); the custom
 # marketing landing page is site_src/index.html and is served at the site root,
-# overwriting MkDocs' generated index during the publish workflow
-# (.github/workflows/docs.yml). Build locally with:
+# overwriting MkDocs' generated index via the overlay_landing_page hook (see the
+# `hooks:` key below). The hook runs on every build — including `mkdocs serve` —
+# so local preview matches the deployed site. Build locally with:
 #
 #     uv sync --group docs
 #     uv run mkdocs serve        # live preview at http://127.0.0.1:8000/
@@ -100,10 +101,16 @@ plugins:
   - search
   - tags                            # Tag pages (used for changelog organization)
 
+# Overlay the custom marketing landing page (site_src/index.html) onto the built
+# site/index.html. Runs on `on_post_build`, so both `mkdocs build` and
+# `mkdocs serve` show the same homepage — local preview matches the deployed site.
+hooks:
+  - site_src/hooks/overlay_landing_page.py
+
 nav:
-  # "Home" points at the docs index (docs/index.md). The publish workflow
-  # overwrites the built site/index.html with the custom landing page, so this
-  # tab lands visitors on the marketing storefront at the site root. Using a
+  # "Home" points at the docs index (docs/index.md). The overlay_landing_page
+  # hook overwrites the built site/index.html with the custom landing page, so
+  # this tab lands visitors on the marketing storefront at the site root. Using a
   # real page (not a raw '/') keeps `mkdocs build --strict` happy — an absolute
   # '/' nav target is flagged as a broken reference under --strict.
   - Home: index.md
