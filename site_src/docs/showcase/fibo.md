@@ -10,7 +10,7 @@ standardized by the Object Management Group (OMG).
 **License:** MIT ·
 **Module:** FIBO-BE (Business Entities) · **File:** `OwnershipAndControl/Executives.rdf` ·
 **Versions:** 2023Q3 (released September 2023) → 2024Q3 (released September 2024) ·
-**Run on:** 2026-06-12 · **owlcompare version:** 0.0.1
+**Run on:** 2026-06-12 · **owlcompare version:** 0.1.0
 
 Why this comparison: FIBO is a real production ontology under continuous
 multi-stakeholder development. [Academic research](https://arxiv.org/abs/2108.05401)

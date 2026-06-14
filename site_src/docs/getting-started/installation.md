@@ -67,7 +67,7 @@ All four give you the same `owlcompare` command on your `PATH`.
 
 ```bash
 owlcompare --version
-# owlcompare 0.0.1
+# owlcompare 0.1.0
 
 owlcompare --help
 ```

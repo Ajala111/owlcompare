@@ -29,9 +29,24 @@ coverage.xml
 .vscode/
 *.swp
 
+# Vim secondary swap files (companion to *.swp)
+*.swo
+
 # OS files
 .DS_Store
 Thumbs.db
+
+# Windows folder metadata (companion to .DS_Store, Thumbs.db)
+desktop.ini
+
+# Secrets — never commit these
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.p12
+*.pfx
 
 # Local-only uv overrides (machine-specific, see DD-012)
 uv.toml

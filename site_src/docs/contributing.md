@@ -118,6 +118,92 @@ The site deploys automatically: a push to `main` triggers
 index during that build) and deploys to GitHub Pages. If a deploy fails, check
 **Settings → Pages → Source: GitHub Actions** is enabled on the repository.
 
+## Cutting a release
+
+owlcompare publishes to [PyPI](https://pypi.org/project/owlcompare/) through a
+tag-triggered GitHub Actions workflow using
+[OIDC Trusted Publishing](https://docs.pypi.org/trusted-publishers/) — there is no
+API token stored in the repository.
+
+### The version is single-sourced
+
+The version lives in **one** place: `src/owlcompare/_version.py`
+(`__version__ = "X.Y.Z"`). `pyproject.toml` reads it dynamically via Hatchling
+(DD-013), so you never edit the version in two files. The release workflow
+refuses to publish if the pushed tag doesn't match `__version__`.
+
+### Steps to release X.Y.Z
+
+1. **Bump the version.** Edit `src/owlcompare/_version.py` to the new version.
+2. **Update the changelog.** Move the relevant `## [Unreleased]` notes into a new
+   `## [X.Y.Z] - YYYY-MM-DD` section in `CHANGELOG.md` (Keep a Changelog format).
+   Add the `compare`/`tag` link references at the bottom.
+3. **Commit** both on `main` (via PR): `Release X.Y.Z`.
+4. **Tag and push:**
+   ```bash
+   git tag -a vX.Y.Z -m "owlcompare vX.Y.Z"
+   git push origin vX.Y.Z
+   ```
+
+Pushing the `vX.Y.Z` tag triggers `.github/workflows/release.yml`, which:
+
+- rejects the tag unless it's a clean final release (`vMAJOR.MINOR.PATCH`);
+- verifies the tag matches `_version.py`;
+- builds the sdist + wheel with `python -m build`;
+- runs `twine check dist/*`;
+- publishes to PyPI via `pypa/gh-action-pypi-publish` (OIDC, environment `pypi`);
+- creates a GitHub Release whose body is this version's `CHANGELOG.md` section,
+  with the build artifacts attached.
+
+### Stage on TestPyPI first
+
+For a dry run, bump `_version.py` to a pre-release (e.g. `0.1.0rc1`) and push a
+`pre/...` tag:
+
+```bash
+git tag pre/v0.1.0-rc1
+git push origin pre/v0.1.0-rc1
+```
+
+That triggers `.github/workflows/release-test.yml`, which runs the same build and
+checks but publishes to [TestPyPI](https://test.pypi.org/) (environment
+`testpypi`) and does **not** cut a GitHub Release. Install the staged build to
+verify it:
+
+```bash
+pip install --index-url https://test.pypi.org/simple/ \
+  --extra-index-url https://pypi.org/simple/ owlcompare==0.1.0rc1
+```
+
+### Versioning policy
+
+owlcompare follows [Semantic Versioning](https://semver.org/) with a pre-1.0
+caveat:
+
+- **`0.x`:** minor bumps (`0.1` → `0.2`) **may break** the CLI surface or JSON
+  schema; patch bumps (`0.1.0` → `0.1.1`) are bug-fix only.
+- **`1.0` onward:** the CLI and JSON schema become a stability commitment;
+  breaking changes bump the major version.
+
+### Recovering from a bad release
+
+PyPI release artifacts are **immutable** — you cannot re-upload the same version.
+If a published release is broken:
+
+1. **Yank it** on PyPI (Manage → Release → Options → Yank). Yanking hides the
+   version from new installs but keeps it resolvable for anyone who pinned it —
+   it is not a delete.
+2. **Fix** the metadata/code on `main`.
+3. **Bump to the next patch** (`0.1.0` → `0.1.1`) in `_version.py` and add a
+   `CHANGELOG.md` entry — never reuse a version number.
+4. **Delete the bad tag** if it never published successfully
+   (`git push --delete origin vX.Y.Z`), then retag the fix. If it *did* publish,
+   leave the tag and move forward with the new patch version.
+
+A good habit is to stage on TestPyPI first (above), which catches metadata
+problems (`twine check`, missing long-description rendering) before they reach the
+real index.
+
 ## License
 
 owlcompare is MIT licensed. By contributing, you agree your contributions are

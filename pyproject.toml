@@ -5,9 +5,19 @@ description = "Modern semantic ontology diff tool — compare two OWL/RDF ontolo
 readme = "README.md"
 license = "MIT"
 authors = [
-    { name = "Olatunji Felix Ajala (Phelz)", email = "ajala111@yahoo.com" },
+    { name = "Olatunji Felix Ajala (Phelz)" },
 ]
 requires-python = ">=3.11"
+keywords = [
+    "owl",
+    "rdf",
+    "ontology",
+    "diff",
+    "semantic",
+    "compare",
+    "owl-diff",
+    "ci",
+]
 dependencies = [
     "httpx>=0.28.1",
     "rdflib>=7.6.0",
@@ -16,13 +26,26 @@ dependencies = [
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Version Control",
+    "Typing :: Typed",
 ]
 
 [project.urls]
+Homepage = "https://ajala111.github.io/owlcompare/"
+Documentation = "https://ajala111.github.io/owlcompare/"
 Repository = "https://github.com/Ajala111/owlcompare"
+Changelog = "https://github.com/Ajala111/owlcompare/blob/main/CHANGELOG.md"
+Issues = "https://github.com/Ajala111/owlcompare/issues"
 
 [project.scripts]
 owlcompare = "owlcompare.cli:main"
@@ -36,6 +59,10 @@ dev = [
     "respx>=0.23.1",
     "jsonschema>=4.26.0",  # DD-020: test-only schema validation; not a runtime dependency
     "pyyaml>=6.0",
+    "build>=1.2",          # Component 22: `python -m build` for local release-artifact checks
+    "twine>=5.0",          # Component 22: `twine check dist/*` validates package metadata
+    "hatchling>=1.25",     # Component 22: the build backend (DD-013), made importable so the
+                           # wheel/sdist-split test builds real artifacts in-process (no isolation)
 ]
 
 # Component 20: the documentation site. Optional group — a plain `uv sync` does
@@ -56,6 +83,12 @@ path = "src/owlcompare/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/owlcompare"]
+# The FIBO demo corpus (examples/fibo_demo/) is documentation/showcase data, not
+# importable code, and would bloat the installed wheel by megabytes. It lives
+# outside the package tree, so `packages` already excludes it; this explicit
+# `exclude` records the intent and guards against a future glob accidentally
+# sweeping it in. It is still shipped in the sdist (see the sdist target below).
+exclude = ["examples/fibo_demo"]
 
 # Ship the canonical JSON Schema (Component 14) as package data so a `pip install
 # owlcompare` carries the contract and `owlcompare.schema.load_schema()` can read
@@ -63,6 +96,28 @@ packages = ["src/owlcompare"]
 # maps it under the package in the wheel. See DD-019 / DD-020.
 [tool.hatch.build.targets.wheel.force-include]
 "docs/schema/diff-result.schema.json" = "owlcompare/schema/diff-result.schema.json"
+
+# The sdist is the complete, reproducible source tarball: it carries the package,
+# the specs and docs it was built against, the test suite, and the FIBO demo data
+# that the wheel deliberately omits. Listing examples/fibo_demo here (and nowhere
+# in the wheel) is the "data in sdist, not in wheel" split called for in the
+# Component 22 plan.
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/owlcompare",
+    "docs",
+    "specs",
+    "tests",
+    "site_src",
+    "scripts",
+    "examples/fibo_demo",
+    "action.yml",
+    "mkdocs.yml",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "pyproject.toml",
+]
 
 [tool.ruff]
 line-length = 100

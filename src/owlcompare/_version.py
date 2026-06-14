@@ -4,4 +4,4 @@
 `owlcompare.__init__` re-exports it for programmatic access.
 """
 
-__version__ = "0.0.1"
+__version__ = "0.1.0"

@@ -8,7 +8,7 @@
 
 ## Status
 
-🚧 **Pre-alpha.** Under active development. See [`docs/ROADMAP.md`](docs/ROADMAP.md) for progress.
+**Pre-alpha.** Under active development. See [`docs/ROADMAP.md`](https://github.com/Ajala111/owlcompare/blob/main/docs/ROADMAP.md) for progress.
 
 ## Why
 
@@ -34,18 +34,18 @@ Diff your ontology on every pull request in three lines:
 
 You get a PR comment with the diff, the HTML and JUnit reports uploaded as
 artifacts, and a check that fails on breaking changes. See
-[`docs/github-action.md`](docs/github-action.md) for the full reference — inputs,
-outputs, baseline detection, and more examples.
+[`docs/github-action.md`](https://github.com/Ajala111/owlcompare/blob/main/docs/github-action.md)
+for the full reference — inputs, outputs, baseline detection, and more examples.
 
 ## Documentation
 
-- [Project brief](docs/PROJECT_BRIEF.md) — vision, audience, success criteria
-- [Architecture](docs/ARCHITECTURE.md) — components, data flow, public surfaces
-- [Roadmap](docs/ROADMAP.md) — phased delivery plan
-- [Design decisions](docs/DESIGN_DECISIONS.md) — why we chose what we chose
-- [Conventions](docs/CONVENTIONS.md) — code style and project standards
-- [Glossary](docs/GLOSSARY.md) — terminology used consistently
+- [Project brief](https://github.com/Ajala111/owlcompare/blob/main/docs/PROJECT_BRIEF.md) — vision, audience, success criteria
+- [Architecture](https://github.com/Ajala111/owlcompare/blob/main/docs/ARCHITECTURE.md) — components, data flow, public surfaces
+- [Roadmap](https://github.com/Ajala111/owlcompare/blob/main/docs/ROADMAP.md) — phased delivery plan
+- [Design decisions](https://github.com/Ajala111/owlcompare/blob/main/docs/DESIGN_DECISIONS.md) — why we chose what we chose
+- [Conventions](https://github.com/Ajala111/owlcompare/blob/main/docs/CONVENTIONS.md) — code style and project standards
+- [Glossary](https://github.com/Ajala111/owlcompare/blob/main/docs/GLOSSARY.md) — terminology used consistently
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSE](https://github.com/Ajala111/owlcompare/blob/main/LICENSE).

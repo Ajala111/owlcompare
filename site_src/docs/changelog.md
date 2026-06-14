@@ -10,17 +10,10 @@ compatibility policy described in their respective reference pages.
 
 ## [Unreleased]
 
-The first public release is being prepared. The development tree already
-includes everything listed under v0.0.1 below; this section collects anything
-landing on top of it before the release is tagged.
+Nothing yet. New work lands here and moves down into a dated section when the
+next version is tagged.
 
-### Pending for the first PyPI release
-
-- Publishing owlcompare to PyPI so `pip install owlcompare` and
-  `uv tool install owlcompare` work out of the box.
-- A flagship demo comparing two real published ontology versions.
-
-## [0.0.1] — initial release
+## [0.1.0] — first public release
 
 The first end-to-end owlcompare: load two ontologies, diff them at the syntactic
 and structural layers, classify severity, detect renames, and render the result
@@ -46,14 +39,17 @@ in five formats.
   PR comments, artifact upload, and breaking-change gating.
 - **Published JSON Schema** — a versioned, machine-readable contract for the JSON
   output, with a documented forward-compatibility policy.
+- **Flagship demo** — a showcase diffing two published quarterly releases of FIBO
+  Business Entities (see [Showcase](showcase/fibo.md)).
+- **PyPI release pipeline** — tag-triggered publishing via OIDC Trusted
+  Publishing, so `pip install owlcompare` and `uv tool install owlcompare` work
+  out of the box.
 
 ### Known limitations
 
 - Layers 2 (inferential) and 3 (impact) are not yet implemented.
 - `owl:imports` closures are not resolved; named-graph / quad sources are
   rejected.
-- owlcompare is not yet on PyPI — install a pinned commit until the release lands
-  (see [Installation](getting-started/installation.md)).
 
 ---
 

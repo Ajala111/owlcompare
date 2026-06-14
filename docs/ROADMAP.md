@@ -2,7 +2,7 @@
 
 This is the source of truth for what's done, what's in progress, and what's deferred.
 
-**Current phase:** Phase 5 — Polish & v1 release. **Phase 5 in progress**:
+**Current phase:** Phase 5 — Polish & v1 release. **Phase 5 is COMPLETE**:
 Component 19 (GitHub Action wrapper) and Component 20 (documentation site) are
 delivered. **Phase 4 (Report renderers) is COMPLETE**: Components 14 (JSON Schema
 Lockdown), 15 (Markdown report), 16 (HTML report — design & wireframe), 17 (HTML
@@ -11,8 +11,11 @@ report — implementation), and 18 (JUnit XML / CI output) all delivered.
 wrappable as a three-line GitHub Actions step, and has a public MkDocs Material
 documentation site (build pipeline + landing page + priority pages + stubs).
 **Component 21 (flagship FIBO demo) is delivered** — a public Showcase tab diffing
-two real FIBO Business Entities releases. Next up: Component 22 (PyPI release
-pipeline), the final Phase 5 component.
+two real FIBO Business Entities releases. **Component 22 (PyPI release pipeline)
+is delivered** — the final Phase 5 component: the package metadata, CHANGELOG, and
+the two tag-triggered Trusted-Publishing workflows are in place and the build is
+verified locally. **v0.1.0 is the planned first public tag** (push of `v0.1.0`
+triggers `release.yml` → PyPI). Phase 5 — and the v1 roadmap — is complete.
 
 > **Soft prerequisite flagged:** Component 22 (PyPI release pipeline) is now a
 > soft prerequisite for the Action to be fully usable by **external** users —
@@ -243,9 +246,34 @@ Component 18). **Phase 4 complete.**
       classification, hierarchy reparenting, signature evolution, and an honest
       `complex_class_expression_changed` fallback — not the rename/Component-12.5
       features the spec originally anticipated. See the build summary below.)
-- [ ] Component 22: PyPI release pipeline — `specs/22-release.md`
+- [x] Component 22: PyPI release pipeline — `specs/22-pypi-release.md` (written retroactively)
+      (Package metadata completed in `pyproject.toml` — keywords, full classifier
+      set, OSI license classifier, expanded `project.urls`; version single-sourced
+      at `0.1.0` in `src/owlcompare/_version.py` per DD-013, *not* statically in
+      pyproject. The wheel excludes `examples/fibo_demo/` (data, ~3 MB) while the
+      sdist ships it for completeness — verified against the built artifacts
+      (wheel: 0 demo files + bundled schema; sdist: 108 demo files). `CHANGELOG.md`
+      (Keep a Changelog) added at the repo root with an honest v0.1.0 entry
+      (Layers 0–1 only; Layers 2–3 deferred; four severity levels). Two
+      tag-triggered workflows: `release.yml` (`v*.*.*` tags → PyPI, environment
+      `pypi`, OIDC Trusted Publishing, strict final-release guard + tag/version
+      match check, `python -m build`, `twine check`,
+      `pypa/gh-action-pypi-publish@release/v1`, GitHub Release via
+      `softprops/action-gh-release@v2` with the CHANGELOG section as the body) and
+      `release-test.yml` (`pre/*` tags → TestPyPI, environment `testpypi`, no
+      GitHub Release). Release process + recovery/yank + semver policy documented
+      in `site_src/docs/contributing.md`. 27 tests in `tests/unit/test_release.py`.
+      `python -m build` + `twine check` PASS locally; the wheel installs and runs
+      in a fresh venv (`python -m owlcompare --version` → `0.1.0`). **NOTE:** this
+      component had no spec during implementation — it was built to the operator's
+      detailed brief; `specs/22-pypi-release.md` was written **retroactively** to
+      preserve the design record (it documents what shipped, not what was planned).
+      Author email omitted from `pyproject.toml` (name only) at the maintainer's
+      request. **Phase C (Phelz's manual step):** tag and push `v0.1.0` to trigger
+      the publish.)
 
-**Exit criteria:** `uv tool install owlcompare` works from PyPI. README links to a public demo HTML report.
+**Exit criteria:** `uv tool install owlcompare` works from PyPI (pipeline ready;
+fires on the `v0.1.0` tag — Phase C). README links to a public demo HTML report.
 
 ---
 

@@ -1,0 +1,89 @@
+# Component 22: stage a release to TestPyPI before the real thing.
+#
+# Fires on a `pre/...` tag (e.g. pre/v0.1.0-rc1). Same build + check flow as
+# release.yml, but publishes to https://test.pypi.org/legacy/ via OIDC Trusted
+# Publishing (TestPyPI Trusted Publisher configured for workflow release-test.yml
+# + environment testpypi) and does NOT cut a GitHub Release — TestPyPI runs are
+# staging-only dry runs.
+#
+# To stage a release, bump src/owlcompare/_version.py to the pre-release version
+# (e.g. 0.1.0rc1), commit, then:
+#   git tag pre/v0.1.0-rc1 && git push origin pre/v0.1.0-rc1
+name: Release (TestPyPI)
+
+on:
+  push:
+    tags:
+      - "pre/*"
+
+# OIDC Trusted Publishing needs `id-token: write`. No GitHub Release is created,
+# so `contents` stays read-only.
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  release-test:
+    name: Build and publish to TestPyPI
+    runs-on: ubuntu-latest
+    # Must match the environment named in the TestPyPI Trusted Publisher config.
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/project/owlcompare/
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tooling
+        run: python -m pip install --upgrade build twine packaging
+
+      - name: Verify the tag matches the package version
+        # The package version is sourced dynamically from src/owlcompare/_version.py
+        # (DD-013). Strip the `pre/` and `v` prefixes off the tag, then compare the
+        # PEP 440-normalized forms so `pre/v0.1.0-rc1` matches a package version of
+        # `0.1.0rc1`.
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          TAG_VERSION="${TAG#pre/}"
+          TAG_VERSION="${TAG_VERSION#v}"
+          python - "$TAG_VERSION" <<'PY'
+          import pathlib, re, sys
+          from packaging.version import Version, InvalidVersion
+
+          tag_raw = sys.argv[1]
+          pkg_raw = re.search(
+              r'__version__\s*=\s*"([^"]+)"',
+              pathlib.Path("src/owlcompare/_version.py").read_text(),
+          ).group(1)
+          try:
+              tag_v, pkg_v = Version(tag_raw), Version(pkg_raw)
+          except InvalidVersion as exc:
+              sys.exit(f"::error::Cannot parse version: {exc}")
+          print(f"Tag version:     {tag_v}")
+          print(f"Package version: {pkg_v}")
+          if tag_v != pkg_v:
+              sys.exit(
+                  f"::error::Tag '{tag_raw}' (=> {tag_v}) does not match package "
+                  f"version {pkg_v}. Bump src/owlcompare/_version.py and retag."
+              )
+          PY
+
+      - name: Build sdist and wheel
+        run: python -m build
+
+      - name: Check the built artifacts
+        run: twine check dist/*
+
+      - name: Publish to TestPyPI
+        # Pinned to release/v1 (NOT @main). repository-url retargets the publish
+        # at TestPyPI; OIDC, no token needed.
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/

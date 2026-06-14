@@ -212,7 +212,7 @@ Print the version and exit. Equivalent to `owlcompare --version`.
 
 ```bash
 owlcompare version
-# owlcompare 0.0.1
+# owlcompare 0.1.0
 ```
 
 ---

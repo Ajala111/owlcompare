@@ -1,0 +1,118 @@
+# Component 22: publish a tagged release to PyPI.
+#
+# Fires when a final-release tag (vMAJOR.MINOR.PATCH, e.g. v0.1.0) is pushed. The
+# job builds the sdist + wheel, validates the metadata with `twine check`,
+# publishes to PyPI via OIDC Trusted Publishing (no API token in the repo — see
+# the PyPI Trusted Publisher configured for workflow release.yml + environment
+# pypi), and cuts a GitHub Release whose body is the matching CHANGELOG section.
+#
+# Pre-release tags (v0.1.0a1, v0.1.0-rc1, pre/...) are intentionally NOT published
+# here; the `v*.*.*` glob can still match some of them, so a strict guard step
+# rejects anything that isn't a clean final release and points at
+# release-test.yml (TestPyPI) instead.
+name: Release
+
+on:
+  push:
+    tags:
+      # Glob is a coarse filter (it also matches e.g. v0.1.0a1); the "Reject
+      # pre-release tags" step below is the real gate.
+      - "v*.*.*"
+
+# OIDC Trusted Publishing needs `id-token: write`; cutting the GitHub Release
+# needs `contents: write`. Nothing else.
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    name: Build and publish to PyPI
+    runs-on: ubuntu-latest
+    # Must match the environment named in the PyPI Trusted Publisher config.
+    environment:
+      name: pypi
+      url: https://pypi.org/project/owlcompare/
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Reject pre-release tags
+        # The trigger glob is permissive; enforce a strict final-release shape
+        # here. Pre-releases go through release-test.yml (TestPyPI).
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Tag '$TAG' is not a final release (vMAJOR.MINOR.PATCH)."
+            echo "::error::Pre-releases are staged via release-test.yml — push a 'pre/...' tag instead."
+            exit 1
+          fi
+          echo "Releasing $TAG"
+
+      - name: Verify the tag matches the package version
+        # The package version is sourced dynamically from src/owlcompare/_version.py
+        # (DD-013: single source of truth; pyproject.toml reads it via Hatchling).
+        # Reading it here is equivalent to reading pyproject's resolved version,
+        # without a second place to keep in sync.
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          VERSION=$(python -c "import re,pathlib; print(re.search(r'__version__\s*=\s*\"([^\"]+)\"', pathlib.Path('src/owlcompare/_version.py').read_text()).group(1))")
+          TAG_VERSION="${TAG#v}"
+          echo "Tag version:     $TAG_VERSION"
+          echo "Package version: $VERSION"
+          if [ "$TAG_VERSION" != "$VERSION" ]; then
+            echo "::error::Tag '$TAG' (=> $TAG_VERSION) does not match package version $VERSION."
+            echo "::error::Bump src/owlcompare/_version.py and retag, or delete the mismatched tag."
+            exit 1
+          fi
+
+      - name: Install build tooling
+        run: python -m pip install --upgrade build twine
+
+      - name: Build sdist and wheel
+        run: python -m build
+
+      - name: Check the built artifacts
+        run: twine check dist/*
+
+      - name: Extract the changelog section for this release
+        # The GitHub Release body is just this version's CHANGELOG entry: the lines
+        # from "## [X.Y.Z]" up to (but not including) the next "## " heading.
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          VERSION="${TAG#v}"
+          # Literal (index-based) match on "## [X.Y.Z]" — building a regex with
+          # "[X.Y.Z]" would be read as a character class, not literal brackets.
+          awk -v ver="$VERSION" '
+            BEGIN { target = "## [" ver "]" }
+            index($0, target) == 1 { capture = 1; next }
+            capture && /^## / { exit }
+            capture { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "No changelog entry found for $VERSION; using a generic note." >&2
+            echo "owlcompare $VERSION" > release-notes.md
+          fi
+          echo "----- release notes -----"
+          cat release-notes.md
+
+      - name: Publish to PyPI
+        # Pinned to the release/v1 branch (NOT @main): OIDC, no token needed.
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+      - name: Create the GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: owlcompare ${{ github.ref_name }}
+          body_path: release-notes.md
+          files: dist/*
+          fail_on_unmatched_files: true
