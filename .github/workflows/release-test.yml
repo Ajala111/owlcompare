@@ -45,35 +45,15 @@ jobs:
 
       - name: Verify the tag matches the package version
         # The package version is sourced dynamically from src/owlcompare/_version.py
-        # (DD-013). Strip the `pre/` and `v` prefixes off the tag, then compare the
-        # PEP 440-normalized forms so `pre/v0.1.0-rc1` matches a package version of
-        # `0.1.0rc1`.
+        # (DD-013). A pre-release tag stages the *upcoming* release, so the package
+        # version stays at the final version (e.g. 0.1.0) while we cut
+        # pre/v0.1.0-rc1, -rc2, … The validator therefore compares BASE versions
+        # (dropping the rc/pre/post/dev suffix) and additionally requires the tag to
+        # actually be a pre-release. The logic lives in scripts/validate_release_tag.py
+        # so it is unit-tested (tests/unit/test_release.py) rather than buried inline.
         env:
           TAG: ${{ github.ref_name }}
-        run: |
-          TAG_VERSION="${TAG#pre/}"
-          TAG_VERSION="${TAG_VERSION#v}"
-          python - "$TAG_VERSION" <<'PY'
-          import pathlib, re, sys
-          from packaging.version import Version, InvalidVersion
-
-          tag_raw = sys.argv[1]
-          pkg_raw = re.search(
-              r'__version__\s*=\s*"([^"]+)"',
-              pathlib.Path("src/owlcompare/_version.py").read_text(),
-          ).group(1)
-          try:
-              tag_v, pkg_v = Version(tag_raw), Version(pkg_raw)
-          except InvalidVersion as exc:
-              sys.exit(f"::error::Cannot parse version: {exc}")
-          print(f"Tag version:     {tag_v}")
-          print(f"Package version: {pkg_v}")
-          if tag_v != pkg_v:
-              sys.exit(
-                  f"::error::Tag '{tag_raw}' (=> {tag_v}) does not match package "
-                  f"version {pkg_v}. Bump src/owlcompare/_version.py and retag."
-              )
-          PY
+        run: python scripts/validate_release_tag.py --mode pre --tag "$TAG"
 
       - name: Build sdist and wheel
         run: python -m build

@@ -10,6 +10,7 @@ and inspects them, proving the wheel/sdist split actually holds.
 
 from __future__ import annotations
 
+import importlib.util
 import re
 import tomllib
 from pathlib import Path
@@ -281,3 +282,67 @@ def test_release_yml_validates_tag_against_version() -> None:
     text = _RELEASE_YML.read_text(encoding="utf-8")
     assert "_version.py" in text
     assert "does not match package version" in text
+
+
+def test_release_test_yml_calls_validation_script() -> None:
+    # The pre-release tag check is delegated to the unit-tested script below rather
+    # than embedded as inline shell, so the two stay in lock-step.
+    text = _RELEASE_TEST_YML.read_text(encoding="utf-8")
+    assert "scripts/validate_release_tag.py --mode pre" in text
+
+
+# --------------------------------------------------------------------------- #
+# tag/version validation logic (scripts/validate_release_tag.py)
+# --------------------------------------------------------------------------- #
+
+
+def _load_validate_module() -> Any:
+    """Import scripts/validate_release_tag.py by path (it is not an installed pkg)."""
+    path = _REPO_ROOT / "scripts" / "validate_release_tag.py"
+    spec = importlib.util.spec_from_file_location("validate_release_tag", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+_validate = _load_validate_module()
+
+
+# release-test.yml (--mode pre): base-version match + must be a pre-release.
+# A pre-release tag stages the upcoming final version, so _version.py stays at
+# 0.1.0 while pre/v0.1.0-rc1, -rc2, … are cut.
+@pytest.mark.parametrize(
+    ("tag", "pkg"),
+    [
+        ("pre/v0.1.0-rc1", "0.1.0"),  # base versions match, tag is a pre-release
+        ("pre/v0.1.0-rc2", "0.1.0"),  # the next rc against the same package version
+    ],
+)
+def test_validate_pre_tag_accepts_matching_prereleases(tag: str, pkg: str) -> None:
+    tag_v, pkg_v = _validate.validate_pre_tag(tag, pkg)
+    assert tag_v.base_version == pkg_v.base_version
+    assert tag_v.is_prerelease
+
+
+def test_validate_pre_tag_rejects_base_version_mismatch() -> None:
+    # pre/v0.2.0-rc1 cannot stage a 0.1.0 package — different base version.
+    with pytest.raises(_validate.TagValidationError, match="base version"):
+        _validate.validate_pre_tag("pre/v0.2.0-rc1", "0.1.0")
+
+
+def test_validate_pre_tag_rejects_non_prerelease() -> None:
+    # pre/v0.1.0 is a final release accidentally pushed to the staging workflow.
+    with pytest.raises(_validate.TagValidationError, match="not a pre-release"):
+        _validate.validate_pre_tag("pre/v0.1.0", "0.1.0")
+
+
+# release.yml (--mode final): strict exact-version match, kept strict on purpose.
+def test_validate_final_tag_accepts_exact_match() -> None:
+    tag_v, pkg_v = _validate.validate_final_tag("v0.1.0", "0.1.0")
+    assert tag_v == pkg_v
+
+
+def test_validate_final_tag_rejects_version_mismatch() -> None:
+    with pytest.raises(_validate.TagValidationError, match="does not match package version"):
+        _validate.validate_final_tag("v0.1.0", "0.1.1")

@@ -84,9 +84,19 @@ the two workflows. The one programmatic invariant: `owlcompare.__version__` (and
   artifacts attached.
 - **`release-test.yml` (TestPyPI).** Trigger: tags `pre/*`. `permissions:
   { contents: read, id-token: write }`. Environment `testpypi`. Same build +
-  `twine check`, with a PEP 440-normalized tag/version check (so `pre/v0.1.0-rc1`
-  matches a package version of `0.1.0rc1`), then publishes with
+  `twine check`, with a **base-version** tag/version check: a pre-release tag
+  stages the *upcoming* release, so `_version.py` stays at the final version (e.g.
+  `0.1.0`) while `pre/v0.1.0-rc1`, `-rc2`, … are cut. The check compares
+  `Version.base_version` (dropping the rc/pre/post/dev suffix) and additionally
+  requires the tag to actually *be* a pre-release (a final-release tag pushed here
+  is rejected with a pointer to `release.yml`). Then publishes with
   `repository-url: https://test.pypi.org/legacy/`. **No** GitHub Release.
+- **`scripts/validate_release_tag.py`.** The tag/version agreement logic is
+  extracted here as two validators — `validate_final_tag` (exact match, for
+  `release.yml`) and `validate_pre_tag` (base-version + pre-release, for
+  `release-test.yml`) — so it is unit-tested rather than buried in workflow shell.
+  `release-test.yml` calls it (`--mode pre`); `release.yml` keeps its strict inline
+  guard unchanged.
 - **Runbook.** `site_src/docs/contributing.md` documents bump → changelog →
   commit → tag → push, the TestPyPI staging dry run, the semver policy, and
   yank/recovery.
