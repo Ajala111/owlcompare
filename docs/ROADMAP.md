@@ -10,7 +10,9 @@ report — implementation), and 18 (JUnit XML / CI output) all delivered.
 `owlcompare diff` now emits JSON, text, Markdown, HTML, and JUnit XML, is
 wrappable as a three-line GitHub Actions step, and has a public MkDocs Material
 documentation site (build pipeline + landing page + priority pages + stubs).
-Next up: Component 21 (flagship ERA ontology demo).
+**Component 21 (flagship FIBO demo) is delivered** — a public Showcase tab diffing
+two real FIBO Business Entities releases. Next up: Component 22 (PyPI release
+pipeline), the final Phase 5 component.
 
 > **Soft prerequisite flagged:** Component 22 (PyPI release pipeline) is now a
 > soft prerequisite for the Action to be fully usable by **external** users —
@@ -220,7 +222,27 @@ Component 18). **Phase 4 complete.**
       railway/ERA fixtures, so the public framing isn't tied to one domain; the
       ERA fixtures remain internal (test suite + the planned Component 21 demo).
       Tone softened to category-level framing throughout.)
-- [ ] Component 21: Flagship ERA ontology demo — `specs/21-era-demo.md`
+- [x] Component 21: Flagship FIBO demo — `specs/21-flagship-demo.md`
+      (Public showcase at `site_src/docs/showcase/fibo.md`, wired into the docs
+      nav as a top-level **Showcase** tab. Diffs two published quarterly releases
+      of the **FIBO Business Entities** module — git tags `master_2023Q3` →
+      `master_2024Q3` (MIT-licensed; sources committed under `examples/fibo_demo/`
+      with `LICENSE-FIBO` preserved) — on `OwnershipAndControl/Executives.rdf`.
+      owlcompare distills 214 raw triple changes into **41 structured events**
+      (28 breaking / 12 non-breaking / 1 info; 0 renames, 0 anonymous-structure
+      changes, 10 unexplained Layer 0 — all meaningful metadata). The headline
+      story: **34 of 41 changes are one coordinated migration** — FIBO-BE adopting
+      the OMG Commons vocabulary (`fibo-fnd-pty-pty:` → `cmns-pts:`) — cross-
+      validated against three verbatim EDM Council release-note quotes (2023Q4,
+      2024Q1 ×2) and FIBO's own embedded `skos:changeNote` (ticket FND-380).
+      `scripts/generate_flagship.py` regenerates all four output formats (clean,
+      repo-relative, reproducible) plus a stdlib-only placeholder preview PNG;
+      `tests/unit/test_docs_build.py` gains 11 structural checks. **Narrative
+      pivot (recorded in spec "Why FIBO" §3):** this module/window contains no
+      renames and no anonymous structures, so the commentary leads with severity
+      classification, hierarchy reparenting, signature evolution, and an honest
+      `complex_class_expression_changed` fallback — not the rename/Component-12.5
+      features the spec originally anticipated. See the build summary below.)
 - [ ] Component 22: PyPI release pipeline — `specs/22-release.md`
 
 **Exit criteria:** `uv tool install owlcompare` works from PyPI. README links to a public demo HTML report.

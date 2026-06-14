@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="owlcompare" tests="51" failures="28" errors="0" skipped="0" time="0">
+  <testsuite name="owlcompare.diff" tests="51" failures="28" errors="0" skipped="0" timestamp="2026-06-12T12:36:46" time="0">
+    <testcase classname="structural.class_reparented" name="fibo-be-oac-exec:Authorization" time="0">
+      <failure type="class_reparented" message="Class fibo-be-oac-exec:Authorization reparented: fibo-fnd-pty-pty:Situation → cmns-pts:Situation (lateral)">Breaking change detected: Class fibo-be-oac-exec:Authorization reparented: fibo-fnd-pty-pty:Situation → cmns-pts:Situation (lateral)
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/Authorization
+  Kind:      class_reparented
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:681e58267d2260260eb52be31606226a348c624b
+    - syntactic:triple_removed:559751109ce5707f38df56d521fc354db1c38f98
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.class_reparented" name="fibo-be-oac-exec:AuthorizingParty" time="0">
+      <failure type="class_reparented" message="Class fibo-be-oac-exec:AuthorizingParty reparented: fibo-fnd-pty-pty:Actor → cmns-pts:Actor (lateral)">Breaking change detected: Class fibo-be-oac-exec:AuthorizingParty reparented: fibo-fnd-pty-pty:Actor → cmns-pts:Actor (lateral)
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/AuthorizingParty
+  Kind:      class_reparented
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:0dec6a5c2f26c7e881b9e96369cbabfb2113a310
+    - syntactic:triple_removed:28e625acae8ca48cf77d26b574b0b0d9f67c69ab
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.class_reparented" name="fibo-be-oac-exec:ResponsibleParty" time="0">
+      <failure type="class_reparented" message="Class fibo-be-oac-exec:ResponsibleParty reparented: fibo-fnd-pty-pty:PartyInRole → cmns-pts:PartyRole (lateral)">Breaking change detected: Class fibo-be-oac-exec:ResponsibleParty reparented: fibo-fnd-pty-pty:PartyInRole → cmns-pts:PartyRole (lateral)
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/ResponsibleParty
+  Kind:      class_reparented
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:8008aa6aa81eb4bdba9ddb8e61762eda009c1ae4
+    - syntactic:triple_removed:cd270c39ffb00b7de7d7f9d99187b752a0360e4d
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.complex_class_expression_changed" name="fibo-be-oac-exec:BoardCapacity" time="0">
+      <failure type="complex_class_expression_changed" message="Complex class expression on fibo-be-oac-exec:BoardCapacity changed (deep)">Breaking change detected: Complex class expression on fibo-be-oac-exec:BoardCapacity changed (deep)
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/BoardCapacity
+  Kind:      complex_class_expression_changed
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:51624658d1a74817d580c61394a3c4051772c705
+    - syntactic:triple_added:598e7cdf39255772397ff0adfade7172257b33af
+    - syntactic:triple_added:9931def13f319ad3c417da9638a356dfd67307b5
+    - syntactic:triple_added:99717cad3872dadd756f442e2355e29ab7f7eabc
+    - syntactic:triple_added:9b1434f42d535eb92b7dbaa07b8c98ad42de1c98
+    - syntactic:triple_added:a1b270cab25d9476191780b3ddc228b42b481bbc
+    - syntactic:triple_added:dc736469c9c1933cc098d37660bcf19ce3a4f947
+    - syntactic:triple_removed:4a624ec0296dc4bc22263c172e1145a0c2a91090
+    - syntactic:triple_removed:55c6bc75179354468ab4a0dfb5db343b9ed8ead1
+    - syntactic:triple_removed:678467012b7d1f7d144560b951a5f13208c96e09
+    - syntactic:triple_removed:68dd4e1c6cb814d85fbd3da7b5ab24a08e72431a
+    - syntactic:triple_removed:691eb09420bed027de5bea28e0fbd7878869ef48
+    - syntactic:triple_removed:f57251d42dd0d6ea2382892c7d3fc51e0c0b593d
+    - syntactic:triple_removed:f850ec4f7aaa707e28db5ffb87226db13208bd99
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.domain_changed" name="fibo-be-oac-exec:elects" time="0">
+      <failure type="domain_changed" message="Domain changed on fibo-be-oac-exec:elects: fibo-fnd-pty-pty:PartyInRole → cmns-pts:PartyRole">Breaking change detected: Domain changed on fibo-be-oac-exec:elects: fibo-fnd-pty-pty:PartyInRole → cmns-pts:PartyRole
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/elects
+  Kind:      domain_changed
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:e56fb1d47a627eaab96e760712327a6b8af81a0b
+    - syntactic:triple_removed:11f7476cbe61186f62571f6eae70dc17a5e0126c
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.domain_changed" name="fibo-be-oac-exec:hasResponsibility" time="0">
+      <failure type="domain_changed" message="Domain changed on fibo-be-oac-exec:hasResponsibility: fibo-fnd-pty-pty:IndependentParty → cmns-pts:Party">Breaking change detected: Domain changed on fibo-be-oac-exec:hasResponsibility: fibo-fnd-pty-pty:IndependentParty → cmns-pts:Party
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/hasResponsibility
+  Kind:      domain_changed
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:21b7cdb3c3077e0bcb6c11d4a24db6106e47bd0f
+    - syntactic:triple_removed:c355bfcd110257ec1636b73e9c02f184083175b5
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.domain_changed" name="fibo-be-oac-exec:nominates" time="0">
+      <failure type="domain_changed" message="Domain changed on fibo-be-oac-exec:nominates: fibo-fnd-pty-pty:PartyInRole → cmns-pts:PartyRole">Breaking change detected: Domain changed on fibo-be-oac-exec:nominates: fibo-fnd-pty-pty:PartyInRole → cmns-pts:PartyRole
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/nominates
+  Kind:      domain_changed
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:31a333aed7577ee8cf5d3f3b13733eead178a33f
+    - syntactic:triple_removed:dd3c6601f5b6c21b7f83b814ee4bf763e46e65ad
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.ontology_metadata_changed" name="fibo-be-oac-exec:" time="0"/>
+    <testcase classname="structural.property_reparented" name="fibo-be-oac-exec:authorizes" time="0">
+      <failure type="property_reparented" message="Property fibo-be-oac-exec:authorizes reparented: fibo-fnd-pty-pty:actsOn → cmns-pts:actsOn (lateral)">Breaking change detected: Property fibo-be-oac-exec:authorizes reparented: fibo-fnd-pty-pty:actsOn → cmns-pts:actsOn (lateral)
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/authorizes
+  Kind:      property_reparented
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:baa9c916596b8ae542bf67e121861bd5ad180b31
+    - syntactic:triple_removed:25e46ee51f9d4d391fa4f307726263c80a0c37c9
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.property_reparented" name="fibo-be-oac-exec:authorizesThrough" time="0">
+      <failure type="property_reparented" message="Property fibo-be-oac-exec:authorizesThrough reparented: fibo-fnd-pty-pty:actsIn → cmns-pts:actsIn (lateral)">Breaking change detected: Property fibo-be-oac-exec:authorizesThrough reparented: fibo-fnd-pty-pty:actsIn → cmns-pts:actsIn (lateral)
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/authorizesThrough
+  Kind:      property_reparented
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:cd3da6e43461f1395aa607b143ee2e3ba280d25e
+    - syntactic:triple_removed:ca277331c4f8ad77086caa636d299d12cc1d2ed5
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.property_reparented" name="fibo-be-oac-exec:hasAuthorizedParty" time="0">
+      <failure type="property_reparented" message="Property fibo-be-oac-exec:hasAuthorizedParty reparented: fibo-fnd-pty-pty:hasUndergoer → cmns-pts:hasUndergoer (lateral)">Breaking change detected: Property fibo-be-oac-exec:hasAuthorizedParty reparented: fibo-fnd-pty-pty:hasUndergoer → cmns-pts:hasUndergoer (lateral)
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/hasAuthorizedParty
+  Kind:      property_reparented
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:8f07769822542ba08a83f812771ab6d33534086c
+    - syntactic:triple_removed:aa18bb1e7255661aa4f78b3155175e7fc021b468
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.property_reparented" name="fibo-be-oac-exec:hasAuthorizingParty" time="0">
+      <failure type="property_reparented" message="Property fibo-be-oac-exec:hasAuthorizingParty reparented: fibo-fnd-pty-pty:hasActor → cmns-pts:hasActor (lateral)">Breaking change detected: Property fibo-be-oac-exec:hasAuthorizingParty reparented: fibo-fnd-pty-pty:hasActor → cmns-pts:hasActor (lateral)
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/hasAuthorizingParty
+  Kind:      property_reparented
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:5e8c9d6ebe78540ff4e752190ecc67dccaab23b9
+    - syntactic:triple_removed:5fd8aa807fda23cef1d0af35159c772af58bc913
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.property_reparented" name="fibo-be-oac-exec:hasResponsibleParty" time="0">
+      <failure type="property_reparented" message="Property fibo-be-oac-exec:hasResponsibleParty reparented: fibo-fnd-pty-pty:hasPartyInRole → cmns-pts:hasPartyRole (lateral)">Breaking change detected: Property fibo-be-oac-exec:hasResponsibleParty reparented: fibo-fnd-pty-pty:hasPartyInRole → cmns-pts:hasPartyRole (lateral)
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/hasResponsibleParty
+  Kind:      property_reparented
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:f725bb684bcebe5761516299fd1520e06da60e1e
+    - syntactic:triple_removed:506d77e67c411a0db111f05aaf3d1e13db4aec48
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.property_reparented" name="fibo-be-oac-exec:isAuthorizedBy" time="0">
+      <failure type="property_reparented" message="Property fibo-be-oac-exec:isAuthorizedBy reparented: fibo-fnd-pty-pty:isAffectedBy → cmns-pts:isAffectedBy (lateral)">Breaking change detected: Property fibo-be-oac-exec:isAuthorizedBy reparented: fibo-fnd-pty-pty:isAffectedBy → cmns-pts:isAffectedBy (lateral)
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/isAuthorizedBy
+  Kind:      property_reparented
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:7085a3eed2c67646addae43ec4a791573600912b
+    - syntactic:triple_removed:041b7f8aa18652da3bd6e9187e38e80cb22c2c4a
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.property_reparented" name="fibo-be-oac-exec:isAuthorizedThrough" time="0">
+      <failure type="property_reparented" message="Property fibo-be-oac-exec:isAuthorizedThrough reparented: fibo-fnd-pty-pty:undergoes → cmns-pts:undergoes (lateral)">Breaking change detected: Property fibo-be-oac-exec:isAuthorizedThrough reparented: fibo-fnd-pty-pty:undergoes → cmns-pts:undergoes (lateral)
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/isAuthorizedThrough
+  Kind:      property_reparented
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:ea7b7fadbd8d74946455696719aa40167e4a22c2
+    - syntactic:triple_removed:5ae0afab5605f1ac11211880cba3ee7f3f3473fc
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.range_changed" name="fibo-be-oac-exec:elects" time="0">
+      <failure type="range_changed" message="Range changed on fibo-be-oac-exec:elects: fibo-fnd-pty-pty:PartyInRole → cmns-pts:PartyRole">Breaking change detected: Range changed on fibo-be-oac-exec:elects: fibo-fnd-pty-pty:PartyInRole → cmns-pts:PartyRole
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/elects
+  Kind:      range_changed
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:552d4ef0cdee7244cdce061167fc50032cef6a63
+    - syntactic:triple_removed:ac5146f2d49fdf9200588d40846474ea51e5290f
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.range_changed" name="fibo-be-oac-exec:nominates" time="0">
+      <failure type="range_changed" message="Range changed on fibo-be-oac-exec:nominates: fibo-fnd-pty-pty:PartyInRole → cmns-pts:PartyRole">Breaking change detected: Range changed on fibo-be-oac-exec:nominates: fibo-fnd-pty-pty:PartyInRole → cmns-pts:PartyRole
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/nominates
+  Kind:      range_changed
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:aaf90a7bcf34175a876ecf191e6a1cfc0308bdf7
+    - syntactic:triple_removed:cd4699446966c55f8e5513cafa782040b27f0db9
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:AuthorizedParty" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:AuthorizedParty: exactly 1 fibo-be-le-lp:LegallyCompetentNaturalPerson cmns-rlcmp:isPlayedBy">Breaking change detected: Restriction added on fibo-be-oac-exec:AuthorizedParty: exactly 1 fibo-be-le-lp:LegallyCompetentNaturalPerson cmns-rlcmp:isPlayedBy
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/AuthorizedParty
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:3b2f95cb89486bc035405eeb32288e2709ccdf51
+    - syntactic:triple_added:497ae656c647b3b47c57ad8a8892fe38e0e2ffcc
+    - syntactic:triple_added:57cccd8ecd54417bcffee17461c7e16415f33b32
+    - syntactic:triple_added:6556ecac6def021900489b1dbbc324a0cfaea007
+    - syntactic:triple_added:f6972547d15ffc143cf0e5f6c0f843d09a20b5e5
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:AuthorizingParty" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:AuthorizingParty: exactly 1 fibo-be-le-lp:LegalPerson cmns-rlcmp:isPlayedBy">Breaking change detected: Restriction added on fibo-be-oac-exec:AuthorizingParty: exactly 1 fibo-be-le-lp:LegalPerson cmns-rlcmp:isPlayedBy
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/AuthorizingParty
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:1be9b9c9b160d8261613fe3f9b3e50d78d183122
+    - syntactic:triple_added:2b9e4fc27996eb578f8558c741319928438315a2
+    - syntactic:triple_added:9b58781e788400e3cf2d7e83b3d02b3561f79b7d
+    - syntactic:triple_added:b5741b6b2b65df2362f93d0b7610ef6c38508827
+    - syntactic:triple_added:f57e60f45c6374417570afa61259661d1d91b232
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:BoardMember" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:BoardMember: cmns-rlcmp:isPlayedBy some _restriction:31f4e449">Breaking change detected: Restriction added on fibo-be-oac-exec:BoardMember: cmns-rlcmp:isPlayedBy some _restriction:31f4e449
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/BoardMember
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:147499fe2f2b80fc1ffb8f9c16c2b00a736a8504
+    - syntactic:triple_added:1b7333c597d28d964baafc64d0e71f6378fff1ec
+    - syntactic:triple_added:325e665a54afa6d96e7e1115ee2cb2c24213be12
+    - syntactic:triple_added:45a4490431e8799618cd9cc81165520d92aac007
+    - syntactic:triple_added:66d9ad243685981ea0041f1556b347d79632cfca
+    - syntactic:triple_added:a6d9bf957a8aee7ae3ea106c20827a143808b0b4
+    - syntactic:triple_added:d0a3dbf034a0fd60fbc98e63be7e7d85702e46f3
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:BoardMember" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:BoardMember: cmns-rlcmp:isPlayedBy some _restriction:677f82c9">Breaking change detected: Restriction added on fibo-be-oac-exec:BoardMember: cmns-rlcmp:isPlayedBy some _restriction:677f82c9
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/BoardMember
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:07a71e2bb8d187886d93367fbd4321353a4fbaa8
+    - syntactic:triple_added:08061a5d0c26c0c5f2af069ddf4b3a32cbd2efad
+    - syntactic:triple_added:4358d58ceea35d2a2e2527dc7a179c0123de557e
+    - syntactic:triple_added:741fdbcc0effe86da1db9bf2dbc0edf8eb1fc415
+    - syntactic:triple_added:acfa12814702fa96c3df7bd329cb536d884adafb
+    - syntactic:triple_added:b3d258776032723b6169184708ac5378fb53c0b8
+    - syntactic:triple_added:c9fe81d3bfc1b71dbe999489eb9e22756566ecff
+    - syntactic:triple_added:e2fcd08a8c49d40b49e7d9c9d1c731fa29e35692
+    - syntactic:triple_added:ed989944dc5f6ab1f10bab7fd6481b72aae11b28
+    - syntactic:triple_added:f17c201e176c2ace9cfc2f458c41526309f14318
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:BoardOfDirectors" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:BoardOfDirectors: cmns-rlcmp:isPlayedBy some _restriction:61683090">Breaking change detected: Restriction added on fibo-be-oac-exec:BoardOfDirectors: cmns-rlcmp:isPlayedBy some _restriction:61683090
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/BoardOfDirectors
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:3664a9432198cfd2ca55e1bea1336cf12ad20f7e
+    - syntactic:triple_added:67d105a19223101032fe18fdee71594606bbb283
+    - syntactic:triple_added:9b15f246b13ea67b040eda003328500fe464fb53
+    - syntactic:triple_added:f7bfd8b42df19e682a66f02fee3a4590a75cf21d
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:BoardOfDirectors" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:BoardOfDirectors: cmns-rlcmp:isPlayedBy some _restriction:df84ca4c">Breaking change detected: Restriction added on fibo-be-oac-exec:BoardOfDirectors: cmns-rlcmp:isPlayedBy some _restriction:df84ca4c
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/BoardOfDirectors
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:1dc291837dc7ad43c477f2f4d99f1c0d27c392a3
+    - syntactic:triple_added:3b25edfedc337c58538ecf846c2832b6ce0de22c
+    - syntactic:triple_added:51624658d1a74817d580c61394a3c4051772c705
+    - syntactic:triple_added:5e2650a2e1118ced972b8dd27d818cf4151b399b
+    - syntactic:triple_added:6e5e03e7a31f323ea2503f3efc035de60606ea50
+    - syntactic:triple_added:81332a2eef1fb6db3fdda279a2d6dd7127ec0dd0
+    - syntactic:triple_added:99717cad3872dadd756f442e2355e29ab7f7eabc
+    - syntactic:triple_added:b3fd49ce7c6f6416952dd287ebeaac2999918f43
+    - syntactic:triple_added:dc736469c9c1933cc098d37660bcf19ce3a4f947
+    - syntactic:triple_added:f0e7101696785b7325175ffc566ef1f028e320a7
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:ChiefExecutiveOfficer" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:ChiefExecutiveOfficer: cmns-rlcmp:isPlayedBy some _restriction:3b9be241">Breaking change detected: Restriction added on fibo-be-oac-exec:ChiefExecutiveOfficer: cmns-rlcmp:isPlayedBy some _restriction:3b9be241
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/ChiefExecutiveOfficer
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:0beea9d381e90f66b54cb142c8f5cc0791ac0046
+    - syntactic:triple_added:1968f54bd2438594171fdaf1983afe97371979cd
+    - syntactic:triple_added:1edcaec92258f266291ceccf1ae2be2037ec63e2
+    - syntactic:triple_added:535007da9b114294024218910f1ade3d597993ff
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:Executive" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:Executive: exactly 1 fibo-be-le-lp:LegallyCompetentNaturalPerson cmns-rlcmp:isPlayedBy">Breaking change detected: Restriction added on fibo-be-oac-exec:Executive: exactly 1 fibo-be-le-lp:LegallyCompetentNaturalPerson cmns-rlcmp:isPlayedBy
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/Executive
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:3b2f95cb89486bc035405eeb32288e2709ccdf51
+    - syntactic:triple_added:497ae656c647b3b47c57ad8a8892fe38e0e2ffcc
+    - syntactic:triple_added:6556ecac6def021900489b1dbbc324a0cfaea007
+    - syntactic:triple_added:78a01a4636dbae9a8d46172502152ea24b314f6a
+    - syntactic:triple_added:f6972547d15ffc143cf0e5f6c0f843d09a20b5e5
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:LegallyDelegatedAuthority" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:LegallyDelegatedAuthority: cmns-rlcmp:isPlayedBy all fibo-be-le-lp:LegalPerson">Breaking change detected: Restriction added on fibo-be-oac-exec:LegallyDelegatedAuthority: cmns-rlcmp:isPlayedBy all fibo-be-le-lp:LegalPerson
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/LegallyDelegatedAuthority
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:5195f39ebe3fd7b70e942766601a437b7dfaf427
+    - syntactic:triple_added:623e876cf305a38993a55b5c39a094b67ecb9d62
+    - syntactic:triple_added:73c000bdb4b0d2de51e7a1869cc4be02e87bcf42
+    - syntactic:triple_added:b917266378ac0ede13e207b4fa6af35916c7c596
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:ResponsibleParty" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:ResponsibleParty: cmns-rlcmp:isPlayedBy all fibo-be-le-lp:LegallyCompetentNaturalPerson">Breaking change detected: Restriction added on fibo-be-oac-exec:ResponsibleParty: cmns-rlcmp:isPlayedBy all fibo-be-le-lp:LegallyCompetentNaturalPerson
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/ResponsibleParty
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:6f55b12837420f6ec3d56772a42a88a90c2358d8
+    - syntactic:triple_added:73364de9dabac55d724e8d3cf5f7f1ed295b5d86
+    - syntactic:triple_added:90dc904d8dc32af6a2c95eb48bfcb77b079712e6
+    - syntactic:triple_added:d423e5d0efbef8867423cd36489a0a2699040c0f
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:ResponsibleParty" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:ResponsibleParty: cmns-rlcmp:isPlayedBy some _restriction:7c75f7a4">Breaking change detected: Restriction added on fibo-be-oac-exec:ResponsibleParty: cmns-rlcmp:isPlayedBy some _restriction:7c75f7a4
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/ResponsibleParty
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:8f960ea1c9f1ce1ced7a7f38f075424e1265394e
+    - syntactic:triple_added:925ab2cc2b2ecc9af54cc83c4c2a75b742337e3b
+    - syntactic:triple_added:940419a4fbecb3ae9543ef3af2f255fb567ba60a
+    - syntactic:triple_added:cf66f3ee2eb7ee5451023eab308a8aa20271ce44
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_added" name="fibo-be-oac-exec:Signatory" time="0">
+      <failure type="restriction_added" message="Restriction added on fibo-be-oac-exec:Signatory: cmns-rlcmp:isPlayedBy some _restriction:f5080d14">Breaking change detected: Restriction added on fibo-be-oac-exec:Signatory: cmns-rlcmp:isPlayedBy some _restriction:f5080d14
+  Entity:    https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/Signatory
+  Kind:      restriction_added
+  Severity:  breaking
+
+  Subsumed Layer 0 changes:
+    - syntactic:triple_added:2aa8213e3a6b60122615722db28322ff53eb561b
+    - syntactic:triple_added:6228a4e3feafec589e7cb9d1cf98579b09c0779e
+    - syntactic:triple_added:63244437580518aa93ecc1b1a6326b1636df3d83
+    - syntactic:triple_added:659cad973d97e78a3047777deb2235175cff4289
+
+Refer to the full owlcompare report for context.</failure>
+    </testcase>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:AuthorizedParty" time="0"/>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:AuthorizingParty" time="0"/>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:BoardMember" time="0"/>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:BoardMember" time="0"/>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:BoardOfDirectors" time="0"/>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:BoardOfDirectors" time="0"/>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:ChiefExecutiveOfficer" time="0"/>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:Executive" time="0"/>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:LegallyDelegatedAuthority" time="0"/>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:ResponsibleParty" time="0"/>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:ResponsibleParty" time="0"/>
+    <testcase classname="structural.restriction_removed" name="fibo-be-oac-exec:Signatory" time="0"/>
+    <testcase classname="syntactic.triple_added" name="fibo-be-oac-exec:" time="0"/>
+    <testcase classname="syntactic.triple_added" name="fibo-be-oac-exec:" time="0"/>
+    <testcase classname="syntactic.triple_added" name="fibo-be-oac-exec:" time="0"/>
+    <testcase classname="syntactic.triple_added" name="fibo-be-oac-exec:" time="0"/>
+    <testcase classname="syntactic.triple_added" name="fibo-be-oac-exec:" time="0"/>
+    <testcase classname="syntactic.triple_removed" name="fibo-be-oac-exec:" time="0"/>
+    <testcase classname="syntactic.triple_removed" name="fibo-be-oac-exec:" time="0"/>
+    <testcase classname="syntactic.triple_removed" name="fibo-be-oac-exec:" time="0"/>
+    <testcase classname="syntactic.triple_removed" name="fibo-be-oac-exec:" time="0"/>
+    <testcase classname="syntactic.triple_removed" name="fibo-be-oac-exec:" time="0"/>
+    <system-out><![CDATA[owlcompare diff
+A: examples\fibo_demo\v1\OwnershipAndControl\Executives.rdf
+B: examples\fibo_demo\v2\OwnershipAndControl\Executives.rdf
+
+87 triples added, 86 triples removed (28 breaking)
+
+Layer 1 — Structural (41 changes)
+  [breaking] Class fibo-be-oac-exec:Authorization reparented: fibo-fnd-pty-pty:Situation → cmns-pts:Situation (lateral)
+  [breaking] Class fibo-be-oac-exec:AuthorizingParty reparented: fibo-fnd-pty-pty:Actor → cmns-pts:Actor (lateral)
+  [breaking] Class fibo-be-oac-exec:ResponsibleParty reparented: fibo-fnd-pty-pty:PartyInRole → cmns-pts:PartyRole (lateral)
+  [breaking] Property fibo-be-oac-exec:authorizes reparented: fibo-fnd-pty-pty:actsOn → cmns-pts:actsOn (lateral)
+  [breaking] Property fibo-be-oac-exec:authorizesThrough reparented: fibo-fnd-pty-pty:actsIn → cmns-pts:actsIn (lateral)
+  [breaking] Property fibo-be-oac-exec:hasAuthorizedParty reparented: fibo-fnd-pty-pty:hasUndergoer → cmns-pts:hasUndergoer (lateral)
+  [breaking] Property fibo-be-oac-exec:hasAuthorizingParty reparented: fibo-fnd-pty-pty:hasActor → cmns-pts:hasActor (lateral)
+  [breaking] Property fibo-be-oac-exec:hasResponsibleParty reparented: fibo-fnd-pty-pty:hasPartyInRole → cmns-pts:hasPartyRole (lateral)
+  [breaking] Property fibo-be-oac-exec:isAuthorizedBy reparented: fibo-fnd-pty-pty:isAffectedBy → cmns-pts:isAffectedBy (lateral)
+  [breaking] Property fibo-be-oac-exec:isAuthorizedThrough reparented: fibo-fnd-pty-pty:undergoes → cmns-pts:undergoes (lateral)
+  [breaking] Restriction added on fibo-be-oac-exec:AuthorizedParty: exactly 1 fibo-be-le-lp:LegallyCompetentNaturalPerson cmns-rlcmp:isPlayedBy
+  [breaking] Restriction added on fibo-be-oac-exec:AuthorizingParty: exactly 1 fibo-be-le-lp:LegalPerson cmns-rlcmp:isPlayedBy
+  [breaking] Restriction added on fibo-be-oac-exec:BoardMember: cmns-rlcmp:isPlayedBy some _restriction:31f4e449
+  [breaking] Restriction added on fibo-be-oac-exec:BoardMember: cmns-rlcmp:isPlayedBy some _restriction:677f82c9
+  [breaking] Restriction added on fibo-be-oac-exec:BoardOfDirectors: cmns-rlcmp:isPlayedBy some _restriction:61683090
+  [breaking] Restriction added on fibo-be-oac-exec:BoardOfDirectors: cmns-rlcmp:isPlayedBy some _restriction:df84ca4c
+  [breaking] Restriction added on fibo-be-oac-exec:ChiefExecutiveOfficer: cmns-rlcmp:isPlayedBy some _restriction:3b9be241
+  [breaking] Restriction added on fibo-be-oac-exec:Executive: exactly 1 fibo-be-le-lp:LegallyCompetentNaturalPerson cmns-rlcmp:isPlayedBy
+  [breaking] Restriction added on fibo-be-oac-exec:LegallyDelegatedAuthority: cmns-rlcmp:isPlayedBy all fibo-be-le-lp:LegalPerson
+  [breaking] Restriction added on fibo-be-oac-exec:ResponsibleParty: cmns-rlcmp:isPlayedBy all fibo-be-le-lp:LegallyCompetentNaturalPerson
+  ...and 21 more
+
+Layer 0 — Syntactic (10 unexplained)        [use --show-syntactic for all]
+  [non_breaking] Removed: <https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/> owl:imports <https://spec.edmco…
+  [non_breaking] Removed: <https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/> owl:imports <https://spec.edmco…
+  [info] Removed: <https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/> owl:versionIRI <https://spec.ed…
+  [non_breaking] Removed: <https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/> cmns-av:copyright "Copyright (c…
+  [non_breaking] Removed: <https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/> cmns-av:copyright "Copyright (c…
+  [non_breaking] Added: <https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/> owl:imports <https://www.omg.org/…
+  [non_breaking] Added: <https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/> owl:imports <https://www.omg.org/…
+  [info] Added: <https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/> owl:versionIRI <https://spec.edmc…
+  [non_breaking] Added: <https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/> cmns-av:copyright "Copyright (c) …
+  [non_breaking] Added: <https://spec.edmcouncil.org/fibo/ontology/BE/OwnershipAndControl/Executives/> cmns-av:copyright "Copyright (c) …]]></system-out>
+  </testsuite>
+</testsuites>

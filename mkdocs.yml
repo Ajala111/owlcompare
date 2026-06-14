@@ -32,6 +32,7 @@ site_dir: site
 # is a contributor note (screenshot-capture instructions), not a published page.
 exclude_docs: |
   assets/README.md
+  showcase/assets/fibo-diff-report.md
 
 theme:
   name: material
@@ -139,3 +140,7 @@ nav:
   - FAQ: faq.md
   - Changelog: changelog.md
   - Contributing: contributing.md
+  # Showcase sits after onboarding/reference so evaluators ready to see real-world
+  # capability find it easily, while new users hit Getting Started first.
+  - Showcase:
+    - showcase/fibo.md

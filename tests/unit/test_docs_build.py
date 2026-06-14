@@ -8,6 +8,8 @@ landing page, a valid publishing workflow — without actually invoking MkDocs
 
 from __future__ import annotations
 
+import compileall
+import json
 import re
 from html.parser import HTMLParser
 from pathlib import Path
@@ -20,6 +22,12 @@ MKDOCS_YML = REPO_ROOT / "mkdocs.yml"
 SITE_SRC = REPO_ROOT / "site_src"
 INDEX_HTML = SITE_SRC / "index.html"
 DOCS_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "docs.yml"
+
+# Component 21 — flagship FIBO demo
+SHOWCASE_PAGE = SITE_SRC / "docs" / "showcase" / "fibo.md"
+SHOWCASE_ASSETS = SITE_SRC / "docs" / "showcase" / "assets"
+FIBO_DEMO = REPO_ROOT / "examples" / "fibo_demo"
+GENERATE_FLAGSHIP = REPO_ROOT / "scripts" / "generate_flagship.py"
 
 
 def _load_mkdocs_config() -> dict[str, object]:
@@ -123,6 +131,64 @@ def test_docs_workflow_triggers_on_push_main_and_dispatch() -> None:
     # YAML 1.1 coerces the bare `on:` key to True, so assert against the raw text.
     assert "workflow_dispatch" in text
     assert re.search(r"branches:\s*\[main\]", text) or "- main" in text
+
+
+# --- Component 21: flagship FIBO demo -------------------------------------------
+
+
+def test_showcase_page_exists_and_has_title() -> None:
+    assert SHOWCASE_PAGE.is_file(), "the showcase page site_src/docs/showcase/fibo.md is missing"
+    first = next(ln for ln in SHOWCASE_PAGE.read_text(encoding="utf-8").splitlines() if ln.strip())
+    assert first.startswith("# "), "fibo.md must open with a '# Title' heading"
+
+
+@pytest.mark.parametrize(
+    "asset",
+    [
+        "fibo-diff-report.html",
+        "fibo-diff-report.json",
+        "fibo-diff-report.md",
+        "fibo-diff-report.xml",
+        "fibo-diff-report-preview.png",
+    ],
+)
+def test_showcase_asset_exists(asset: str) -> None:
+    path = SHOWCASE_ASSETS / asset
+    assert path.is_file(), f"showcase asset {asset} is missing — run scripts/generate_flagship.py"
+    assert path.stat().st_size > 0, f"showcase asset {asset} is empty"
+
+
+def test_showcase_json_validates_against_schema() -> None:
+    from owlcompare.schema import validate_diff_json
+
+    data = json.loads((SHOWCASE_ASSETS / "fibo-diff-report.json").read_text(encoding="utf-8"))
+    validate_diff_json(data)  # raises on schema drift
+
+
+def test_fibo_demo_sources_present() -> None:
+    for version in ("v1", "v2"):
+        rdf_files = list((FIBO_DEMO / version).rglob("*.rdf"))
+        assert rdf_files, f"examples/fibo_demo/{version} has no .rdf source files"
+    assert (FIBO_DEMO / "LICENSE-FIBO").is_file(), "examples/fibo_demo/LICENSE-FIBO is missing"
+    assert (FIBO_DEMO / "README.md").is_file(), "examples/fibo_demo/README.md is missing"
+
+
+def test_license_fibo_is_mit() -> None:
+    text = (FIBO_DEMO / "LICENSE-FIBO").read_text(encoding="utf-8")
+    assert "MIT License" in text
+    assert "Enterprise Data Management Council" in text
+
+
+def test_generate_flagship_script_is_valid_python() -> None:
+    assert GENERATE_FLAGSHIP.is_file(), "scripts/generate_flagship.py is missing"
+    assert compileall.compile_file(GENERATE_FLAGSHIP, quiet=1), (
+        "scripts/generate_flagship.py does not compile"
+    )
+
+
+def test_showcase_is_in_nav() -> None:
+    targets = _iter_nav_md_targets(_load_mkdocs_config()["nav"])
+    assert "showcase/fibo.md" in targets, "showcase/fibo.md is not wired into the mkdocs nav"
 
 
 if __name__ == "__main__":  # pragma: no cover
