@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: phelz/owlcompare@v1
+      - uses: Ajala111/owlcompare@v1
         with:
           ontology-path: ontology/my-ontology.ttl
 ```
@@ -64,11 +64,6 @@ On the next pull request you get:
 - a **check status** that turns red if there are breaking changes.
 
 That's it. Everything below is optional tuning.
-
-> **Heads up — install path.** Until owlcompare is published to PyPI (Component
-> 22), `phelz/owlcompare@v1` cannot `pip install owlcompare` for external repos.
-> See [Installation modes](#installation-modes) and
-> [Known limitations](#known-limitations) for how to use it today.
 
 ---
 
@@ -214,7 +209,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: phelz/owlcompare@v1
+      - uses: Ajala111/owlcompare@v1
         with:
           ontology-path: ontology/era.ttl
 ```
@@ -225,7 +220,7 @@ Diff against a fixed `release` branch instead of the PR base, pin a specific
 owlcompare version for reproducibility, and only generate the HTML report.
 
 ```yaml
-- uses: phelz/owlcompare@v1
+- uses: Ajala111/owlcompare@v1
   with:
     ontology-path: ontology/era.ttl
     baseline-ref: release
@@ -241,7 +236,7 @@ Capture the diff results and act on them — for example, fail only when there a
 
 ```yaml
 - id: ontology
-  uses: phelz/owlcompare@v1
+  uses: Ajala111/owlcompare@v1
   with:
     ontology-path: ontology/era.ttl
     fail-on-breaking: "false"   # we'll decide ourselves below
@@ -282,7 +277,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: phelz/owlcompare@v1
+      - uses: Ajala111/owlcompare@v1
         with:
           ontology-path: ${{ matrix.ontology }}
           # A distinct marker per file keeps each ontology's PR comment separate.
@@ -311,7 +306,7 @@ jobs:
         with:
           fetch-depth: 0
       - id: ontology
-        uses: phelz/owlcompare@v1
+        uses: Ajala111/owlcompare@v1
         with:
           ontology-path: ontology/era.ttl
           # scheduled/dispatch runs have no PR base, so name the baseline.
@@ -335,23 +330,22 @@ The `owlcompare-version` input selects how the CLI is installed:
 | `local` | `pip install -e .` against the checked-out repository. Used to self-test the Action against live code (the smoke-test workflow uses this). |
 | *exact version* (e.g. `1.0.0`) | `pip install owlcompare==1.0.0`. |
 
-**Until owlcompare is published to PyPI (Component 22):**
+**Installing from source (development workflows within the owlcompare repo):**
 
-- For **external repos**, the `latest` PyPI install will not yet succeed. Until
-  the PyPI release lands you can install a pinned commit directly in a shell step
-  *before* the Action, then set `owlcompare-version` to that installed version —
-  or simply wait for the PyPI release, after which `latest` works out of the box.
+- You can install a pinned commit directly in a shell step *before* the Action,
+  then set `owlcompare-version` to that installed version. This is useful for
+  testing an unreleased commit; most users should just use `latest` (PyPI).
 
   ```yaml
-  - run: pip install "git+https://github.com/phelz/owlcompare.git@v1.0.0"
+  - run: pip install "git+https://github.com/Ajala111/owlcompare.git@v1.0.0"
   ```
 
 - The built-in **git fallback** in `latest` mode installs from
   `github.com/${{ github.repository }}@${{ github.sha }}`. That only resolves to
   owlcompare when the workflow runs *inside the owlcompare repository itself*
   (i.e. during development / the smoke test). It is **not** a general install
-  path for external repos — for those, prefer an explicit version once PyPI is
-  live.
+  path for external repos — for those, the canonical path is `latest` (PyPI) or
+  an explicit version.
 
 ---
 
@@ -428,8 +422,6 @@ Enable LFS on checkout: `actions/checkout@v4` with `lfs: true`.
 
 ## Known limitations
 
-- **PyPI not yet published.** External repos can't use `owlcompare-version:
-  latest` until Component 22 ships. See [Installation modes](#installation-modes).
 - **Forked PRs can't be commented on.** The read-only token on fork PRs means the
   comment step warns and skips. For trusted forks you *can* use the
   `pull_request_target` event (which runs with the base repo's token) — but only
@@ -449,8 +441,8 @@ Enable LFS on checkout: `actions/checkout@v4` with `lfs: true`.
 
 The Action follows GitHub Actions conventions:
 
-- `phelz/owlcompare@v1` — the floating major tag (moves on minor/patch releases).
-- `phelz/owlcompare@v1.0.0` — an immutable pin.
+- `Ajala111/owlcompare@v1` — the floating major tag (moves on minor/patch releases).
+- `Ajala111/owlcompare@v1.0.0` — an immutable pin.
 - `main` is the development branch; don't depend on it in production.
 - Breaking changes to the input/output schema bump the major tag to `v2`.
 

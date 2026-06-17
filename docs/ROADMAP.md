@@ -21,7 +21,7 @@ triggers `release.yml` → PyPI). Phase 5 — and the v1 roadmap — is complete
 > soft prerequisite for the Action to be fully usable by **external** users —
 > `owlcompare-version: latest` can only `pip install owlcompare` once owlcompare
 > is on PyPI. Until then external users install a pinned commit via
-> `pip install git+https://github.com/phelz/owlcompare.git@<ref>`, and the Action
+> `pip install git+https://github.com/Ajala111/owlcompare.git@<ref>`, and the Action
 > self-tests inside this repo via `owlcompare-version: local`.
 
 ---

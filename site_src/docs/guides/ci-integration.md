@@ -39,13 +39,6 @@ On the next pull request you get three things:
 
 That's the whole setup. Everything below is optional tuning.
 
-!!! note "Install path while owlcompare is pre-PyPI"
-    Until owlcompare is published to PyPI, the `latest` install mode can only
-    resolve inside the owlcompare repo itself. For your own repo, either wait for
-    the PyPI release (after which `latest` just works) or pin a version once it's
-    available. See the [Action's installation modes](https://github.com/Ajala111/owlcompare/blob/main/docs/github-action.md#installation-modes)
-    for the details.
-
 ## How the Action works
 
 It's a [composite action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)

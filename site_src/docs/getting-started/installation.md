@@ -54,15 +54,6 @@ Windows, `winget install Python.Python.3.12` is the smoothest path.
 
 All four give you the same `owlcompare` command on your `PATH`.
 
-!!! note "PyPI availability"
-    owlcompare's first PyPI release is imminent. If `pip install owlcompare`
-    cannot find the package yet, install a pinned commit directly while the
-    release lands:
-
-    ```bash
-    pip install "git+https://github.com/Ajala111/owlcompare.git@main"
-    ```
-
 ## Verify the install
 
 ```bash
