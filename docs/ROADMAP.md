@@ -277,6 +277,52 @@ fires on the `v0.1.0` tag — Phase C). README links to a public demo HTML repor
 
 ---
 
+## v0.2.0 — Severity refinement and Layer 2 prep
+
+Driven by community feedback on v0.1.0:
+
+### Per-layer severity classification
+
+v0.1.0 classifies severity globally per change kind. Community feedback
+has pointed out that severity is consumer-dependent — what's breaking for
+a SPARQL-query consumer is not breaking for a SHACL validator, and vice
+versa.
+
+v0.2.0 will move toward per-layer severity:
+
+- **Layer 1 (structural)** — severity based on the ontology's own axioms
+  (current v0.1.0 behavior; refined for clarity)
+- **Layer 2 (inferential)** — severity based on what a reasoner derives
+  (new in v0.2.0)
+- **Layer 3 (impact)** — severity based on downstream consumer impact
+  (planned for v0.3.0+)
+
+A single change may carry different severity at different layers. Removing
+a class is structural-breaking; adding `owl:disjointWith` may be
+inferential-breaking even though it's a structural addition.
+
+### Use-case profiles
+
+Replace the kind-level `--severity-config` with profile-based
+classification. Profiles describe the consumer's relationship with the
+ontology (SPARQL queries, SHACL validation, instance data, reasoner-derived
+facts). Each profile maps change kinds to severity based on what actually
+breaks that consumer.
+
+v0.2.0 will ship built-in profiles for common cases (SPARQL consumer, SHACL
+validator, schema-only consumer); user-defined profiles via TOML remain
+supported.
+
+### Acknowledgment
+
+These directions are driven by user feedback on the v0.1.0 LinkedIn
+announcement — particularly comments from ontology engineers pointing out
+that severity classification is consumer-dependent and can't be a global
+property of change kinds. Continuing engagement welcome at the
+[GitHub Issues page](https://github.com/Ajala111/owlcompare/issues).
+
+---
+
 ## Backlog (post-v1)
 
 ### Surfaced during Component 19 (GitHub Action)

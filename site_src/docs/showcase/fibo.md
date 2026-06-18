@@ -54,6 +54,19 @@ characteristic of this editorial period (a vocabulary migration, not a
 restructuring), not a gap in owlcompare; the rename detector and Component 12.5's
 anonymous-structure decoder simply had nothing to fire on here.
 
+## Source files
+
+The exact FIBO files used in this diff are committed to the owlcompare repo,
+ready for anyone to fork or rerun:
+
+- **2023Q3 baseline:** [`examples/fibo_demo/v1/`](https://github.com/Ajala111/owlcompare/tree/main/examples/fibo_demo/v1) (FIBO-BE module, git tag `master_2023Q3`)
+- **2024Q3 target:** [`examples/fibo_demo/v2/`](https://github.com/Ajala111/owlcompare/tree/main/examples/fibo_demo/v2) (FIBO-BE module, git tag `master_2024Q3`)
+- **License:** MIT, preserved at [`LICENSE-FIBO`](https://github.com/Ajala111/owlcompare/blob/main/examples/fibo_demo/LICENSE-FIBO)
+
+The specific file diffed in this showcase is `OwnershipAndControl/Executives.rdf`.
+The [Reproduce this diff](#reproduce-this-diff) section below has the one command
+that turns these files back into every output format on this page.
+
 ## Cross-validating with EDM Council's release notes
 
 This is the showcase's unique value-add: owlcompare's findings cross-referenced
